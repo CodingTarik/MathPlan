@@ -46,13 +46,16 @@ app.set("views", path.join(__dirname, "views"));
 app.use("/", pages);
 app.use("/api", api);
 
-if (process.env.NODE_ENV != 'test') {
+if (process.env.NODE_ENV != "test") {
   // HTTP-Server
   if (config.server.ALLOW_HTTP) {
     let httpServer = null;
     if (config.HTTP_REDIRECT) {
       httpServer = http.createServer((req, res) => {
-        res.writeHead(301, { "Location": "https://" + config.server.host + ":" + config.PORT_HTTPS + req.url });
+        res.writeHead(301, {
+          Location:
+            "https://" + config.server.host + ":" + config.PORT_HTTPS + req.url,
+        });
         res.end();
       });
     } else {
