@@ -1,15 +1,26 @@
 <!-- views/navbar.ejs -->
-<nav class="navbar navbar-expand-lg navbar-dark bg-primary sticky-top">
+<nav class="navbar navbar-expand-lg navbar-dark sticky-top my-primary">
   <div class="container">
     <a class="navbar-brand" href="/">
       <div class="container" style="display: flex; align-items: center">
-        <img src="/assets/images/logo.png" alt="Materno-Logo" class="img-thumbnail img-fluid"
-          style="max-width: 32px; height: 100%; margin-top: -5px" />
+        <img
+          src="/assets/images/logo.png"
+          alt="Materno-Logo"
+          class="img-thumbnail img-fluid"
+          style="max-width: 32px; height: 100%; margin-top: -5px"
+        />
         <h2>Materno</h2>
       </div>
     </a>
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
-      aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+    <button
+      class="navbar-toggler"
+      type="button"
+      data-toggle="collapse"
+      data-target="#navbarNav"
+      aria-controls="navbarNav"
+      aria-expanded="false"
+      aria-label="Toggle navigation"
+    >
       <span class="navbar-toggler-icon"></span>
     </button>
     <div class="collapse navbar-collapse" id="navbarNav">
@@ -18,16 +29,13 @@
           <a class="nav-link" href="/">Startseite</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="/about">Über uns</a>
-        </li>
-        <li class="nav-item">
           <a class="nav-link" href="/about">Meine Prüfungspläne</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="/manage">Verwaltungsmenü</a>
+          <a class="nav-link" href="/manage">Dozenten</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="/manage">Dozierenden-Panel</a>
+          <a class="nav-link" href="/manage">Intern</a>
         </li>
       </ul>
       <ul class="navbar-nav" style="margin-left: auto">
@@ -37,8 +45,13 @@
           </button>
         </li>
         <li class="nav-item dropdown">
-          <button class="btn btn-outline-light rounded-pill dropdown-toggle" id="languageDropdown"
-            data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          <button
+            class="btn btn-outline-light rounded-pill dropdown-toggle"
+            id="languageDropdown"
+            data-bs-toggle="dropdown"
+            aria-haspopup="true"
+            aria-expanded="false"
+          >
             <i class="fa fa-flag"></i> 🇩🇪
           </button>
           <div class="dropdown-menu" aria-labelledby="languageDropdown">
@@ -58,7 +71,8 @@
 <script>
   function setLanguage(language) {
     document.cookie = "language=" + language;
-    document.getElementById('languageDropdown').innerHTML = '<i class="fa fa-flag"></i> ' + (language == 'de' ? '🇩🇪' : '🇬🇧');
+    document.getElementById("languageDropdown").innerHTML =
+      '<i class="fa fa-flag"></i> ' + (language == "de" ? "🇩🇪" : "🇬🇧");
   }
 </script>
 
