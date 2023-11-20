@@ -9,6 +9,7 @@ const fs = require("fs");
 
 // Config
 const config = require(path.join(__dirname, "config.js"));
+
 // Router
 const api = require(path.join(__dirname, "routes/api"));
 const pages = require(path.join(__dirname, "routes/pages"));
