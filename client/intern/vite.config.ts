@@ -4,7 +4,7 @@ import react from "@vitejs/plugin-react";
 import path from "node:path";
 
 // https://vitejs.dev/config/
-export default defineConfig(({ command, mode, isSsrBuild }) => {
+export default defineConfig(({ command}) => {
   if (command === "serve")
     return {
       plugins: [react()],
