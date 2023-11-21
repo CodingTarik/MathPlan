@@ -16,9 +16,7 @@ module.exports = {
       env: {
         node: true
       },
-      files: [
-        '.eslintrc.{js,cjs}'
-      ],
+      files: ['.eslintrc.{js,cjs}'],
       parserOptions: {
         sourceType: 'script'
       }
@@ -27,15 +25,14 @@ module.exports = {
   parserOptions: {
     ecmaVersion: 'latest'
   },
-  plugins: [
-    'react',
-    'jest'
-  ],
+  plugins: ['react', 'jest'],
   rules: {
-    'no-func-assign': 'off'
+    'no-func-assign': 'off',
+    semi: ['error', 'always'],
+    'space-before-function-paren': [
+      'error',
+      { anonymous: 'always', named: 'never', asyncArrow: 'always' }
+    ]
   },
-  ignorePatterns: [
-    'node_modules/',
-    'build/'
-  ]
-}
+  ignorePatterns: ['node_modules/', 'build/']
+};

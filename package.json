@@ -26,6 +26,7 @@
     "jest": "^29.7.0",
     "nodemon": "^3.0.1",
     "prettier": "^3.1.0",
+    "prettier-plugin-ejs": "^0.0.18",
     "standard": "^17.1.0",
     "supertest": "^6.3.3",
     "typescript": "^5.3.2"
@@ -42,6 +43,13 @@
     "lint:fix": "eslint --fix .",
     "precommit": "npm run lint",
     "prepare": "husky install",
-    "format": "prettier --write \"**/*.{js,html,ejs,ts,json,css}\""
+    "format": "prettier --plugin=prettier-plugin-ejs --write \"**/*.{js,html,ejs,ts,json,css}\"",
+    "test": "jest",
+    "fullDevStart": "npm install && npm run prepare && npm run clean && npm run format && npm run lint:fix && npm run start",
+    "installHusky": "npm install && npm run prepare && npx husky add .husky/pre-commit \"npm run lint\" && npx husky add .husky/pre-commit \"npm run test\""
+  },
+  "prettier": {
+    "singleQuote": true,
+    "trailingComma": "none"
   }
 }
