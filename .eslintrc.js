@@ -9,7 +9,7 @@ module.exports = {
   extends: [
     'standard',
     'plugin:react/recommended',
-    "plugin:security/recommended"
+    'plugin:security/recommended'
   ],
   overrides: [
     {
