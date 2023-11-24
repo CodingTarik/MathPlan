@@ -27,7 +27,7 @@ const moduleProperties = [
   },
   {
     propertyName: "moduleLanguage",
-    readFrom: "(Semester|Verwendbarkeit|Unregelmäßig) Sprache",
+    readFrom: "([sS]emester|Verwendbarkeit|[Uu]nregelmäßig) Sprache",
     readTo: "Modulverantwortliche",
   },
   {
