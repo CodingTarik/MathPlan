@@ -1,3 +1,4 @@
+
 // load the environment variables from the .env file in the root of the project
 require('dotenv').config();
 
@@ -17,7 +18,7 @@ config.database.DB_USER = process.env.DB_USER || 'root';
 console.log(process.env.DB_USER)
 console.log(process.env.DB_HOST)
 console.log(process.env.DB_PASSWORD)
-console.log(process.env.DB_DATABASE)
+console.log(process.env.DB_DATABASE) 
 
 // Initialize an empty server configuration object
 config.server = {};

@@ -12,3 +12,6 @@ CREATE TABLE module (
 INSERT INTO module (modulnummer, modulname, cp, sprache, verwendbarkeit)
 VALUES
 (1, 'Analysis', 9, 'Deutsch', 'B. Sc. Mathematik');
+INSERT INTO module (modulnummer, modulname, cp, sprache, verwendbarkeit)
+VALUES
+(2, 'Numerik', 3, 'Englisch', 'B. Sc. Mathematik');
