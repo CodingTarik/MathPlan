@@ -15,6 +15,7 @@ const pool = mysql.createPool({
 
 pool.query("SELECT * FROM module", function(err, results, fields) {
     console.log(results);
+//mit asynch await?
 }
 )
 
