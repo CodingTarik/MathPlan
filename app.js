@@ -28,7 +28,16 @@ app.use(
   "/assets/bootstrap",
   express.static(path.join(__dirname, "node_modules/bootstrap/dist"))
 );
+
+//start needed for testing with postman
+// parse requests of content-type - application/json
+app.use(express.json());
+
+// parse requests of content-type - application/x-www-form-urlencoded
+app.use(express.urlencoded({ extended: true }));
 app.use(
+//end needed for testing with postman
+
   "/assets/jquery",
   express.static(path.join(__dirname, "node_modules/jquery/dist"))
 );
@@ -47,7 +56,7 @@ app.use("/api", api);
 
 //Datbase
 const db = require(path.join(__dirname, "/database/database.js"))
-db.sequelize.sync()
+db.sequelize.sync() //db.sequelize.sync({force: true}) um zugrundeliegende DB zu ändern
   .then(() => {
     console.log("Synced db.");
   })

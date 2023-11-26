@@ -1,32 +1,3 @@
-/* const mysql = require('mysql2')
-const path = require("path")
-// Config
-const config = require(path.join(__dirname, '../config.js'))
-
-
-
-// collection of connections to the database
-const pool = mysql.createPool({
-    host: config.database.DB_HOST,
-    user: config.database.DB_USER,
-    password: config.database.DB_PASSWORD,
-    database: config.database.DB_DATABASE
-}).promise()
-
-async function showAll() {
-    const result = await pool.query("SELECT * FROM module")
-}
-
-result = await showAll()
-console.log(result[0])
-
-
-    /* const result = await pool.query("SELECT * FROM module", function(err, results, fields) {
-        console.log(results);
-    }
-    ) */
-
-
 const path = require("path")
 // Config
 const config_file = require(path.join(__dirname, '../config.js'))
@@ -79,22 +50,13 @@ const Modul = sequelize.define('Modul', {
     type: Sequelize.STRING,
     allowNull: false,
   },
-  moduleAppliciability: {
+  moduleApplicability: {
     type: Sequelize.STRING,
     allowNull: false,
   },
 });
 
 // Beziehungen zwischen Benutzer und Modul hinzufügen, falls erforderlich
-
-// Tabellen erstellen (nur einmal ausführen)
-/* const initialize = async () => {
-    try {
-    await sequelize.sync();
-    } catch (error) {
-    console.error('Fehler beim Synchronisieren der Datenbank: ', error);
-    }
-} */
 
 // Funktionen für Benutzer-Operationen
 const addUser = async (username) => {
@@ -134,8 +96,9 @@ const getUsers = async () => {
 };
 
 // Funktionen für Modul-Operationen
-const addModul = (moduleData) => {
-    if (!req.body.title) {
+const addModul = (req, res) => {
+    console.log(req)
+    if (!req.body.id) {
         res.status(400).send({
           message: "Content can not be empty!"
         });
@@ -146,7 +109,7 @@ const addModul = (moduleData) => {
         moduleName: req.body.name,
         moduleCredits: req.body.credits,
         moduleLanguage: req.body.language,
-        moduleAppliciability: req.body.appliciability
+        moduleApplicability: req.body.applicability
 
     };
     Modul.create(modul)
@@ -187,11 +150,6 @@ const getModuls = async () => {
     throw new Error(`Fehler beim Abrufen der Module: ${error.message}`);
   }
 };
-
-//initialize()
-//addModul({moduleID: 1,moduleName: 'Analysis', moduleCredits: 3, moduleLanguage: 'Deutsch', moduleAppliciability: 'M.Sc. Mathematik'});
-//const result = getModuls()
-//console.log(result)
 
 module.exports = {
   Sequelize,
