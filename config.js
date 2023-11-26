@@ -15,10 +15,6 @@ config.database.DB_PASSWORD = process.env.DB_PASSWORD || '2eu889';
 config.database.DB_DATABASE = process.env.DB_DATABASE || 'data_app';
 // Set the database user, defaulting to 'root' if not provided
 config.database.DB_USER = process.env.DB_USER || 'root';
-console.log(process.env.DB_USER)
-console.log(process.env.DB_HOST)
-console.log(process.env.DB_PASSWORD)
-console.log(process.env.DB_DATABASE) 
 
 // Initialize an empty server configuration object
 config.server = {};
