@@ -45,6 +45,16 @@ app.set("views", path.join(__dirname, "views"));
 app.use("/", pages);
 app.use("/api", api);
 
+//Datbase
+const db = require(path.join(__dirname, "/database/database.js"))
+db.sequelize.sync()
+  .then(() => {
+    console.log("Synced db.");
+  })
+  .catch((err) => {
+    console.log("Failed to sync db: " + err.message);
+  });
+
 if (process.env.NODE_ENV != 'test') {
   // HTTP-Server
   if (config.server.ALLOW_HTTP) {
