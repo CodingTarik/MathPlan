@@ -32,7 +32,7 @@ export default defineConfig(({ command }) => {
       plugins: [react()],
       // Base URL for the application (empty string for relative paths)
       // This is important because we dont want absolute paths (in html, javascript file for loading other files) in production
-      base: '',
+      base: '/intern',
       // Build configuration
       build: {
         // Rollup options for bundling
