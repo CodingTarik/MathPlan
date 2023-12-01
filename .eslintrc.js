@@ -34,5 +34,10 @@ module.exports = {
       { anonymous: 'always', named: 'never', asyncArrow: 'always' }
     ]
   },
-  ignorePatterns: ['node_modules/', 'build/']
+  ignorePatterns: ['node_modules/', 'build/'],
+  settings: {
+    react: {
+      version: 'detect' // or specify the React version you are using, e.g., "16.8"
+    }
+  }
 };
