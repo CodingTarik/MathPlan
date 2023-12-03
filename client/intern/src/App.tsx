@@ -1,19 +1,21 @@
 // Importing necessary dependencies and styles
-import "./App.css";
-import ListItemDecorator from "@mui/joy/ListItemDecorator";
-import Tabs from "@mui/joy/Tabs";
-import TabList from "@mui/joy/TabList";
-import Tab, { tabClasses } from "@mui/joy/Tab";
-import React from "react";
-import TabPanel from "@mui/lab/TabPanel";
-import { TabContext } from "@mui/lab";
+import './App.css';
+import ListItemDecorator from '@mui/joy/ListItemDecorator';
+import Tabs from '@mui/joy/Tabs';
+import TabList from '@mui/joy/TabList';
+import Tab, { tabClasses } from '@mui/joy/Tab';
+import React from 'react';
+import TabPanel from '@mui/lab/TabPanel';
+import { TabContext } from '@mui/lab';
 import SchoolIcon from '@mui/icons-material/School';
 import ReceiptLongIcon from '@mui/icons-material/ReceiptLong';
 import PolicyIcon from '@mui/icons-material/Policy';
 import SettingsIcon from '@mui/icons-material/Settings';
 
 /**
- * Main component representing the entire application.
+ * JSX structure representing the entire intern application.
+ *
+ * @function App
  * @returns {JSX.Element} The rendered React element.
  */
 function App() {
@@ -21,7 +23,7 @@ function App() {
   const [index, setIndex] = React.useState(0);
 
   // Color options for different tabs
-  const colors = ["primary", "neutral", "success", "warning"] as const;
+  const colors = ['primary', 'neutral', 'success', 'warning'] as const;
 
   // JSX structure representing the entire application
   return (
@@ -42,27 +44,35 @@ function App() {
         sx={(theme) => ({
           p: 1,
           borderRadius: 16,
-          mx: "auto",
+          mx: 'auto',
           mt: 0,
           boxShadow: theme.shadow.sm,
           // Variables for customizing the shadow, is used in many componens of material ui
           // simple rgb value like 100, 100, 100
           // example use "--joy-shadowRing": "0 0 0 30px rgba(var(--joy-shadowChannel, 255 255 255) / 0.1)",
-          "--joy-shadowChannel": theme.vars.palette[colors[index]].darkChannel,
-          // mui uses emotion libary for styling
-          // https://www.w3schools.com/cssref/css_selectors.php
-          // https://www.w3schools.com/css/css_pseudo_classes.asp
-          // https://emotion.sh/docs/nested
+          '--joy-shadowChannel': theme.vars.palette[colors[index]].darkChannel,
+          /**
+           * Customizes the appearance of tab button "root" elements with CSS styling.
+           *
+           * The "root" elements correspond to all tab buttons, similar to ".MuiTab-root" in the DOM for each tab.
+           * The styling is applied using the Emotion library, where the "&" refers to the parent element (Tabs Object).
+           *
+           * For detailed information on CSS selectors, visit: {@link https://www.w3schools.com/cssref/css_selectors.php}
+           * To explore CSS pseudo-classes, refer to: {@link https://www.w3schools.com/css/css_pseudo_classes.asp}
+           * Learn more about nested styling with Emotion: {@link https://emotion.sh/docs/nested}
+           *
+           * @property {string} "&" - Reference to the parent element (Tabs Object) for applying styles to all tab buttons of the current tab.
+           */
           [`& .${tabClasses.root}`]: {
             py: 1,
             flex: 1,
-            transition: "0.3s",
-            fontWeight: "md",
-            fontSize: "md",
+            transition: '0.3s',
+            fontWeight: 'md',
+            fontSize: 'md',
             [`&:not(.${tabClasses.selected}):not(:hover)`]: {
-              opacity: 0.7,
-            },
-          },
+              opacity: 0.7
+            }
+          }
         })}
       >
         {/* 
@@ -73,11 +83,11 @@ function App() {
           variant="soft"
           size="md"
           disableUnderline
-          sx={{ borderRadius: "lg", p: 0 }}
+          sx={{ borderRadius: 'lg', p: 0 }}
         >
           {/* 
             Individual Tab components for each section. 
-            - `orientation="vertical"` sets the tabs to display vertically.
+            - `orientation="vertical"` sets the tabs to display tab content vertically.
             - Conditional styling based on the selected tab index using `... (index === 0 && { color: colors[0] })`.
           */}
           <Tab
