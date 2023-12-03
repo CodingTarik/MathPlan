@@ -21,7 +21,7 @@ function App() {
   const [index, setIndex] = React.useState(0);
 
   // Color options for different tabs
-  const colors = ["primary", "danger", "success", "warning"] as const;
+  const colors = ["primary", "neutral", "success", "warning"] as const;
 
   // JSX structure representing the entire application
   return (
