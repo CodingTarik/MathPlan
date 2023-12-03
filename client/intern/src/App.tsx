@@ -36,7 +36,7 @@ function App() {
       */}
       <Tabs
         size="lg"
-        aria-label="Bottom Navigation"
+        aria-label="Intern Navigation"
         value={index}
         onChange={(_event, value) => setIndex(value as number)}
         sx={(theme) => ({
