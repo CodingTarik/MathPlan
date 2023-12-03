@@ -51,6 +51,13 @@ config.dev.DEBUG = testBool(process.env.DEBUG) || false;
 // Export the config object
 module.exports = config;
 
+/**
+ * Checks a boolean text and returns the corresponding boolean value.
+ *
+ * @function testBool
+ * @param {string} textBool - The boolean text to check.
+ * @returns {boolean} Returns `true` if the input is case-insensitively equal to 'true', otherwise `false`.
+ */
 function testBool(textBool) {
   // check text bool and return value (check also case-sensitivity)
   return /^true$/i.test(textBool);
