@@ -1,4 +1,3 @@
-
 // load the environment variables from the .env file in the root of the project
 require('dotenv').config();
 
@@ -14,7 +13,7 @@ config.database.DB_PASSWORD = process.env.DB_PASSWORD || '2eu889';
 // Set the database name, defaulting to 'database' if not provided
 config.database.DB_DATABASE = process.env.DB_DATABASE || 'data_app';
 // Set the database user, defaulting to 'root' if not provided
-config.database.DB_USER = process.env.DB_USER || 'root';
+config.database.DB_USER = process.env.DB_USER || 'root';
 
 // Initialize an empty server configuration object
 config.server = {};

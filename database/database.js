@@ -1,6 +1,6 @@
-const path = require("path")
+const path = require('path');
 // Config
-const config_file = require(path.join(__dirname, '../config.js'))
+const configFile = require(path.join(__dirname, '../config.js'));
 // dbController.js
 const Sequelize = require('sequelize');
 
@@ -9,12 +9,12 @@ const dialect = 'mysql'; // Change this to 'mysql' if you want to use MySQL
 
 // Define database connection parameters
 const config = {
-  database: config_file.database.DB_DATABASE,
-  username: config_file.database.DB_USER, // Your MySQL username
-  password: config_file.database.DB_PASSWORD, // Your MySQL password
-  host: config_file.database.DB_HOST,
-  dialect: dialect,
-  storage: 'path/to/database.sqlite', // For SQLite, define the path to the SQLite file
+  database: configFile.database.DB_DATABASE,
+  username: configFile.database.DB_USER, // Your MySQL username
+  password: configFile.database.DB_PASSWORD, // Your MySQL password
+  host: configFile.database.DB_HOST,
+  dialect,
+  storage: 'path/to/database.sqlite' // For SQLite, define the path to the SQLite file
 };
 
 // Sequelize-Instanz erstellen
@@ -25,8 +25,8 @@ const User = sequelize.define('User', {
   username: {
     type: Sequelize.STRING,
     allowNull: false,
-    unique: true,
-  },
+    unique: true
+  }
   // Weitere Benutzerattribute hier hinzufügen
 });
 
@@ -36,24 +36,24 @@ const Modul = sequelize.define('Modul', {
     type: Sequelize.INTEGER,
     allowNull: false,
     primaryKey: true,
-    autoIncrement: true,
+    autoIncrement: true
   },
   moduleName: {
     type: Sequelize.STRING,
-    allowNull: false,
+    allowNull: false
   },
   moduleCredits: {
     type: Sequelize.INTEGER,
-    allowNull: false,
+    allowNull: false
   },
   moduleLanguage: {
     type: Sequelize.STRING,
-    allowNull: false,
+    allowNull: false
   },
   moduleApplicability: {
     type: Sequelize.STRING,
-    allowNull: false,
-  },
+    allowNull: false
+  }
 });
 
 // Beziehungen zwischen Benutzer und Modul hinzufügen, falls erforderlich
@@ -97,29 +97,29 @@ const getUsers = async () => {
 
 // Funktionen für Modul-Operationen
 const addModul = (req, res) => {
-    console.log(req)
-    if (!req.body.id) {
-        res.status(400).send({
-          message: "Content can not be empty!"
-        });
-        return;
-      }
-    const modul = {
-        moduleID: req.body.id,
-        moduleName: req.body.name,
-        moduleCredits: req.body.credits,
-        moduleLanguage: req.body.language,
-        moduleApplicability: req.body.applicability
+  console.log(req);
+  if (!req.body.id) {
+    res.status(400).send({
+      message: 'Content can not be empty!'
+    });
+    return;
+  }
+  const modul = {
+    moduleID: req.body.id,
+    moduleName: req.body.name,
+    moduleCredits: req.body.credits,
+    moduleLanguage: req.body.language,
+    moduleApplicability: req.body.applicability
 
-    };
-    Modul.create(modul)
+  };
+  Modul.create(modul)
     .then(data => {
       res.send(data);
     })
     .catch(err => {
       res.status(500).send({
         message:
-          err.message || "Fehler beim Hinzufügen des Moduls"
+          err.message || 'Fehler beim Hinzufügen des Moduls'
       });
     });
 };
@@ -163,6 +163,5 @@ module.exports = {
   addModul,
   deleteModul,
   editModul,
-  getModuls,
+  getModuls
 };
-

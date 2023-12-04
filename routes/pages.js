@@ -1,7 +1,7 @@
 const express = require('express');
 const path = require('path');
 const router = express.Router();
-//const data = require(path.join(__dirname, "../database/database.js"))
+// const data = require(path.join(__dirname, "../database/database.js"))
 
 router.get('/', (req, res, next) => {
   res.render('layout/index', {

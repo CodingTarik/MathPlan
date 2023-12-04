@@ -15,7 +15,7 @@ const pages = require(path.join(__dirname, 'routes/pages'));
 
 // Objects
 const app = express();
-const port = config.server.PORT;
+// const port = config.server.PORT;
 
 // Register logger
 if (config.dev.DEBUG) {
@@ -29,14 +29,14 @@ app.use(
   express.static(path.join(__dirname, 'node_modules/bootstrap/dist'))
 );
 
-//start needed for testing with postman
+// start needed for testing with postman
 // parse requests of content-type - application/json
 app.use(express.json());
 
 // parse requests of content-type - application/x-www-form-urlencoded
 app.use(express.urlencoded({ extended: true }));
 app.use(
-//end needed for testing with postman
+// end needed for testing with postman
   '/assets/jquery',
   express.static(path.join(__dirname, 'node_modules/jquery/dist'))
 );
@@ -53,14 +53,14 @@ app.set('views', path.join(__dirname, 'views'));
 app.use('/', pages);
 app.use('/api', api);
 
-//Datbase
-const db = require(path.join(__dirname, "/database/database.js"))
-db.sequelize.sync() //db.sequelize.sync({force: true}) um zugrundeliegende DB zu ändern
+// Datbase
+const db = require(path.join(__dirname, '/database/database.js'));
+db.sequelize.sync() // db.sequelize.sync({force: true}) um zugrundeliegende DB zu ändern
   .then(() => {
-    console.log("Synced db.");
+    console.log('Synced db.');
   })
   .catch((err) => {
-    console.log("Failed to sync db: " + err.message);
+    console.log('Failed to sync db: ' + err.message);
   });
 
 if (process.env.NODE_ENV !== 'test') {
