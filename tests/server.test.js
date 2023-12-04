@@ -1,5 +1,5 @@
 const request = require('supertest');
-const app = require('../app').app; 
+const app = require('../app').app;
 
 // Testfall: Überprüfe, ob der Server erreichbar ist
 test('Server ist erreichbar', async () => {

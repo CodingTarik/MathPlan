@@ -1,6 +1,9 @@
 /* styles.css */
 body {
-    height: 100vh impr !important;
-    padding: 0;
+  height: 100vh impr !important;
+  padding: 0;
 }
 
+.my-primary {
+  background-color: #1e2854;
+}

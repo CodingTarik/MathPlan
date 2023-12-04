@@ -1,6 +1,12 @@
+# Ignore docs directory
+/docs
+
 # Ignore node_modules directory
 /node_modules
 /client
+
+# Ignore build folder
+/client/build
 
 # Ignore logs and other runtime data
 npm-debug.log

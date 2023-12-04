@@ -1,0 +1,13 @@
+<!-- views/index.ejs -->
+<!doctype html>
+<%- include('header') %>
+<html>
+  <body>
+    <%- include('navbar') %>
+    <!-- Here is "navbar.ejs" included -->
+    <div class="container mt-4 contentcont">
+      <%- include(body) %>
+    </div>
+    <%- include('footer') %>
+  </body>
+</html>
