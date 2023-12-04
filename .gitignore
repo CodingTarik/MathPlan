@@ -1,5 +1,6 @@
 # Ignore node_modules directory
 /node_modules
+/client
 
 # Ignore logs and other runtime data
 npm-debug.log
