@@ -1,6 +1,8 @@
 const fs = require("fs");
 const pdf = require("pdf-parse");
 
+module.exports = readAndFilterData;
+
 //TODO: Diese Infos ggf. aus Konfigurationsdatei einlesen?
 
 // properties to be extracted from the module description
@@ -37,7 +39,6 @@ const moduleProperties = [
   },
 ];
 
-//TODO: diese Funktion könnte/sollte man ggf. aufspalten, da sie sehr lang ist
 async function readAndFilterData(dataBuffer, searchTerm) {
   try {
     // read content from pdf file
@@ -59,23 +60,37 @@ async function readAndFilterData(dataBuffer, searchTerm) {
     }
 
     // collect all module properties into one array per property
-    const parsedProperties = {};
-    for (const property of moduleProperties) {
-      parsedProperties[property.propertyName] = filterAndAppendNextWords(
-        pdfText,
-        property.readFrom,
-        property.readTo
+    const parsedProperties = parseProperties(pdfText, numberOfModules);
+    
+    // build target objects from parsed properties
+    return buildModules(parsedProperties, numberOfModules);
+
+  } catch (error) {
+    console.error("Error while parsing the pdf file:", error);
+  }
+}
+
+function parseProperties(pdfText, numberOfModules) {
+  parsedProperties = {};
+
+  for (const property of moduleProperties) {
+    parsedProperties[property.propertyName] = filterAndAppendNextWords(
+      pdfText,
+      property.readFrom,
+      property.readTo
+    );
+
+    if (parsedProperties[property.propertyName].length !== numberOfModules) {
+      throw new Error(
+        `Number of parsed ${property.propertyName} (${parsedProperties[property.propertyName].length}) does not match number of modules (${numberOfModules})!`
       );
-
-      if (parsedProperties[property.propertyName].length !== numberOfModules) {
-        throw new Error(
-          `Number of parsed ${property.propertyName} (${parsedProperties[property.propertyName].length}) does not match number of modules (${numberOfModules})!`
-        );
-      }
     }
+  }
+  return parsedProperties;
+}
 
-    // build target objects
-    const modules = [];
+function buildModules(parsedProperties, numberOfModules) {
+  const modules = [];
     for (let i = 0; i < numberOfModules; i++) {
       const module = {};
       for (const property of moduleProperties) {
@@ -92,15 +107,8 @@ async function readAndFilterData(dataBuffer, searchTerm) {
       }
       modules.push(module);
     }
-
     return modules;
-
-  } catch (error) {
-    console.error("Error while parsing the pdf file:", error);
-  }
 }
-
-module.exports = readAndFilterData;
 
 function moduleDescriptionsPreprocessing(moduleDescriptions) {
   moduleDescriptions = moduleDescriptions
