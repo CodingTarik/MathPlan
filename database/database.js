@@ -20,6 +20,7 @@ const config = {
 // Sequelize-Instanz erstellen
 const sequelize = new Sequelize(config);
 
+/*
 // Benutzer-Modell definieren
 const User = sequelize.define('User', {
   username: {
@@ -29,14 +30,15 @@ const User = sequelize.define('User', {
   }
   // Weitere Benutzerattribute hier hinzufügen
 });
+*/
 
 // Modul-Modell definieren
 const Modul = sequelize.define('Modul', {
   moduleID: {
-    type: Sequelize.INTEGER,
+    type: Sequelize.STRING,
     allowNull: false,
     primaryKey: true,
-    autoIncrement: true
+    autoIncrement: false // TODO okay so?
   },
   moduleName: {
     type: Sequelize.STRING,
@@ -59,6 +61,7 @@ const Modul = sequelize.define('Modul', {
 // Beziehungen zwischen Benutzer und Modul hinzufügen, falls erforderlich
 
 // Funktionen für Benutzer-Operationen
+/*
 const addUser = async (username) => {
   try {
     const user = await User.create({ username });
@@ -94,7 +97,7 @@ const getUsers = async () => {
     throw new Error(`Fehler beim Abrufen der Benutzer: ${error.message}`);
   }
 };
-
+*/
 // Funktionen für Modul-Operationen
 const addModul = (req, res) => {
   console.log(req);
@@ -123,7 +126,7 @@ const addModul = (req, res) => {
       });
     });
 };
-
+/*
 const deleteModul = async (moduleId) => {
   try {
     const deletedModul = await Modul.destroy({ where: { moduleID: moduleId } });
@@ -150,18 +153,19 @@ const getModuls = async () => {
     throw new Error(`Fehler beim Abrufen der Module: ${error.message}`);
   }
 };
+*/
 
 module.exports = {
   Sequelize,
   sequelize,
-  User,
+  //  User,
   Modul,
-  addUser,
+  /*  addUser,
   deleteUser,
   editUser,
-  getUsers,
-  addModul,
+  getUsers, */
+  addModul/*,
   deleteModul,
   editModul,
-  getModuls
+  getModuls */
 };

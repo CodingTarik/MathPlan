@@ -55,7 +55,8 @@ app.use('/api', api);
 
 // Datbase
 const db = require(path.join(__dirname, '/database/database.js'));
-db.sequelize.sync() // db.sequelize.sync({force: true}) um zugrundeliegende DB zu ändern
+db.sequelize.sync()
+// db.sequelize.sync({force: true}) //for changing underlying database (delets all content, updates scheme
   .then(() => {
     console.log('Synced db.');
   })

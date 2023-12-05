@@ -2,12 +2,35 @@ import React from 'react';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
+// TODO Tarik fragen, wie das ungeschummelt geht
+/* eslint-disable */
+// @ts-ignore
+import ModuleServices from '../database_services/ModuleServices'; // for database functionality
+//const ModuleServices = require('../database_services/ModuleServices');
 
 function handleButtonClick(values: string[]) {
   //console.log(addModuleParameters);
   // if successful reset state
-  
-  console.log(values);
+    const newModule = {
+      id: values[0],
+      name: values[1],
+      credits: values[2],
+      language: values[3],
+      applicability: values[4]
+    };
+
+    console.log("Module to be added:");
+    console.log(newModule);
+
+    ModuleServices.create(newModule)
+      .then((response: { data: any; }) => { // TODO datentyp von data statt any
+        console.log("Success at saving module!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+        console.log(response.data);
+      })
+      .catch((e: any) => { // TODO datentyp von e statt any
+        console.log("Error while saving module!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+        console.log(e);
+      });
 }
 
 export default function AddModuleFields() {
@@ -40,7 +63,7 @@ export default function AddModuleFields() {
           id="Modulname"
           label="Modulname"
           defaultValue=""
-          onChange={(event) => {
+          onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
             const nextModule = addModuleParameters.slice();
             nextModule[1] = event.target.value;
             setAddModuleParameters(nextModule);
@@ -54,7 +77,7 @@ export default function AddModuleFields() {
           InputLabelProps={{
             shrink: true,
           }}
-          onChange={(event) => {
+          onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
             const nextModule = addModuleParameters.slice();
             nextModule[2] = event.target.value;
             setAddModuleParameters(nextModule);
@@ -65,7 +88,7 @@ export default function AddModuleFields() {
           id="Verwendbarkeit"
           label="Verwendbarkeit"
           defaultValue=""
-          onChange={(event) => {
+          onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
             const nextModule = addModuleParameters.slice();
             nextModule[3] = event.target.value;
             setAddModuleParameters(nextModule);
@@ -76,7 +99,7 @@ export default function AddModuleFields() {
           id="Sprache"
           label="Sprache"
           defaultValue=""
-          onChange={(event) => {
+          onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
             const nextModule = addModuleParameters.slice();
             nextModule[4] = event.target.value;
             setAddModuleParameters(nextModule);
