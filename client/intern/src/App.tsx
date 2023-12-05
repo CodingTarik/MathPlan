@@ -11,6 +11,7 @@ import SchoolIcon from '@mui/icons-material/School';
 import ReceiptLongIcon from '@mui/icons-material/ReceiptLong';
 import PolicyIcon from '@mui/icons-material/Policy';
 import SettingsIcon from '@mui/icons-material/Settings';
+import ExaminationRegulationApp from './pages/examinationregulations.tsx';
 
 /**
  * JSX structure representing the entire intern application.
@@ -151,10 +152,10 @@ function App() {
           <b>First</b> tab panel content
         </TabPanel>
         <TabPanel value="1">
-          <b>Second</b> tab panel content
+        <b>Second</b> tab panel content
         </TabPanel>
         <TabPanel value="2">
-          <b>Third</b> tab panel content
+          <ExaminationRegulationApp></ExaminationRegulationApp>
         </TabPanel>
         <TabPanel value="3">
           <b>Fourth</b> tab panel content

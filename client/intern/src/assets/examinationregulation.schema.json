@@ -1,0 +1,69 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "title": "Prüfungsordnung",
+    "definitions": {
+      "area": {
+        "type": "object",
+        "properties": {
+          "name": { "type": "string" },
+          "minCreditPointsOverall": { "type": "integer"},
+          "maxCreditPointsOverall": { "type": "integer"},
+          "minCreditPointsPraktikum": { "type": "integer"},
+          "maxCreditPointsPraktikum": { "type": "integer"},
+          "minCreditPointsSeminar": { "type": "integer"},
+          "maxCreditPointsSeminar": { "type": "integer"},
+          "minCreditPointsVorlesung": { "type": "integer"},
+          "maxCreditPointsVorlesung": { "type": "integer"},
+          "minSubAreaCheck": {"type": "integer"}, 
+          "maxSubAreaCheck": {"type": "integer"}, 
+          "minSeminarsCount": {"type": "integer"},
+          "minSeminarsCP": {"type": "integer"},
+          "maxSeminarsCP": {"type": "integer"},
+          "maxSeminarsCount": {"type": "integer"},
+          "minPraktikumCount": {"type": "integer"},
+          "maxPraktikumCount": {"type": "integer"},
+          "minVorlesungCount": {"type": "integer"},
+          "maxVorlesungCount": {"type": "integer"},
+          "minModuleCount": {"type": "integer"},
+          "subarea": {
+            "type": "array",
+            "items": { "$ref": "#/definitions/area" },
+            "default": []
+          },
+          "module": {
+            "type": "array",
+            "items": { "$ref": "#/definitions/module" },
+            "default": []
+          },
+          "modulerange": {
+            "type": "array",
+            "items": { "$ref": "#/definitions/modulerange" },
+            "default": []
+          }
+           
+        },
+        "defaultProperties": ["name", "maxCreditPointsOverall", "minCreditPointsOverall", "subarea", "module", "modulerange"]
+      },
+      "module": {
+          "type": "object",
+          "properties": {
+              "name": {"type": "string"},
+              "creditPoints": {"type": "integer"},
+              "pflicht": {"type": "boolean"}
+          }
+      },
+      "modulerange": {
+          "type": "object",
+          "properties": {
+              "fachbereich": {"type": "string"},
+              "look-for": {"type": "string"}
+          }
+      }
+    },
+  
+    "type": "object",
+  
+    "properties": {
+      "area": { "$ref": "#/definitions/area" }
+    }
+  }

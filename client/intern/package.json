@@ -13,10 +13,13 @@
     "@emotion/react": "^11.11.1",
     "@emotion/styled": "^11.11.0",
     "@fontsource/inter": "^5.0.15",
+    "@json-editor/json-editor": "^2.12.0",
     "@mui/icons-material": "^5.14.18",
     "@mui/joy": "5.0.0-beta.13",
     "@mui/lab": "^5.0.0-alpha.153",
     "@mui/material": "^5.14.18",
+    "@types/json-editor": "^0.0.10",
+    "json-editor": "^0.7.28",
     "mui": "^0.0.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
