@@ -100,6 +100,8 @@ async function readAndFilterData(dataBuffer, searchTerm) {
   }
 }
 
+module.exports = readAndFilterData;
+
 function moduleDescriptionsPreprocessing(moduleDescriptions) {
   moduleDescriptions = moduleDescriptions
     .replace(/(\r\n|\n|\r)/gm, " ")                   // remove line breaks
@@ -140,7 +142,10 @@ function toRegexString(str) {
 
 
 function debug() {
-  const filename = process.argv.length > 2 ? process.argv[2] : "./ModulhandbuchPO2018_neu_und_schn_Stand_15_Dez_21.pdf";
+  if (process.argv.length < 3)
+    return;
+  
+  const filename = process.argv[2];
 
   const searchTerm = "Modulbeschreibung";
   const dataBuffer = fs.readFileSync(filename);
