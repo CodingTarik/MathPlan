@@ -32,11 +32,13 @@
           },
           "module": {
             "type": "array",
+            "format": "table",
             "items": { "$ref": "#/definitions/module" },
             "default": []
           },
           "modulerange": {
             "type": "array",
+            "format": "table",
             "items": { "$ref": "#/definitions/modulerange" },
             "default": []
           }
@@ -49,7 +51,8 @@
           "properties": {
               "name": {"type": "string"},
               "creditPoints": {"type": "integer"},
-              "pflicht": {"type": "boolean"}
+              "pflicht": {"type": "boolean"},
+              "nichtwählbarmitmodul": {"type": "array", "items": { "$ref": "#/definitions/module" }}
           }
       },
       "modulerange": {
