@@ -61,10 +61,9 @@ async function readAndFilterData(dataBuffer, searchTerm) {
 
     // collect all module properties into one array per property
     const parsedProperties = parseProperties(pdfText, numberOfModules);
-    
+
     // build target objects from parsed properties
     return buildModules(parsedProperties, numberOfModules);
-
   } catch (error) {
     console.error("Error while parsing the pdf file:", error);
   }
@@ -82,7 +81,9 @@ function parseProperties(pdfText, numberOfModules) {
 
     if (parsedProperties[property.propertyName].length !== numberOfModules) {
       throw new Error(
-        `Number of parsed ${property.propertyName} (${parsedProperties[property.propertyName].length}) does not match number of modules (${numberOfModules})!`
+        `Number of parsed ${property.propertyName} (${
+          parsedProperties[property.propertyName].length
+        }) does not match number of modules (${numberOfModules})!`
       );
     }
   }
@@ -91,33 +92,32 @@ function parseProperties(pdfText, numberOfModules) {
 
 function buildModules(parsedProperties, numberOfModules) {
   const modules = [];
-    for (let i = 0; i < numberOfModules; i++) {
-      const module = {};
-      for (const property of moduleProperties) {
-        let parsedProperty = parsedProperties[property.propertyName][i];
+  for (let i = 0; i < numberOfModules; i++) {
+    const module = {};
+    for (const property of moduleProperties) {
+      let parsedProperty = parsedProperties[property.propertyName][i];
 
-        // if needed, remove excess characters from property value
-        if (property.excess) {
-          for (const excess of property.excess) {
-            parsedProperty = parsedProperty.replace(new RegExp(excess), "");
-          }
+      // if needed, remove excess characters from property value
+      if (property.excess) {
+        for (const excess of property.excess) {
+          parsedProperty = parsedProperty.replace(new RegExp(excess), "");
         }
-
-        module[property.propertyName] = parsedProperty;
       }
-      modules.push(module);
+
+      module[property.propertyName] = parsedProperty;
     }
-    return modules;
+    modules.push(module);
+  }
+  return modules;
 }
 
 function moduleDescriptionsPreprocessing(moduleDescriptions) {
   moduleDescriptions = moduleDescriptions
-    .replace(/(\r\n|\n|\r)/gm, " ")                   // remove line breaks
-    .replace(/\s+/g, " ")                             // harmonize spaces
-    .replace(/Arbeits\ aufwand/g, "Arbeitsaufwand");  // fix additional line break in Arbeitsaufwand
+    .replace(/(\r\n|\n|\r)/gm, " ") // remove line breaks
+    .replace(/\s+/g, " ") // harmonize spaces
+    .replace(/Arbeits\ aufwand/g, "Arbeitsaufwand"); // fix additional line break in Arbeitsaufwand
 
   return moduleDescriptions;
-
 }
 
 function filterAndAppendNextWords(originalString, readFrom, readTo) {
@@ -148,16 +148,16 @@ function toRegexString(str) {
   return str.replace(/\ /g, "\\ ").replace(/\./g, "\\.");
 }
 
-
 function debug() {
-  if (process.argv.length < 3)
-    return;
-  
+  if (process.argv.length < 3) return;
+
   const filename = process.argv[2];
 
   const searchTerm = "Modulbeschreibung";
   const dataBuffer = fs.readFileSync(filename);
-  readAndFilterData(dataBuffer, searchTerm).then((modules) => { console.dir(modules, {maxArrayLength: null}); } );
+  readAndFilterData(dataBuffer, searchTerm).then((modules) => {
+    console.dir(modules, { maxArrayLength: null });
+  });
 }
 
 debug();
