@@ -1,21 +1,18 @@
 stages:
   - test
 
-variables:
-  QEMU_IMAGE: "multiarch/qemu-user-static"
-  NJSSCAN_IMAGE: "opensecurity/njsscan:latest"
-  SOURCE_DIR: "/."
-
 run_x86_container:
   stage: test
-  image: $QEMU_IMAGE
-  script:
-    - docker pull $NJSSCAN_IMAGE
-    - docker run -v $(pwd):$SOURCE_DIR --platform linux/amd64 -it $NJSSCAN_IMAGE $SOURCE_DIR
+  image: returntocorp/semgrep
+  before_script:
+    - pip3 install --upgrade njsscan
+script:
+    - njsscan .
   only:
     - merge_requests
   tags:
     - linrunner
+
 lint:
   stage: test
   image: node
