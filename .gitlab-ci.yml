@@ -13,6 +13,9 @@ njsscan:
     - python3 -m venv .venv
     - source .venv/bin/activate
     - python3 -m pip install semgrep
+    - python3 -m pip install --upgrade pip
+    - python3 -m pip install pipenv
+    - python3 -m pip install --upgrade --upgrade-strategy eager -r <(pip freeze)
     - python3 -m pip install njsscan
   script:
     - pwd
