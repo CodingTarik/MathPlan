@@ -1,14 +1,11 @@
 stages:
   - test
 
-variables:
-  PYTHON_VERSION: "3"
-
 njsscan:
   stage: test
-  image: python
+  image: opensecurity/njsscan
   before_script:
-      - pip3 install --upgrade njsscan
+      - pwd
   script:
       - njsscan .
   only:
