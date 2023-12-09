@@ -1,10 +1,15 @@
 stages:
   - test
 
+variables:
+  PYTHON_VERSION: "3"
+
 njsscan:
   stage: test
   before_script:
-    - pip3 install --upgrade njsscan
+    - apt update -qy
+    - apt install -y python${PYTHON_VERSION} python3-pip
+    - pip install njsscan
   script:
     - njsscan .
   only:
@@ -16,7 +21,7 @@ lint:
   stage: test
   script:
     - npm install
-    - npm build
+    - npm run build
     - npm run lint
   only:
     - merge_requests
