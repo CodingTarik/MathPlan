@@ -9,6 +9,8 @@ njsscan:
     - njsscan .
   only:
     - merge_requests
+  tags:
+    - linrunner
 
 lint:
   stage: test
@@ -18,3 +20,5 @@ lint:
     - npm run lint
   only:
     - merge_requests
+  tags:
+    - linrunner
