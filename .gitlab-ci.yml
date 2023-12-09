@@ -12,8 +12,8 @@ njsscan:
     - pip3 install --upgrade njsscan
     - git clone https://github.com/returntocorp/semgrep
     - cd semgrep
-    - make dev-setup
     - apt install opam
+    - make dev-setup
     - opam init
     - eval $(opam config env)
     - make
