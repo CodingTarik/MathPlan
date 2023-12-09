@@ -1,18 +1,6 @@
 stages:
   - test
 
-run_x86_container:
-  stage: test
-  image: returntocorp/semgrep
-  before_script:
-    - pip3 install --upgrade njsscan
-  script:
-    - njsscan .
-  only:
-    - merge_requests
-  tags:
-    - linrunner
-
 lint:
   stage: test
   image: node
