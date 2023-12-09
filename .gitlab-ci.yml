@@ -12,12 +12,12 @@ njsscan:
     - pip3 install --upgrade njsscan
     - git clone https://github.com/returntocorp/semgrep
     - cd semgrep
-    - apt install opam
+    - apt install -y opam
     - make dev-setup
     - opam init
     - eval $(opam config env)
     - make
-    - sudo apt install pipenv
+    - sudo apt install -y pipen v
     - python3 -m pip install 'ruamel.yaml==0.16.0'
     - cd cli
     - python3 setup.py install
