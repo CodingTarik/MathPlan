@@ -6,7 +6,7 @@ run_x86_container:
   image: returntocorp/semgrep
   before_script:
     - pip3 install --upgrade njsscan
-script:
+  script:
     - njsscan .
   only:
     - merge_requests
