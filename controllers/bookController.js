@@ -9,6 +9,7 @@ exports.handleGetBook = [
     .withMessage('Der Titel darf nur aus Buchstaben bestehen'),
   (req, res) => {
     const errors = validationResult(req);
+    var sql = 'SELECT * FROM books WHERE title = ' + req.params.title;
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() });
     }
