@@ -3,36 +3,19 @@ stages:
 
 variables:
   QEMU_IMAGE: "multiarch/qemu-user-static"
-  X86_IMAGE: "opensecurity/njsscan"
+  NJSSCAN_IMAGE: "opensecurity/njsscan:latest"
+  SOURCE_DIR: "/."
 
-njsscan:
+run_x86_container:
   stage: test
-  image: python
-  before_script:
-    - apt update
-    - apt install -y python3.11-venv
-    - python3 -m venv .venv
-    - source .venv/bin/activate
-    - pip3 install --upgrade njsscan
-    - git clone https://github.com/returntocorp/semgrep
-    - cd semgrep
-    - apt install -y opam
-    - opam init
-    - eval $(opam config env)
-    - make dev-setup
-    - make
-    - sudo apt install -y pipen v
-    - python3 -m pip install 'ruamel.yaml==0.16.0'
-    - cd cli
-    - python3 setup.py install
-    - cd ../..
+  image: $QEMU_IMAGE
   script:
-    - njsscan .
+    - docker pull $NJSSCAN_IMAGE
+    - docker run -v $(pwd):$SOURCE_DIR --platform linux/amd64 -it $NJSSCAN_IMAGE $SOURCE_DIR
   only:
     - merge_requests
   tags:
     - linrunner
-
 lint:
   stage: test
   image: node
