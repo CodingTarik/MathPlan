@@ -16,6 +16,7 @@ njsscan:
     - python3 -m pip install --upgrade pip
     - python3 -m pip install pipenv
     - python3 -m pip install --upgrade --upgrade-strategy eager -r <(pip freeze)
+    - python3 -m pip install --upgrade attrs>=22.2.0
     - python3 -m pip install njsscan
   script:
     - pwd
