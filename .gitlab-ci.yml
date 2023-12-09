@@ -8,18 +8,6 @@ njsscan:
   stage: test
   before_script:
     - apt update -qy
-    - apt install -y python${PYTHON_VERSION} python3-pip
-    - apt install -y python3.11-venv
-    - python3 -m venv .venv
-    - source .venv/bin/activate
-    - python3 -m pip install semgrep
-    - python3 -m pip install --upgrade pip
-    - python3 -m pip install pipenv
-    - python3 -m pip install --upgrade --upgrade-strategy eager -r <(pip freeze)
-    - python3 -m pip install --upgrade attrs>=22.2.0
-    - python3 -m pip install njsscan
-    - semgrep --version
-    - python3 -m pip install semgrep==0.104.0
   script:
     - pwd
     - ls
