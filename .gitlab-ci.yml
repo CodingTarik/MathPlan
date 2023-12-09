@@ -1,6 +1,10 @@
 stages:
   - test
 
+variables:
+  QEMU_IMAGE: "multiarch/qemu-user-static"
+  X86_IMAGE: "opensecurity/njsscan"
+
 njsscan:
   stage: test
   image: python
@@ -13,9 +17,9 @@ njsscan:
     - git clone https://github.com/returntocorp/semgrep
     - cd semgrep
     - apt install -y opam
-    - make dev-setup
     - opam init
     - eval $(opam config env)
+    - make dev-setup
     - make
     - sudo apt install -y pipen v
     - python3 -m pip install 'ruamel.yaml==0.16.0'
