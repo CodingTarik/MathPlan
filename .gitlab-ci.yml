@@ -3,11 +3,26 @@ stages:
 
 njsscan:
   stage: test
-  image: opensecurity/njsscan
+  image: python
   before_script:
-      - pwd
+    - apt install -y python3.11-venv
+    - python3 -m venv .venv
+    - source .venv/bin/activate
+    - pip3 install --upgrade njsscan
+    - git clone https://github.com/returntocorp/semgrep
+    - cd semgrep
+    - make dev-setup
+    - apt install opam
+    - opam init
+    - eval $(opam config env)
+    - make
+    - sudo apt install pipenv
+    - python3 -m pip install 'ruamel.yaml==0.16.0'
+    - cd cli
+    - python3 setup.py install
+    - cd ../..
   script:
-      - njsscan .
+    - njsscan .
   only:
     - merge_requests
   tags:
