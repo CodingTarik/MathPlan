@@ -9,7 +9,9 @@ njsscan:
   before_script:
     - apt update -qy
     - apt install -y python${PYTHON_VERSION} python3-pip
-    - pip install njsscan
+    - python3 -m venv .venv
+    - source .venv/bin/activate
+    - python3 -m pip install njsscan
   script:
     - njsscan .
   only:
