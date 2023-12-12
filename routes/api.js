@@ -10,7 +10,6 @@ const bookController = require(
 // Example-API
 router.get('/:title', bookController.handleGetBook);
 
-
 router.post('/addModul', db.addModul);
 
 module.exports = router;
