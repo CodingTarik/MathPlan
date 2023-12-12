@@ -21,11 +21,11 @@ function handleButtonClick(values: string[]) {
     console.log(newModule);
 
     ModuleServices.create(newModule)
-      .then((response: { data: any; }) => { // TODO datentyp von data statt any
+      .then((response: { data: Object; }) => { 
         console.log("Success at saving module!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
         console.log(response.data);
       })
-      .catch((e: any) => { // TODO datentyp von e statt any
+      .catch((e: Error) => { 
         console.log("Error while saving module!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
         console.log(e);
       });
