@@ -2,11 +2,8 @@ import React from 'react';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
-// TODO Tarik fragen, wie das ungeschummelt geht
-/* eslint-disable */
-// @ts-ignore
+
 import ModuleServices from '../database_services/ModuleServices'; // for database functionality
-//const ModuleServices = require('../database_services/ModuleServices');
 
 function handleButtonClick(values: string[]) {
     const newModule = {
@@ -21,11 +18,11 @@ function handleButtonClick(values: string[]) {
     console.log(newModule);
 
     ModuleServices.create(newModule)
-      .then((response: { data: any; }) => { // TODO datentyp von data statt any
+      .then((response: { data: object; }) => { // TODO datentyp von data statt any
         console.log("Success at saving module!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
         console.log(response.data);
       })
-      .catch((e: any) => { // TODO datentyp von e statt any
+      .catch((e: object) => { // TODO datentyp von e statt any
         console.log("Error while saving module!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
         console.log(e);
       });

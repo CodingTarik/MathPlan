@@ -1,18 +1,14 @@
 import axios from "axios";
 
 const http = axios.create({
-  baseURL: "http://localhost:80/api",
-  /**
-   @todo
-   */
-  //baseURL: "http://${config.server.HOST}:${config.server.PORT_HTTP}/api", //not hard coded
+  baseURL: "http://localhost:80/api", // hardcoded for the moment
   headers: {
     "Content-type": "application/json"
   }
 })
 // modified from https://www.bezkoder.com/react-hooks-crud-axios-api/
 
-const create = data => {
+const create = (data : object) => {
   return http.post("/addModul", data);
 };
 
