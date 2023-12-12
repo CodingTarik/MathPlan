@@ -13,8 +13,8 @@ function handleButtonClick(values: string[]) {
       id: values[0],
       name: values[1],
       credits: values[2],
-      language: values[3],
-      applicability: values[4]
+      language: values[4],
+      applicability: values[3]
     };
 
     ModuleServices.create(newModule)
