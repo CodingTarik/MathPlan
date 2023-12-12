@@ -27,6 +27,10 @@ function handleButtonClick(values: string[]) {
     }
 }
 
+function isAddButtonDisabled(values: string[]) {
+  return!(values[0] !== null && values[1] !== null && values[2] !== null && values[3] !== null && values[4] !== null);
+}
+
 export default function AddModuleFields() {
   const [addModuleParameters, setAddModuleParameters] = React.useState(Array(5).fill(null));
 
@@ -101,7 +105,7 @@ export default function AddModuleFields() {
         />
       </div>
     </Box>
-    <Button variant="outlined" onClick = {() => handleButtonClick(addModuleParameters)}>Speichern</Button>
+    <Button variant="outlined" disabled = {isAddButtonDisabled(addModuleParameters)} onClick = {() => handleButtonClick(addModuleParameters)}>Speichern</Button>
     </>
   );
 }
