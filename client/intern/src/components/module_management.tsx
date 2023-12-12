@@ -6,6 +6,7 @@ import TextField from '@mui/material/TextField';
 import ModuleServices from '../database_services/ModuleServices'; // for database functionality
 
 function handleButtonClick(values: string[]) {
+  if (values[0] !== null && values[1] !== null && values[2] !== null && values[3] !== null && values[4] !== null) {
     const newModule = {
       id: values[0],
       name: values[1],
@@ -14,18 +15,16 @@ function handleButtonClick(values: string[]) {
       applicability: values[4]
     };
 
-    console.log("Module to be added:");
-    console.log(newModule);
-
     ModuleServices.create(newModule)
       .then((response: { data: object; }) => { 
-        console.log("Success at saving module!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+        console.log("Success at saving module");
         console.log(response.data);
       })
       .catch((e: Error) => { 
-        console.log("Error while saving module!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+        console.log("Error while saving module");
         console.log(e);
       });
+    }
 }
 
 export default function AddModuleFields() {

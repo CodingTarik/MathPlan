@@ -28,12 +28,11 @@ app.use(
   express.static(path.join(__dirname, 'node_modules/bootstrap/dist'))
 );
 
-
 // parse requests of content-type - application/json
 app.use(express.json());
 
 // parse requests of content-type - application/x-www-form-urlencoded
-app.use(express.urlencoded({ extended: true })); 
+app.use(express.urlencoded({ extended: true }));
 app.use(
   '/assets/jquery',
   express.static(path.join(__dirname, 'node_modules/jquery/dist'))
