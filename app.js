@@ -15,7 +15,6 @@ const pages = require(path.join(__dirname, 'routes/pages'));
 
 // Objects
 const app = express();
-// const port = config.server.PORT;
 
 // Register logger
 if (config.dev.DEBUG) {
