@@ -1,5 +1,6 @@
 import axios from "axios";
 
+// create a axios object to send http requests
 const http = axios.create({
   baseURL: "http://localhost:80/api", // hardcoded for the moment
   headers: {
@@ -8,6 +9,8 @@ const http = axios.create({
 })
 // modified from https://www.bezkoder.com/react-hooks-crud-axios-api/
 
+
+// send post request with new database obejct
 const create = (data : object) => {
   return http.post("/addModul", data);
 };

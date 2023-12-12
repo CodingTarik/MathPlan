@@ -17,10 +17,10 @@ const config = {
   storage: 'path/to/database.sqlite' // For SQLite, define the path to the SQLite file
 };
 
-// Sequelize-Instanz erstellen
+// create a sequelize object
 const sequelize = new Sequelize(config);
 
-// Modul-Modell definieren
+// the table with the courses and its attributes is defined
 const Modul = sequelize.define('Modul', {
   moduleID: {
     type: Sequelize.STRING,
@@ -46,7 +46,7 @@ const Modul = sequelize.define('Modul', {
   }
 });
 
-// Funktionen für Modul-Operationen
+// a course is added to the database by taking the content of the request body, creating a new entry and calling create of sequelize
 const addModul = (req, res) => {
   if (!req.body.id) {
     res.status(400).send({
