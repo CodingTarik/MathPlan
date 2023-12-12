@@ -48,7 +48,6 @@ const Modul = sequelize.define('Modul', {
 
 // Funktionen für Modul-Operationen
 const addModul = (req, res) => {
-  console.log(req);
   if (!req.body.id) {
     res.status(400).send({
       message: 'Content can not be empty!'
