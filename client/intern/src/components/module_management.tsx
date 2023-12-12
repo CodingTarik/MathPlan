@@ -9,8 +9,6 @@ import ModuleServices from '../database_services/ModuleServices'; // for databas
 //const ModuleServices = require('../database_services/ModuleServices');
 
 function handleButtonClick(values: string[]) {
-  //console.log(addModuleParameters);
-  // if successful reset state
     const newModule = {
       id: values[0],
       name: values[1],

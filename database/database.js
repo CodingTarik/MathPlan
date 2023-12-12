@@ -20,25 +20,13 @@ const config = {
 // Sequelize-Instanz erstellen
 const sequelize = new Sequelize(config);
 
-/*
-// Benutzer-Modell definieren
-const User = sequelize.define('User', {
-  username: {
-    type: Sequelize.STRING,
-    allowNull: false,
-    unique: true
-  }
-  // Weitere Benutzerattribute hier hinzufügen
-});
-*/
-
 // Modul-Modell definieren
 const Modul = sequelize.define('Modul', {
   moduleID: {
     type: Sequelize.STRING,
     allowNull: false,
     primaryKey: true,
-    autoIncrement: false // TODO okay so?
+    autoIncrement: false
   },
   moduleName: {
     type: Sequelize.STRING,
@@ -58,46 +46,6 @@ const Modul = sequelize.define('Modul', {
   }
 });
 
-// Beziehungen zwischen Benutzer und Modul hinzufügen, falls erforderlich
-
-// Funktionen für Benutzer-Operationen
-/*
-const addUser = async (username) => {
-  try {
-    const user = await User.create({ username });
-    return user;
-  } catch (error) {
-    throw new Error(`Fehler beim Hinzufügen des Benutzers: ${error.message}`);
-  }
-};
-
-const deleteUser = async (userId) => {
-  try {
-    const deletedUser = await User.destroy({ where: { id: userId } });
-    return deletedUser;
-  } catch (error) {
-    throw new Error(`Fehler beim Löschen des Benutzers: ${error.message}`);
-  }
-};
-
-const editUser = async (userId, newData) => {
-  try {
-    const editedUser = await User.update(newData, { where: { id: userId } });
-    return editedUser;
-  } catch (error) {
-    throw new Error(`Fehler beim Bearbeiten des Benutzers: ${error.message}`);
-  }
-};
-
-const getUsers = async () => {
-  try {
-    const users = await User.findAll();
-    return users;
-  } catch (error) {
-    throw new Error(`Fehler beim Abrufen der Benutzer: ${error.message}`);
-  }
-};
-*/
 // Funktionen für Modul-Operationen
 const addModul = (req, res) => {
   console.log(req);
@@ -126,46 +74,10 @@ const addModul = (req, res) => {
       });
     });
 };
-/*
-const deleteModul = async (moduleId) => {
-  try {
-    const deletedModul = await Modul.destroy({ where: { moduleID: moduleId } });
-    return deletedModul;
-  } catch (error) {
-    throw new Error(`Fehler beim Löschen des Moduls: ${error.message}`);
-  }
-};
-
-const editModul = async (moduleId, newData) => {
-  try {
-    const editedModul = await Modul.update(newData, { where: { moduleID: moduleId } });
-    return editedModul;
-  } catch (error) {
-    throw new Error(`Fehler beim Bearbeiten des Moduls: ${error.message}`);
-  }
-};
-
-const getModuls = async () => {
-  try {
-    const moduls = await Modul.findAll();
-    return moduls;
-  } catch (error) {
-    throw new Error(`Fehler beim Abrufen der Module: ${error.message}`);
-  }
-};
-*/
 
 module.exports = {
   Sequelize,
   sequelize,
-  //  User,
   Modul,
-  /*  addUser,
-  deleteUser,
-  editUser,
-  getUsers, */
-  addModul/*,
-  deleteModul,
-  editModul,
-  getModuls */
+  addModul
 };
