@@ -19,9 +19,11 @@
     "@mui/lab": "^5.0.0-alpha.153",
     "@mui/material": "^5.14.18",
     "@types/json-editor": "^0.0.10",
+    "font-awesome": "^4.7.0",
     "json-editor": "^0.7.28",
     "mui": "^0.0.1",
     "react": "^18.2.0",
+    "react-bootstrap": "^2.9.1",
     "react-dom": "^18.2.0"
   },
   "devDependencies": {

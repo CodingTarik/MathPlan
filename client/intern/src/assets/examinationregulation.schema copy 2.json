@@ -1,0 +1,87 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Prüfungsordnung",
+  "definitions": {
+    "area": {
+      "type": "object",
+      "properties": {
+        "name": { "type": "string", "title": "Area Name", "propertyOrder": 1, "options": {
+          "inputAttributes": {
+            "placeholder": "Enter Area Name"
+          }
+        } },
+        "description": {"type": "string", "title": "Description", "propertyOrder": 2, "format": "textarea"},
+        "minCreditPointsOverall": { "type": "integer", "title": "Minimum Overall Credit Points"},
+        "maxCreditPointsOverall": { "type": "integer", "title": "Maximum Overall Credit Points" },
+        "minCreditPointsPraktikum": { "type": "integer", "title": "Minimum Credit Points for Praktikum" },
+        "maxCreditPointsPraktikum": { "type": "integer", "title": "Maximum Credit Points for Praktikum" },
+        "minCreditPointsSeminar": { "type": "integer", "title": "Minimum Credit Points for Seminar" },
+        "maxCreditPointsSeminar": { "type": "integer", "title": "Maximum Credit Points for Seminar" },
+        "minCreditPointsVorlesung": { "type": "integer", "title": "Minimum Credit Points for Vorlesung" },
+        "maxCreditPointsVorlesung": { "type": "integer", "title": "Maximum Credit Points for Vorlesung" },
+        "minSubAreaCheck": { "type": "integer", "title": "Minimum Sub-Area Check" },
+        "maxSubAreaCheck": { "type": "integer", "title": "Maximum Sub-Area Check" },
+        "minSeminarsCount": { "type": "integer", "title": "Minimum Seminars Count" },
+        "minSeminarsCP": { "type": "integer", "title": "Minimum Seminars Credit Points" },
+        "maxSeminarsCP": { "type": "integer", "title": "Maximum Seminars Credit Points" },
+        "maxSeminarsCount": { "type": "integer", "title": "Maximum Seminars Count" },
+        "minPraktikumCount": { "type": "integer", "title": "Minimum Praktikum Count" },
+        "maxPraktikumCount": { "type": "integer", "title": "Maximum Praktikum Count" },
+        "minVorlesungCount": { "type": "integer", "title": "Minimum Vorlesung Count" },
+        "maxVorlesungCount": { "type": "integer", "title": "Maximum Vorlesung Count" },
+        "minModuleCount": { "type": "integer", "title": "Minimum Module Count" },
+        "subarea": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/area" },
+          "default": [],
+          "title": "Sub-Areas",
+          "propertyOrder": 1001
+        },
+        "module": {
+          "type": "array",
+          "format": "table",
+          "items": { "$ref": "#/definitions/module" },
+          "default": [],
+          "title": "Modules",
+          "propertyOrder": 1002
+        },
+        "modulerange": {
+          "type": "array",
+          "format": "table",
+          "items": { "$ref": "#/definitions/modulerange" },
+          "default": [],
+          "title": "Module Range",
+          "propertyOrder": 1003
+        }
+      },
+      "defaultProperties": ["name"],
+      "title": "Area"
+    },
+    "module": {
+      "type": "object",
+      "properties": {
+        "name": { "type": "string", "title": "Module Name" },
+        "creditPoints": { "type": "integer", "title": "Credit Points" },
+        "pflicht": { "type": "boolean", "title": "Mandatory" },
+        "nichtwählbarmitmodul": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/module" },
+          "title": "Not Selectable with Module"
+        }
+      },
+      "title": "Module"
+    },
+    "modulerange": {
+      "type": "object",
+      "properties": {
+        "fachbereich": { "type": "string", "title": "Department" },
+        "look-for": { "type": "string", "title": "Look For" }
+      },
+      "title": "Module Range"
+    }
+  },
+  "type": "object",
+  "properties": {
+    "area": { "$ref": "#/definitions/area" }
+  }
+}
