@@ -12,7 +12,11 @@ import ReceiptLongIcon from '@mui/icons-material/ReceiptLong';
 import PolicyIcon from '@mui/icons-material/Policy';
 import SettingsIcon from '@mui/icons-material/Settings';
 import ExaminationRegulationApp from './pages/examinationregulations.tsx';
+//@ts-expect-error json-editor is not typed
+import * as jsonmod from '@json-editor/json-editor';
+ 
 
+ 
 /**
  * JSX structure representing the entire intern application.
  *
@@ -23,6 +27,8 @@ function App() {
   // State to manage the currently selected tab index
   const [index, setIndex] = React.useState(0);
 
+  // Adding jsonmod
+  window.JSONEditor = jsonmod.JSONEditor;
   // Color options for different tabs
   const colors = ['primary', 'neutral', 'success', 'warning'] as const;
 

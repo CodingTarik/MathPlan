@@ -226,7 +226,7 @@
         "modulerange": {
           "type": "array",
           "format": "table",
-          "items": { "$ref": "#/definitions/modulerange" },
+          "items": { "$ref": "#/definitions/modulerange"},
           "default": [],
           "title": "Module Range",
           "propertyOrder": 1003
@@ -235,7 +235,7 @@
       "defaultProperties": ["name"],
       "required": ["name"],
       "title": "Area",
-      "headerTemplate": "{{self.name}}"
+      "headerTemplate": "{{i}} - {{self.name}}"
     },
     "module": {
       "type": "object",
@@ -243,7 +243,7 @@
         "name": {
           "type": "string",
           "format": "select2",
-          "enum": ["dsf", "dsgds", "dadgdsgsdg"],
+          "enumSource": {"$ref": "api/module/getmodules"},
           "title": "Module Name",
           "options": {
             "inputAttributes": {
