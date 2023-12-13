@@ -1,5 +1,7 @@
 {
   "dependencies": {
+    "@types/jquery": "^3.5.29",
+    "@types/select2": "^4.0.63",
     "bootstrap": "^5.3.2",
     "dotenv": "^16.3.1",
     "ejs": "^3.1.9",

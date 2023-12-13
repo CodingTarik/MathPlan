@@ -18,13 +18,16 @@
     "@mui/joy": "5.0.0-beta.13",
     "@mui/lab": "^5.0.0-alpha.153",
     "@mui/material": "^5.14.18",
+    "@types/jquery": "^3.5.29",
     "@types/json-editor": "^0.0.10",
+    "@types/select2": "^4.0.63",
     "font-awesome": "^4.7.0",
     "json-editor": "^0.7.28",
     "mui": "^0.0.1",
     "react": "^18.2.0",
     "react-bootstrap": "^2.9.1",
-    "react-dom": "^18.2.0"
+    "react-dom": "^18.2.0",
+    "select2": "^4.1.0-rc.0"
   },
   "devDependencies": {
     "@types/react": "^18.2.37",

@@ -11,12 +11,13 @@ import SchoolIcon from '@mui/icons-material/School';
 import ReceiptLongIcon from '@mui/icons-material/ReceiptLong';
 import PolicyIcon from '@mui/icons-material/Policy';
 import SettingsIcon from '@mui/icons-material/Settings';
+import $ from 'jquery';
 import ExaminationRegulationApp from './pages/examinationregulations.tsx';
 //@ts-expect-error json-editor is not typed
-import * as jsonmod from '@json-editor/json-editor';
- 
+import * as JSONEditor from '@json-editor/json-editor';
+import 'select2/dist/css/select2.css';
+import select2 from 'select2';
 
- 
 /**
  * JSX structure representing the entire intern application.
  *
@@ -27,8 +28,17 @@ function App() {
   // State to manage the currently selected tab index
   const [index, setIndex] = React.useState(0);
 
-  // Adding jsonmod
-  window.JSONEditor = jsonmod.JSONEditor;
+  // Adding jsoneditor and select2
+  window.JSONEditor = JSONEditor.JSONEditor;
+  
+  // Add jquery to window
+  // @ts-expect-error need this for jsoneditor to expand this to select2
+  window.$ = window.jQuery = $;
+
+  // Extend JQuery with select2
+  // @ts-expect-error select2 is not typed correctly
+  select2($);
+
   // Color options for different tabs
   const colors = ['primary', 'neutral', 'success', 'warning'] as const;
 
@@ -158,7 +168,7 @@ function App() {
           <b>First</b> tab panel content
         </TabPanel>
         <TabPanel value="1">
-        <b>Second</b> tab panel content
+          <b>Second</b> tab panel content
         </TabPanel>
         <TabPanel value="2">
           <ExaminationRegulationApp></ExaminationRegulationApp>

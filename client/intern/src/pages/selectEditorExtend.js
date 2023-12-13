@@ -1,3 +1,8 @@
+/**
+ * @description Represents an extension of the Select2 editor with additional $ref loading functionality for enumSource.
+ * @extends window.JSONEditor.defaults.editors.select2
+ * @see {@link https://github.com/json-editor/json-editor/blob/b846b41697039134ac48b0078cd7056ea5d15faa/src/editors/select2.js}
+ */
 export class SelectedExtend extends window.JSONEditor.defaults.editors.select2 {
   preBuild() {
     this.input_type = 'select';
@@ -110,6 +115,7 @@ export class SelectedExtend extends window.JSONEditor.defaults.editors.select2 {
               this.template_engine
             );
         }
+        /* Extension begins here */
         if (
           this.enumSource[i].source &&
           typeof this.enumSource[i].source == 'object'
@@ -120,6 +126,7 @@ export class SelectedExtend extends window.JSONEditor.defaults.editors.select2 {
             this.enumSource[i].source.push(src[j]);
           }
         }
+        /* End of extension */
       }
       /* Other, not supported */
     } else {
