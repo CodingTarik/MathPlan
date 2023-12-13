@@ -8,7 +8,6 @@ import ModuleServices from '../database_services/ModuleServices'; // for databas
 
 // called when button is clicked to create new database entry and add it to database
 function handleButtonClick(values: string[]) {
-  if (values[0] !== null && values[1] !== null && values[2] !== null && values[3] !== null && values[4] !== null) {
     const newModule = {
       id: values[0],
       name: values[1],
@@ -26,16 +25,16 @@ function handleButtonClick(values: string[]) {
         console.log("Error while saving module");
         console.log(e);
       });
-    }
+    
 }
 
 // if there is an empty field, the button is disabled and can not be clicked
 function isAddButtonDisabled(values: string[]) {
-  return!(values[0] !== null && values[1] !== null && values[2] !== null && values[3] !== null && values[4] !== null);
+  return!(values[0].length !=0 && values[1].length !=0 && values[2].length !=0 && values[3].length !=0 && values[4].length !=0);
 }
 
 export default function AddModuleFields() {
-  const [addModuleParameters, setAddModuleParameters] = React.useState(Array(5).fill(null));
+  const [addModuleParameters, setAddModuleParameters] = React.useState(Array(5).fill(""));
 
   return (
     <>
