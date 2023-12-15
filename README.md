@@ -30,6 +30,7 @@ Materno is a Node.js web application developed to streamline the management of m
 
 4. **Database Setup:**
    Set up a MySQL database and update the connection string in the `.env` file or use Envrioment variables.
+   Whenever there are changes in the scheme of tables, comment in db.sequelize.sync({force: true}) in app.js and comment out the line above. CAREFULL, this will delete all entries in the database.
 
 5. **Start the Application:**
    ```bash
