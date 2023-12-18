@@ -1,9 +1,9 @@
-const fs = require("fs");
-const pdf = require("pdf-parse");
+const fs = require('fs');
+const pdf = require('pdf-parse');
 
 module.exports = readAndFilterData;
 
-//TODO: Diese Infos ggf. aus Konfigurationsdatei einlesen?
+// TODO: Diese Infos ggf. aus Konfigurationsdatei einlesen?
 
 // properties to be extracted from the module description
 // propertyName: name of the property in the resulting object
@@ -11,32 +11,32 @@ module.exports = readAndFilterData;
 // if excess is given, the specified characters will be removed from the property value after extraction
 const moduleProperties = [
   {
-    propertyName: "moduleID",
-    readFrom: "Modul Nr.",
-    readTo: "Creditpoints",
-    excess: ["\\s"],
+    propertyName: 'moduleID',
+    readFrom: 'Modul Nr.',
+    readTo: 'Creditpoints',
+    excess: ['\\s']
   },
   {
-    propertyName: "moduleName",
-    readFrom: "Modulname",
-    readTo: "Modul",
+    propertyName: 'moduleName',
+    readFrom: 'Modulname',
+    readTo: 'Modul'
   },
   {
-    propertyName: "moduleCredits",
-    readFrom: "Modul Nr.",
-    readTo: "Arbeitsaufwand",
-    excess: ["^.*Creditpoints\\s"],
+    propertyName: 'moduleCredits',
+    readFrom: 'Modul Nr.',
+    readTo: 'Arbeitsaufwand',
+    excess: ['^.*Creditpoints\\s']
   },
   {
-    propertyName: "moduleLanguage",
-    readFrom: "([sS]emester|Verwendbarkeit|[Uu]nregelmäßig) Sprache",
-    readTo: "Modulverantwortliche",
+    propertyName: 'moduleLanguage',
+    readFrom: '([sS]emester|Verwendbarkeit|[Uu]nregelmäßig) Sprache',
+    readTo: 'Modulverantwortliche'
   },
   {
-    propertyName: "moduleApplicability",
-    readFrom: "Verwendbarkeit des Moduls",
-    readTo: "9 Literatur",
-  },
+    propertyName: 'moduleApplicability',
+    readFrom: 'Verwendbarkeit des Moduls',
+    readTo: '9 Literatur'
+  }
 ];
 
 async function readAndFilterData(dataBuffer, searchTerm) {
@@ -47,7 +47,7 @@ async function readAndFilterData(dataBuffer, searchTerm) {
     // extract text from pdf and do some preprocessing
     const pdfText = moduleDescriptionsPreprocessing(data.text);
 
-    //TODO: searchTerm wieder entfernen? Sehe den Sinn nicht so ganz...
+    // TODO: searchTerm wieder entfernen? Sehe den Sinn nicht so ganz...
     // filter text for searchTerm
     if (!pdfText.includes(searchTerm)) {
       throw new Error(`Search term ${searchTerm} not found in data buffer!`);
@@ -56,7 +56,7 @@ async function readAndFilterData(dataBuffer, searchTerm) {
     // count number of modules
     const numberOfModules = (pdfText.match(/Modulbeschreibung/g) || []).length;
     if (numberOfModules === 0) {
-      throw new Error("No modules found in data buffer!");
+      throw new Error('No modules found in data buffer!');
     }
 
     // collect all module properties into one array per property
@@ -65,12 +65,12 @@ async function readAndFilterData(dataBuffer, searchTerm) {
     // build target objects from parsed properties
     return buildModules(parsedProperties, numberOfModules);
   } catch (error) {
-    console.error("Error while parsing the pdf file:", error);
+    console.error('Error while parsing the pdf file:', error);
   }
 }
 
 function parseProperties(pdfText, numberOfModules) {
-  parsedProperties = {};
+  const parsedProperties = {};
 
   for (const property of moduleProperties) {
     parsedProperties[property.propertyName] = filterAndAppendNextWords(
@@ -100,7 +100,7 @@ function buildModules(parsedProperties, numberOfModules) {
       // if needed, remove excess characters from property value
       if (property.excess) {
         for (const excess of property.excess) {
-          parsedProperty = parsedProperty.replace(new RegExp(excess), "");
+          parsedProperty = parsedProperty.replace(new RegExp(excess), '');
         }
       }
 
@@ -113,9 +113,9 @@ function buildModules(parsedProperties, numberOfModules) {
 
 function moduleDescriptionsPreprocessing(moduleDescriptions) {
   moduleDescriptions = moduleDescriptions
-    .replace(/(\r\n|\n|\r)/gm, " ") // remove line breaks
-    .replace(/\s+/g, " ") // harmonize spaces
-    .replace(/Arbeits\ aufwand/g, "Arbeitsaufwand"); // fix additional line break in Arbeitsaufwand
+    .replace(/(\r\n|\n|\r)/gm, ' ') // remove line breaks
+    .replace(/\s+/g, ' ') // harmonize spaces
+    .replace(/Arbeits aufwand/g, 'Arbeitsaufwand'); // fix additional line break in Arbeitsaufwand
 
   return moduleDescriptions;
 }
@@ -126,7 +126,7 @@ function filterAndAppendNextWords(originalString, readFrom, readTo) {
   readTo = toRegexString(readTo);
 
   // Find all matches of readFrom ... readTo
-  const regex = new RegExp(`${readFrom}.*?${readTo}`, "gm");
+  const regex = new RegExp(`${readFrom}.*?${readTo}`, 'gm');
   const matches = originalString.match(regex);
 
   if (matches === null) {
@@ -135,8 +135,8 @@ function filterAndAppendNextWords(originalString, readFrom, readTo) {
 
   // Remove searchTerm and keyWordBis from matches
   for (let i = 0; i < matches.length; i++) {
-    matches[i] = matches[i].replace(new RegExp(`^${readFrom}`), "");
-    matches[i] = matches[i].replace(new RegExp(`${readTo}$`), "");
+    matches[i] = matches[i].replace(new RegExp(`^${readFrom}`), '');
+    matches[i] = matches[i].replace(new RegExp(`${readTo}$`), '');
     matches[i] = matches[i].trim();
   }
 
@@ -145,7 +145,7 @@ function filterAndAppendNextWords(originalString, readFrom, readTo) {
 
 // Helper function to escape special characters in a string
 function toRegexString(str) {
-  return str.replace(/\ /g, "\\ ").replace(/\./g, "\\.");
+  return str.replace(/\./g, '\\.');
 }
 
 function debug() {
@@ -153,7 +153,7 @@ function debug() {
 
   const filename = process.argv[2];
 
-  const searchTerm = "Modulbeschreibung";
+  const searchTerm = 'Modulbeschreibung';
   const dataBuffer = fs.readFileSync(filename);
   readAndFilterData(dataBuffer, searchTerm).then((modules) => {
     console.dir(modules, { maxArrayLength: null });
