@@ -1,3 +1,5 @@
+/* eslint-disable */
+
 // just an example will be deleted later
 // with npx jest you can start unit test
 // utils.test.js

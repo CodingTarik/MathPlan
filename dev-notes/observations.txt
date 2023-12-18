@@ -1,0 +1,18 @@
+Dinge, die bei anderen Modulhandbüchern als dem Mathe-Modulhandbuch zu beachten sind:
+
+- möglw. steht dort "Kreditpunkte" oder "Leistungspunkte" statt "Creditpoints"
+
+- "Modulbeschreibung" steht ggf. nicht über jedem Modul (warum auch immer), das ist also nicht unbedingt zum Zählen der Module geeignet
+
+- Seitenzahlen und Fußzeile können sich in die eingelesenen Daten einschleichen, sollten als als Teil des Preprocessings entfernt werden
+
+
+Auffälligkeiten beim Mathe-Handbuch:
+
+- "Verwendbarkeit" ist anscheinend händisch eingetragen
+    - Typos: 04-10-0588
+    - unterschiedliche Abkürzungen: 04-10-0229, 04-14-0100, 04-10-0254, 04-10-0591, 04-10-0599
+    - Punkte mal vorhanden und mal nicht
+    - Zusatzinfos in unterschiedlicher Schreibweise: 04-10-0051, 04-10-0589, 04-10-0051/de, 04-10-0590/de, 04-10-0393/de (!), 04-10-0042/de (!)
+    - komische Einträge: 04-10-0601
+    - leer: 04-10-0595/en, 41-21-0382, ...

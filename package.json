@@ -14,7 +14,8 @@
     "mysql2": "^3.6.3",
     "react": "^18.2.0",
     "rimraf": "^5.0.5",
-    "sequelize": "^6.35.1"
+    "sequelize": "^6.35.1",
+    "pdf-parse": "^1.1.1"
   },
   "devDependencies": {
     "@types/node": "^20.10.3",
