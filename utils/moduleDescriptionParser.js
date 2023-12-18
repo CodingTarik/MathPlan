@@ -38,6 +38,13 @@ const moduleProperties = [
   }
 ];
 
+/**
+ * Parses the properties specified in "moduleProperties" from the given data buffer.
+ *
+ * @param {Buffer} dataBuffer The data buffer of the pdf file to be parsed.
+ * @param {string} searchTerm The search term to be used to check if the data buffer contains module information.
+ * @returns {Promise<Array>} The parsed module descriptions: An array of objects, each object representing one module.
+ */
 async function readAndFilterData(dataBuffer, searchTerm) {
   try {
     // read content from pdf file
@@ -68,6 +75,13 @@ async function readAndFilterData(dataBuffer, searchTerm) {
   }
 }
 
+/**
+ * Collects all module properties into one array per property.
+ *
+ * @param pdfText The preprocessed text of the pdf file to be parsed.
+ * @param numberOfModules The number of modules expected.
+ * @returns {Object} An object containing one array per module property.
+ */
 function parseProperties(pdfText, numberOfModules) {
   const parsedProperties = {};
 
@@ -89,6 +103,13 @@ function parseProperties(pdfText, numberOfModules) {
   return parsedProperties;
 }
 
+/**
+ * Builds the target objects from the parsed properties.
+ *
+ * @param parsedProperties The parsed properties, an object containing one array per module property.
+ * @param numberOfModules The number of modules expected.
+ * @returns {Array} An array of objects, each object representing one module.
+ */
 function buildModules(parsedProperties, numberOfModules) {
   const modules = [];
   for (let i = 0; i < numberOfModules; i++) {
@@ -110,6 +131,11 @@ function buildModules(parsedProperties, numberOfModules) {
   return modules;
 }
 
+/**
+ * Preprocesses the module descriptions: harmonizes whitespaces and removes line breaks.
+ * @param moduleDescriptions The un-preprocessed module descriptions text.
+ * @returns {string} The preprocessed module descriptions text.
+ */
 function moduleDescriptionsPreprocessing(moduleDescriptions) {
   moduleDescriptions = moduleDescriptions
     .replace(/(\r\n|\n|\r)/gm, ' ') // remove line breaks
@@ -119,6 +145,14 @@ function moduleDescriptionsPreprocessing(moduleDescriptions) {
   return moduleDescriptions;
 }
 
+/**
+ * Filters the given originalString for all matches of readFrom ... readTo.
+ *
+ * @param originalString The string to be filtered.
+ * @param readFrom The start of the match to be filtered.
+ * @param readTo The end of the match to be filtered.
+ * @returns {Array} An array of all matches.
+ */
 function filterAndAppendNextWords(originalString, readFrom, readTo) {
   // Escape special characters in search terms
   readFrom = toRegexString(readFrom);
@@ -142,7 +176,12 @@ function filterAndAppendNextWords(originalString, readFrom, readTo) {
   return matches;
 }
 
-// Helper function to escape special characters in a string
+/**
+ * Helper function to escape special characters in a string so that the string becomes a valid RegEx.
+ *
+ * @param str The string to be escaped.
+ * @returns {string} The escaped string.
+ */
 function toRegexString(str) {
   return str.replace(/\./g, '\\.');
 }
