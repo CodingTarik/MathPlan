@@ -1,4 +1,5 @@
 // Just an example, will be deleted later
+/* eslint-disable */
 const { check, validationResult } = require('express-validator');
 exports.handleGetBook = [
   check('title')
@@ -9,6 +10,7 @@ exports.handleGetBook = [
     .withMessage('Der Titel darf nur aus Buchstaben bestehen'),
   (req, res) => {
     const errors = validationResult(req);
+    const sql = 'SELECT * FROM books WHERE title = ' + req.params.title;
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() });
     }
