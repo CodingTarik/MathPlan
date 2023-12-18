@@ -1,7 +1,6 @@
 const path = require('path');
 // Config
 const configFile = require(path.join(__dirname, '../config.js'));
-// dbController.js
 const Sequelize = require('sequelize');
 
 // Choose the database dialect (mysql or sqlite)

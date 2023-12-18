@@ -52,8 +52,10 @@ app.use('/api', api);
 
 // Datbase
 const db = require(path.join(__dirname, '/database/database.js'));
+/* eslint-disable */
 db.sequelize.sync()
 // db.sequelize.sync({force: true}) //for changing underlying database (delets all content, updates scheme
+/* eslint-enable */
   .then(() => {
     console.log('Synced db.');
   })
