@@ -25,9 +25,10 @@ module.exports = {
   parserOptions: {
     ecmaVersion: 'latest'
   },
-  plugins: ['react', 'jest'],
+  plugins: ['react', 'jest', 'etc'],
   rules: {
     'no-func-assign': 'off',
+    'etc/no-commented-out-code': 'warn',
     semi: ['error', 'always'],
     'space-before-function-paren': [
       'error',

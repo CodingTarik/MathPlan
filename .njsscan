@@ -1,0 +1,15 @@
+---
+- nodejs-extensions:
+  - .js
+
+  ignore-paths:
+  - __MACOSX
+  - skip_dir
+  - node_modules
+  - .venv
+  ignore-extensions:
+  - .py
+
+  severity-filter:
+  - WARNING
+  - ERROR
