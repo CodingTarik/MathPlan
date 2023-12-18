@@ -1,4 +1,3 @@
-const fs = require('fs');
 const pdf = require('pdf-parse');
 
 module.exports = readAndFilterData;
@@ -147,17 +146,3 @@ function filterAndAppendNextWords(originalString, readFrom, readTo) {
 function toRegexString(str) {
   return str.replace(/\./g, '\\.');
 }
-
-function debug() {
-  if (process.argv.length < 3) return;
-
-  const filename = process.argv[2];
-
-  const searchTerm = 'Modulbeschreibung';
-  const dataBuffer = fs.readFileSync(filename);
-  readAndFilterData(dataBuffer, searchTerm).then((modules) => {
-    console.dir(modules, { maxArrayLength: null });
-  });
-}
-
-debug();

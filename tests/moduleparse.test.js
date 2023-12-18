@@ -5,8 +5,8 @@ const fs = require('fs');
 const readAndFilterData = require(path.join(__dirname, '../utils/moduleDescriptionParser.js'));
 
 async function prepareData() {
-    const dataBuffer = fs.readFileSync(path.join(__dirname, 'resources/ModulhandbuchPO2018_neu_und_schn_Stand_15_Dez_21.pdf'));
-    return await readAndFilterData(dataBuffer, 'Modulbeschreibung');
+  const dataBuffer = fs.readFileSync(path.join(__dirname, 'resources/ModulhandbuchPO2018_neu_und_schn_Stand_15_Dez_21.pdf'));
+  return await readAndFilterData(dataBuffer, 'Modulbeschreibung');
 }
 
 let modules;
