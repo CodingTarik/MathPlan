@@ -7,7 +7,7 @@ const config = {};
 // Initialize an empty database configuration object
 config.database = {};
 // Set the database host, defaulting to 'localhost' if not provided
-config.database.DB_HOST = process.env.DB_HOST || '127.0.0.1'; 
+config.database.DB_HOST = process.env.DB_HOST || '127.0.0.1';
 // Set the database password, defaulting to 'password' if not provided
 config.database.DB_PASSWORD = process.env.DB_PASSWORD || 'password';
 // Set the database name, defaulting to 'database' if not provided
