@@ -13,6 +13,9 @@ const config = require(path.join(__dirname, 'config.js'));
 const api = require(path.join(__dirname, 'routes/api'));
 const pages = require(path.join(__dirname, 'routes/pages'));
 
+// Database
+const db = require(path.join(__dirname, '/database/database.js'));
+
 // Objects
 const app = express();
 
@@ -51,7 +54,6 @@ app.use('/', pages);
 app.use('/api', api);
 
 // Datbase
-const db = require(path.join(__dirname, '/database/database.js'));
 /* eslint-disable */
 db.sequelize.sync()
 // for changing the underlying database (delets all content, updates scheme) a line of code can be added as decribed in readme file
