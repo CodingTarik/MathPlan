@@ -13,7 +13,7 @@ const config = {
   password: configFile.database.DB_PASSWORD, // Your MySQL password
   host: configFile.database.DB_HOST,
   dialect,
-  storage: 'path/to/database.sqlite' // For SQLite, define the path to the SQLite file
+  storage: './database.sqlite' // For SQLite, define the path to the SQLite file
 };
 
 // create a sequelize object
