@@ -54,7 +54,7 @@ app.use('/api', api);
 const db = require(path.join(__dirname, '/database/database.js'));
 /* eslint-disable */
 db.sequelize.sync()
-// db.sequelize.sync({force: true}) //for changing underlying database (delets all content, updates scheme
+// for changing the underlying database (delets all content, updates scheme) a line of code can be added as decribed in readme file
 /* eslint-enable */
   .then(() => {
     console.log('Synced db.');
