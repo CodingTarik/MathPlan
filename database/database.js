@@ -3,16 +3,13 @@ const path = require('path');
 const configFile = require(path.join(__dirname, '../config.js'));
 const Sequelize = require('sequelize');
 
-// Choose the database dialect (mysql or sqlite)
-const dialect = 'mysql'; // Change this to 'mysql' if you want to use MySQL
-
 // Define database connection parameters
 const config = {
   database: configFile.database.DB_DATABASE,
   username: configFile.database.DB_USER, // Your MySQL username
   password: configFile.database.DB_PASSWORD, // Your MySQL password
   host: configFile.database.DB_HOST,
-  dialect,
+  dialect: configFile.database.DB_DIALECT, // can be set to 'mysql' or 'sqlite'
   storage: './database.sqlite' // For SQLite, define the path to the SQLite file
 };
 

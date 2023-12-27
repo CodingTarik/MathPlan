@@ -14,6 +14,8 @@ config.database.DB_PASSWORD = process.env.DB_PASSWORD || 'password';
 config.database.DB_DATABASE = process.env.DB_DATABASE || 'database';
 // Set the database user, defaulting to 'root' if not provided
 config.database.DB_USER = process.env.DB_USER || 'root';
+// Set the database dialect to 'mysql' or 'sqlite'
+config.database.DB_DIALECT = process.env.DB_DIALECT || 'sqlite';
 
 // Initialize an empty server configuration object
 config.server = {};
