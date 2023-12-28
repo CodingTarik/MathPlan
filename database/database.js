@@ -17,6 +17,7 @@ const config = {
 const sequelize = new Sequelize(config);
 
 // the table with the courses and its attributes is defined
+// here and below as well we write 'modul' instead of 'module' to clarify that we mean university modules not NodeJS modules
 const Modul = sequelize.define('Modul', {
   moduleID: {
     type: Sequelize.STRING,
@@ -43,31 +44,15 @@ const Modul = sequelize.define('Modul', {
 });
 
 // a course is added to the database by taking the content of the request body, creating a new entry and calling create of sequelize
-const addModul = (req, res) => {
-  if (!req.body.id) {
-    res.status(400).send({
-      message: 'Content can not be empty!'
-    });
-    return;
-  }
+const addModul = (id, name, credits, language, applicability) => {
   const modul = {
-    moduleID: req.body.id,
-    moduleName: req.body.name,
-    moduleCredits: req.body.credits,
-    moduleLanguage: req.body.language,
-    moduleApplicability: req.body.applicability
-
+    moduleID: id,
+    moduleName: name,
+    moduleCredits: credits,
+    moduleLanguage: language,
+    moduleApplicability: applicability
   };
-  Modul.create(modul)
-    .then(data => {
-      res.send(data);
-    })
-    .catch(err => {
-      res.status(500).send({
-        message:
-          err.message || 'Fehler beim Hinzufügen des Moduls'
-      });
-    });
+  return Modul.create(modul);
 };
 
 module.exports = {
