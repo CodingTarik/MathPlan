@@ -1,8 +1,9 @@
 import axios from "axios";
 
+
 // create a axios object to send http requests
 const http = axios.create({
-  baseURL: "http://localhost:80/api", // hardcoded for the moment
+  baseURL: `${window.location.origin}/api`,
   headers: {
     "Content-type": "application/json"
   }
