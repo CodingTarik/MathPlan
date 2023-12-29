@@ -20,7 +20,7 @@ const sequelize = new Sequelize(config);
 // here and below as well we write 'modul' instead of 'module' to clarify that we mean university modules not NodeJS modules
 const Modul = sequelize.define('Modul', {
   moduleID: {
-    type: Sequelize.STRING,
+    type: Sequelize.STRING.BINARY,
     allowNull: false,
     primaryKey: true,
     autoIncrement: false
@@ -45,7 +45,7 @@ const Modul = sequelize.define('Modul', {
 
 /**
  * a course is added to the database by taking the content of the request body, creating a new entry and calling create of sequelize
- * @param {Sequelize.STRING} id
+ * @param {Sequelize.STRING.BINARY} id
  * @param {Sequelize.STRING} name
  * @param {Sequelize.INTEGER} credits
  * @param {Sequelize.STRING} language
