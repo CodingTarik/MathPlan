@@ -1,6 +1,12 @@
 const path = require('path');
 const db = require(path.join(__dirname, '../database/database.js'));
 
+/**
+ * if a request is made the addModul function of the database is called by the controller and the added module is sent back as a response
+ * @param  req
+ * @param  res
+ * @returns if the passed data is not sufficient as in does not contain a module id
+ */
 const addModul = (req, res) => {
   if (!req.body.id) {
     res.status(400).send({

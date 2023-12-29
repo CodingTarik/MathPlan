@@ -43,7 +43,15 @@ const Modul = sequelize.define('Modul', {
   }
 });
 
-// a course is added to the database by taking the content of the request body, creating a new entry and calling create of sequelize
+/**
+ * a course is added to the database by taking the content of the request body, creating a new entry and calling create of sequelize
+ * @param {Sequelize.STRING} id
+ * @param {Sequelize.STRING} name
+ * @param {Sequelize.INTEGER} credits
+ * @param {Sequelize.STRING} language
+ * @param {Sequelize.STRING} applicability
+ * @returns a promise that is rejected or fulfilled depending on the success of adding the module
+ */
 const addModul = (id, name, credits, language, applicability) => {
   const modul = {
     moduleID: id,
