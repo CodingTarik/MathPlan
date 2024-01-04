@@ -12,6 +12,7 @@ import ReceiptLongIcon from '@mui/icons-material/ReceiptLong';
 import PolicyIcon from '@mui/icons-material/Policy';
 import SettingsIcon from '@mui/icons-material/Settings';
 
+import AddModuleFields from './components/module_management';
 /**
  * JSX structure representing the entire intern application.
  *
@@ -148,7 +149,7 @@ function App() {
           - The content can be customized for each tab.
         */}
         <TabPanel value="0">
-          <b>First</b> tab panel content
+           <AddModuleFields/>
         </TabPanel>
         <TabPanel value="1">
           <b>Second</b> tab panel content

@@ -15,6 +15,9 @@ const config = require(path.join(__dirname, 'config.js'));
 const api = require(path.join(__dirname, 'routes/api'));
 const pages = require(path.join(__dirname, 'routes/pages'));
 
+// Database
+const db = require(path.join(__dirname, '/database/database.js'));
+
 // Objects
 const app = express();
 
@@ -34,6 +37,12 @@ app.use(
   '/assets/bootstrap',
   express.static(path.join(__dirname, 'node_modules/bootstrap/dist'))
 );
+
+// parse requests of content-type - application/json
+app.use(express.json());
+
+// parse requests of content-type - application/x-www-form-urlencoded
+app.use(express.urlencoded({ extended: true }));
 app.use(
   '/assets/jquery',
   express.static(path.join(__dirname, 'node_modules/jquery/dist'))
@@ -51,22 +60,27 @@ app.set('views', path.join(__dirname, 'views'));
 app.use('/', pages);
 app.use('/api', api);
 
-try {
-  if (process.env.NODE_ENV !== 'test') {
-    // HTTP-Server
-    if (config.server.ALLOW_HTTP) {
-      let httpServer = null;
-      if (config.HTTP_REDIRECT) {
-        httpServer = http.createServer((req, res) => {
-          res.writeHead(301, {
-            Location:
-              'https://' +
-              config.server.host +
-              ':' +
-              config.PORT_HTTPS +
-              req.url
-          });
-          res.end();
+// Datbase
+/* eslint-disable */
+db.sequelize.sync()
+// for changing the underlying database (delets all content, updates scheme) a line of code can be added as decribed in readme file
+/* eslint-enable */
+  .then(() => {
+    console.log('Synced db.');
+  })
+  .catch((err) => {
+    console.log('Failed to sync db: ' + err.message);
+  });
+
+if (process.env.NODE_ENV !== 'test') {
+  // HTTP-Server
+  if (config.server.ALLOW_HTTP) {
+    let httpServer = null;
+    if (config.HTTP_REDIRECT) {
+      httpServer = http.createServer((req, res) => {
+        res.writeHead(301, {
+          Location:
+            'https://' + config.server.host + ':' + config.PORT_HTTPS + req.url
         });
       } else {
         httpServer = http.createServer(app);
