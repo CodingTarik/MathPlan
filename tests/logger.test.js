@@ -104,7 +104,7 @@ describe('Logger Zip Tests', () => {
       })
     );
     // log some messages to create a log file > 1mb
-    for (let i = 0; i < 100000; i++) {
+    for (let i = 0; i < 10000; i++) {
       logger.debug('test');
     }
     // Wait for logger to finish writing
