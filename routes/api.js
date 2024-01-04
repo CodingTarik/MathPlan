@@ -1,12 +1,11 @@
 const express = require('express');
 const router = express.Router();
 const path = require('path');
+const internAPI = require(path.join(__dirname, 'api/intern.js'));
+const studentAPI = require(path.join(__dirname, 'api/student.js'));
 
-const bookController = require(
-  path.join(__dirname, '../controllers/bookController.js')
-);
-
-// Example-API
-router.get('/:title', bookController.handleGetBook);
+// Routing
+router.use('/intern', internAPI);
+router.use('/student', studentAPI);
 
 module.exports = router;

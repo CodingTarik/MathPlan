@@ -1,0 +1,332 @@
+const path = require('path');
+// Config
+const configFile = require(path.join(__dirname, '../config.js'));
+// dbController.js
+const Sequelize = require('sequelize');
+
+// Choose the database dialect (mysql or sqlite)
+const dialect = 'mysql'; // Change this to 'mysql' if you want to use MySQL
+
+// Define database connection parameters
+const config = {
+  database: configFile.database.DB_DATABASE,
+  username: configFile.database.DB_USER, // Your MySQL username
+  password: configFile.database.DB_PASSWORD, // Your MySQL password
+  host: configFile.database.DB_HOST,
+  dialect,
+  storage: 'path/to/database.sqlite' // For SQLite, define the path to the SQLite file
+};
+
+// Sequelize-Instanz erstellen
+const sequelize = new Sequelize(config);
+
+/*
+// Benutzer-Modell definieren
+const User = sequelize.define('User', {
+  username: {
+    type: Sequelize.STRING,
+    allowNull: false,
+    unique: true
+  }
+  // Weitere Benutzerattribute hier hinzufügen
+});
+*/
+
+// Modul-Modell definieren
+const Modul = sequelize.define('Modul', {
+  moduleID: {
+    type: Sequelize.STRING,
+    allowNull: false,
+    primaryKey: true,
+    autoIncrement: false // TODO okay so?
+  },
+  moduleName: {
+    type: Sequelize.STRING,
+    allowNull: false
+  },
+  moduleCredits: {
+    type: Sequelize.INTEGER,
+    allowNull: false
+  },
+  moduleLanguage: {
+    type: Sequelize.STRING,
+    allowNull: false
+  },
+  moduleApplicability: {
+    type: Sequelize.STRING,
+    allowNull: false
+  }
+});
+
+// Beziehungen zwischen Benutzer und Modul hinzufügen, falls erforderlich
+
+// Funktionen für Benutzer-Operationen
+/*
+const addUser = async (username) => {
+  try {
+    const user = await User.create({ username });
+    return user;
+  } catch (error) {
+    throw new Error(`Fehler beim Hinzufügen des Benutzers: ${error.message}`);
+  }
+};
+
+const deleteUser = async (userId) => {
+  try {
+    const deletedUser = await User.destroy({ where: { id: userId } });
+    return deletedUser;
+  } catch (error) {
+    throw new Error(`Fehler beim Löschen des Benutzers: ${error.message}`);
+  }
+};
+
+const editUser = async (userId, newData) => {
+  try {
+    const editedUser = await User.update(newData, { where: { id: userId } });
+    return editedUser;
+  } catch (error) {
+    throw new Error(`Fehler beim Bearbeiten des Benutzers: ${error.message}`);
+  }
+};
+
+const getUsers = async () => {
+  try {
+    const users = await User.findAll();
+    return users;
+  } catch (error) {
+    throw new Error(`Fehler beim Abrufen der Benutzer: ${error.message}`);
+  }
+};
+*/
+// Funktionen für Modul-Operationen
+const addModul = (req, res) => {
+  console.log(req);
+  if (!req.body.id) {
+    res.status(400).send({
+      message: 'Content can not be empty!'
+    });
+    return;
+  }
+  const modul = {
+    moduleID: req.body.id,
+    moduleName: req.body.name,
+    moduleCredits: req.body.credits,
+    moduleLanguage: req.body.language,
+    moduleApplicability: req.body.applicability
+
+  };
+  Modul.create(modul)
+    .then(data => {
+      res.send(data);
+    })
+    .catch(err => {
+      res.status(500).send({
+        message:
+          err.message || 'Fehler beim Hinzufügen des Moduls'
+      });
+    });
+};
+/*
+const deleteModul = async (moduleId) => {
+  try {
+    const deletedModul = await Modul.destroy({ where: { moduleID: moduleId } });
+    return deletedModul;
+  } catch (error) {
+    throw new Error(`Fehler beim Löschen des Moduls: ${error.message}`);
+  }
+};
+
+const editModul = async (moduleId, newData) => {
+  try {
+    const editedModul = await Modul.update(newData, { where: { moduleID: moduleId } });
+    return editedModul;
+  } catch (error) {
+    throw new Error(`Fehler beim Bearbeiten des Moduls: ${error.message}`);
+  }
+};
+
+const getModuls = async () => {
+  try {
+    const moduls = await Modul.findAll();
+    return moduls;
+  } catch (error) {
+    throw new Error(`Fehler beim Abrufen der Module: ${error.message}`);
+  }
+};
+*/
+
+module.exports = {
+  Sequelize,
+  sequelize,
+  //  User,
+  Modul,
+  /*  addUser,
+  deleteUser,
+  editUser,
+  getUsers, */
+  addModul/*,
+  deleteModul,
+  editModul,
+  getModuls */
+};
+
+// https://www.bezkoder.com/node-js-express-sequelize-mysql/
+// Tutorial entspricht bei uns Modul
+
+const db = require("../models");
+const Tutorial = db.tutorials;
+const Op = db.Sequelize.Op;
+
+// Testing these functions with postman: need for setting Content-Type to JSON when using raw bodies
+
+/**************************************
+ * CRUD functions
+ *************************************/
+// Create and Save a new Tutorial
+exports.create = (req, res) => {
+ // Validate request
+ if (!req.body.title) {
+   res.status(400).send({
+     message: "Content can not be empty!"
+   });
+   return;
+ }
+
+ // Create a Tutorial
+ const tutorial = {
+   title: req.body.title,
+   description: req.body.description,
+   published: req.body.published ? req.body.published : false
+ };
+
+ // Save Tutorial in the database
+ Tutorial.create(tutorial)
+   .then(data => {
+     res.send(data);
+   })
+   .catch(err => {
+     res.status(500).send({
+       message:
+         err.message || "Some error occurred while creating the Tutorial."
+     });
+   });
+};
+
+// Retrieve all Tutorials from the database / find by title from the database
+exports.findAll = (req, res) => {
+   const title = req.query.title;
+   var condition = title ? { title: { [Op.like]: `%${title}%` } } : null; // Beachte Umgang mit String
+ 
+   Tutorial.findAll({ where: condition })
+     .then(data => {
+       res.send(data);
+     })
+     .catch(err => {
+       res.status(500).send({
+         message:
+           err.message || "Some error occurred while retrieving tutorials."
+       });
+     });
+};
+
+// Find a single Tutorial with an id
+exports.findOne = (req, res) => {
+   const id = req.params.id;
+
+   Tutorial.findByPk(id)
+     .then(data => {
+       if (data) {
+         res.send(data);
+       } else {
+         res.status(404).send({
+           message: `Cannot find Tutorial with id=${id}.`
+         });
+       }
+     })
+     .catch(err => {
+       res.status(500).send({
+         message: "Error retrieving Tutorial with id=" + id
+       });
+     });
+};
+
+// Update a Tutorial by the id in the request
+exports.update = (req, res) => {
+   const id = req.params.id;
+
+   Tutorial.update(req.body, {
+     where: { id: id }
+   })
+     .then(num => {
+       if (num == 1) { // bei PK darf höchstens eine Zeile den WErt haben -> nur eine Zeile darf geupdatet werden
+         res.send({
+           message: "Tutorial was updated successfully."
+         });
+       } else {
+         res.send({
+           message: `Cannot update Tutorial with id=${id}. Maybe Tutorial was not found or req.body is empty!`
+         });
+       }
+     })
+     .catch(err => {
+       res.status(500).send({
+         message: "Error updating Tutorial with id=" + id
+       });
+     });
+};
+
+// Delete a Tutorial with the specified id in the request
+exports.delete = (req, res) => {
+   const id = req.params.id;
+
+   Tutorial.destroy({
+     where: { id: id }
+   })
+     .then(num => {
+       if (num == 1) {
+         res.send({
+           message: "Tutorial was deleted successfully!"
+         });
+       } else {
+         res.send({
+           message: `Cannot delete Tutorial with id=${id}. Maybe Tutorial was not found!`
+         });
+       }
+     })
+     .catch(err => {
+       res.status(500).send({
+         message: "Could not delete Tutorial with id=" + id
+       });
+     });
+};
+
+// Delete all Tutorials from the database.
+exports.deleteAll = (req, res) => {
+   Tutorial.destroy({
+      where: {},
+      truncate: false
+    })
+      .then(nums => {
+        res.send({ message: `${nums} Tutorials were deleted successfully!` });
+      })
+      .catch(err => {
+        res.status(500).send({
+          message:
+            err.message || "Some error occurred while removing all tutorials."
+        });
+      });
+};
+
+// Find all published Tutorials
+exports.findAllPublished = (req, res) => {
+   Tutorial.findAll({ where: { published: true } })
+   .then(data => {
+     res.send(data);
+   })
+   .catch(err => {
+     res.status(500).send({
+       message:
+         err.message || "Some error occurred while retrieving tutorials."
+     });
+   });
+};
