@@ -3,7 +3,7 @@ import axios from "axios";
 
 // create a axios object to send http requests
 const http = axios.create({
-  baseURL: `${window.location.origin}/api`,
+  baseURL: `${window.location.origin}/api/intern`,
   headers: {
     "Content-type": "application/json"
   }

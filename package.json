@@ -50,7 +50,7 @@
     "build:student": "cd client/student && npm install && npm run build",
     "copyIntern": "node -e \"require('fs').cpSync('./client/intern/dist', './client/build/intern', {recursive: true});\"",
     "copyStudent": "node -e \"require('fs').cpSync('./client/student/dist', './client/build/student', {recursive: true});\"",
-    "start": "npm run build && node app.js",
+    "start": "npm install && npm run build && node app.js",
     "lint": "eslint .",
     "lint:fix": "eslint --fix .",
     "precommit": "npm run lint",
