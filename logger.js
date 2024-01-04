@@ -88,7 +88,7 @@ const logger = winston.createLogger({
   ]
 });
 logger.debug('Debug status: ' + config.dev.DEBUG);
-// If debug mode is enabled, add a DailyRotateFile transport for logging network-related messages.
+// If debug mode is enabled, add a DailyRotateFile transport for logging level debug-related messages.
 if (config.dev.DEBUG) {
   logger.debug(
     'Debug mode enabled, adding DailyRotateFile transport for logging network-related messages and debug messages.'

@@ -52,6 +52,7 @@
     "lint:fix": "eslint --fix .",
     "precommit": "npm run lint",
     "prepare": "husky install",
+    "uninstallHusky": "git config --unset core.hooksPath",
     "format": "prettier --plugin=prettier-plugin-ejs --write \"**/*.{js,html,ejs,ts,json,css}\"",
     "test": "jest",
     "fullDevStart": "npm install && npm run prepare && npm run clean && npm run format && npm run lint:fix && npm run start",
