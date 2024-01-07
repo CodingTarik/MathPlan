@@ -8,7 +8,4 @@ const studentAPI = require(path.join(__dirname, 'api/student.js'));
 router.use('/intern', internAPI);
 router.use('/student', studentAPI);
 
-// Module-API
-router.get('/module/getmodules', moduleController.getAllModules);
-
 module.exports = router;

@@ -10,10 +10,13 @@ const bookController = require(
   path.join(__dirname, '../../controllers/bookController.js')
 );
 
-// Example-API
-router.get('/:title', bookController.handleGetBook);
+ 
 
 router.post('/addModul', dbController.addModul);
 router.post('/deleteModulById', dbController.deleteModulById);
+router.get('/getAllModuls', dbController.getAllModuls);
+
+// Example-API
+router.get('/:title', bookController.handleGetBook);
 
 module.exports = router;

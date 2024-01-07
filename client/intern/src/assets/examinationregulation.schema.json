@@ -243,7 +243,7 @@
         "name": {
           "type": "string",
           "format": "select2",
-          "enumSource": {"$ref": "api/module/getmodules"},
+          "enumSource": {"$ref": "api/intern/getAllModuls"},
           "title": "Module Name",
           "options": {
             "inputAttributes": {

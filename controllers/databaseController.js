@@ -1,5 +1,5 @@
 const path = require('path');
-const db = require(path.join(__dirname, '../database/database.js'));
+const db = require(path.join(__dirname, '../database/modulHelper.js'));
 
 /**
  * if a request is made the addModul function of the database is called by the controller and the added module is sent back as a response
@@ -62,7 +62,21 @@ const deleteModulById = (req, res) => {
     });
 };
 
+const getAllModuls = (req, res) => {
+  db.getAllModuls()
+    .then(data => {
+      res.send(data);
+    })
+    .catch(err => {
+      res.status(500).send({
+        message:
+            err.message || 'Error retrieving modules!'
+      });
+    });
+}
+
 module.exports = {
   addModul,
-  deleteModulById
+  deleteModulById,
+  getAllModuls
 };
