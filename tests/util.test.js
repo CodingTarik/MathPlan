@@ -1,3 +1,5 @@
+/* eslint-disable */
+
 // just an example will be deleted later
 // with npx jest you can start unit test
 // utils.test.js
@@ -8,7 +10,7 @@ test('adds 1 + 2 to equal 3', () => {
   expect(add(1, 2)).toBe(3);
 });
 
-// utils.test.js
+// in utils.test.js
 describe('add function', () => {
   test('adds positive numbers', () => {
     expect(add(1, 2)).toBe(3);
@@ -19,22 +21,22 @@ describe('add function', () => {
   });
 });
 
-// strings.test.js
+// in strings.test.js
 test('string matches', () => {
   expect('hello').toMatch(/hello/);
 });
 
-// arrays.test.js
+// in arrays.test.js
 test('array contains value', () => {
   expect(['apple', 'orange']).toContain('apple');
 });
 
-// objects.test.js
+// in objects.test.js
 test('object has property', () => {
   expect({ name: 'John' }).toHaveProperty('name');
 });
 
-// exceptions.test.js
+// in exceptions.test.js
 function throwError() {
   throw new Error('Test Error');
 }

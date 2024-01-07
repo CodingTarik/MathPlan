@@ -18,6 +18,7 @@ import * as JSONEditor from '@json-editor/json-editor';
 import 'select2/dist/css/select2.css';
 import select2 from 'select2';
 
+import AddModuleFields from './components/module_management';
 /**
  * JSX structure representing the entire intern application.
  *
@@ -165,7 +166,7 @@ function App() {
           - The content can be customized for each tab.
         */}
         <TabPanel value="0">
-          <b>First</b> tab panel content
+           <AddModuleFields/>
         </TabPanel>
         <TabPanel value="1">
           <b>Second</b> tab panel content

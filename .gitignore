@@ -1,8 +1,12 @@
 # Ignore docs directory
 /docs
 
+# Ignore logs
+/logs
+
 # Ignore node_modules directory
 /node_modules
+
 
 # Ignore build folder
 /client/build

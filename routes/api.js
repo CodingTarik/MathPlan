@@ -1,15 +1,12 @@
 const express = require('express');
 const router = express.Router();
 const path = require('path');
-const bookController = require(
-  path.join(__dirname, '../controllers/bookController.js')
-);
-const moduleController = require(
-  path.join(__dirname, '../controllers/moduleController.js')
-);
+const internAPI = require(path.join(__dirname, 'api/intern.js'));
+const studentAPI = require(path.join(__dirname, 'api/student.js'));
 
-// Example-API
-router.get('/:title', bookController.handleGetBook);
+// Routing
+router.use('/intern', internAPI);
+router.use('/student', studentAPI);
 
 // Module-API
 router.get('/module/getmodules', moduleController.getAllModules);

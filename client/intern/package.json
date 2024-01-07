@@ -23,6 +23,7 @@
     "@types/select2": "^4.0.63",
     "font-awesome": "^4.7.0",
     "json-editor": "^0.7.28",
+    "axios": "^1.6.4",
     "mui": "^0.0.1",
     "react": "^18.2.0",
     "react-bootstrap": "^2.9.1",
