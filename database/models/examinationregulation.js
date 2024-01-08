@@ -22,12 +22,12 @@ module.exports = (sequelize) => {
   const ExaminationRegulation = sequelize.define('ExaminationRegulation', {
     name: {
       type: DataTypes.STRING,
-      allowNull: false,
+      allowNull: false
     },
     jsonSchema: {
       type: DataTypes.STRING,
-      allowNull: false,
-    },
+      allowNull: false
+    }
   });
 
   /**
@@ -46,7 +46,7 @@ module.exports = (sequelize) => {
      */
     ExaminationRegulation.belongsTo(models.User, {
       foreignKey: 'createdBy',
-      as: 'creator',
+      as: 'creator'
     });
 
     /**
@@ -62,7 +62,7 @@ module.exports = (sequelize) => {
       through: 'EditedByUser',
       foreignKey: 'regulationId',
       otherKey: 'editedById',
-      as: 'editors',
+      as: 'editors'
     });
   };
 

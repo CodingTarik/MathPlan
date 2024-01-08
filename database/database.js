@@ -37,11 +37,11 @@ const sequelize = new Sequelize(config);
 const models = {
   Modul: Modul(sequelize),
   User: User(sequelize),
-  ExaminationRegulation: ExaminationRegulation(sequelize),
+  ExaminationRegulation: ExaminationRegulation(sequelize)
 };
 
 module.exports = {
   config,
   sequelize,
-  models,
+  models
 };

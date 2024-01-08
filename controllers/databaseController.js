@@ -65,6 +65,15 @@ const deleteModulById = (req, res) => {
 const getAllModuls = (req, res) => {
   db.getAllModuls()
     .then(data => {
+      // for json-editor we need to convert the
+      // json-editor syntax with [] to a large object
+      // so every module in data array needs to be concated to json object but as an object element
+      // like so {"0":{...},"1":{...}}
+      const json = {};
+      for (let i = 0; i < data.length; i++) {
+        json[i] = data[i];
+      }
+      data = json;
       res.send(data);
     })
     .catch(err => {
@@ -73,7 +82,7 @@ const getAllModuls = (req, res) => {
             err.message || 'Error retrieving modules!'
       });
     });
-}
+};
 
 module.exports = {
   addModul,

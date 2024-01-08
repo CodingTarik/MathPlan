@@ -44,5 +44,3 @@ module.exports = (sequelize) => {
   });
   return Modul;
 };
-
-

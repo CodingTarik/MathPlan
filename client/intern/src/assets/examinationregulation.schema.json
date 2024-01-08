@@ -239,15 +239,25 @@
     },
     "module": {
       "type": "object",
+      "id": "moduleid",
       "properties": {
         "name": {
-          "type": "string",
+          "type": "object",
           "format": "select2",
-          "enumSource": {"$ref": "api/intern/getAllModuls"},
+          "enumSource": {"$ref": "api/intern/getAllModuls", "title": "moduleName"},
           "title": "Module Name",
           "options": {
             "inputAttributes": {
               "placeholder": "Enter Module Name"
+            }
+          }
+        },
+        "moduleID": {
+          "type": "string",
+          "title": "Modul ID",
+          "options": {
+            "inputAttributes": {
+              "placeholder": "Enter Credit Points"
             }
           }
         },

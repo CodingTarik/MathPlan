@@ -52,7 +52,7 @@ async function initializeJsonEditor(
       schema: schema,
       ajax: true
     });
-
+    window.JSONEditorInstance = editor;
     // Watch for changes in the editor
     watchEditorChanges(editor);
   }
@@ -70,18 +70,26 @@ function watchEditorChanges(editor: any) {
    */
   const watcherCallback = function (path: string) {
     try {
-      // Use regex to extract information from the changed path
-      const regex = /^([^]+)\.module\.(\d+)\.name$/;
-      const match = path.match(regex);
+      // Check any module name changes
+      {
+        // Use regex to extract information from the changed path
+        // e.g. root.area.module.0.name
+        const regex = /^([^]+)\.module\.(\d+)\.name$/;
+        // Check if the path matches the regex
+        const match = path.match(regex);
 
-      if (match) {
-        // Build the result path and set a specific value in the editor
-        const resultString =
-          match[1] + '.module' + '.' + match[2] + '.creditPoints';
-
-        // Will be used for maping, set CP field to coressponding module credit points if new module selected
-        /** @todo: This is a temporary test solution, needs to be changed*/
-        editor.getEditor(resultString).setValue(9);
+        if (match) {
+          // Build the result path and set a specific value in the editor
+          const module = editor.getEditor(match[0]).getValue();
+          const creditPoints =
+            match[1] + '.module' + '.' + match[2] + '.creditPoints';
+          const moduleID =
+            match[1] + '.module' + '.' + match[2] + '.moduleID';
+          // Will be used for maping, set CP field to coressponding module credit points if new module selected
+          /** @todo: This is a temporary test solution, needs to be changed*/
+          editor.getEditor(creditPoints).setValue(module.moduleCredits);
+          editor.getEditor(moduleID).setValue(module.moduleID);
+        }
       }
     } catch (e) {
       console.log(e);
@@ -93,10 +101,11 @@ function watchEditorChanges(editor: any) {
     // Iterate through all editor keys and set up watches
     for (const key in editor.editors) {
       if (
+        // checks that the key is not inherited from the prototype
         Object.prototype.hasOwnProperty.call(editor.editors, key) &&
         key !== 'root'
       ) {
-        // Unwatch and re-watch each key to ensure callback is triggered
+        // Unwatch and re-watch each key to ensure callback is triggered just once
         editor.unwatch(key, watcherCallback.bind(editor, key));
         editor.watch(key, watcherCallback.bind(editor, key));
       }
@@ -142,6 +151,7 @@ const AppWithoutStrictMode = () => <ExaminationRegulationApp />;
 declare global {
   interface Window {
     JSONEditor: any;
+    JSONEditorInstance: any;
   }
 }
 

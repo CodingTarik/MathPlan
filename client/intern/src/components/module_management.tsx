@@ -11,9 +11,7 @@ import ModuleServices from '../database_services/ModuleServices'; // for databas
  */
 function handleButtonClick(values: string[]) {
     const newModule = {
-      id: values[0].split('').map(char => {
-        return char.charCodeAt(0).toString(2);
-     }).join(' '),
+      id: values[0],
       name: values[1],
       credits: values[2],
       language: values[4],

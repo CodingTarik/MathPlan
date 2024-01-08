@@ -10,8 +10,6 @@ const bookController = require(
   path.join(__dirname, '../../controllers/bookController.js')
 );
 
- 
-
 router.post('/addModul', dbController.addModul);
 router.post('/deleteModulById', dbController.deleteModulById);
 router.get('/getAllModuls', dbController.getAllModuls);

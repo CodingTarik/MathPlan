@@ -52,7 +52,7 @@ const isModuleExists = (moduleID) => {
  */
 const deleteModulById = async (moduleID) => {
   try {
-    //logger.info(`Deleting module with ID ${moduleID}...`);
+    // logger.info(`Deleting module with ID ${moduleID}...`);
     const affectedRows = await Modul.destroy({
       where: {
         moduleID
@@ -62,7 +62,7 @@ const deleteModulById = async (moduleID) => {
     // If affectedRows is greater than 0, it means at least one record was deleted
     return affectedRows > 0;
   } catch (error) {
-    //logger.error('Error deleting module:', error);
+    // logger.error('Error deleting module:', error);
     return false; // Return false if an error occurs during deletion
   }
 };
