@@ -13,6 +13,7 @@ import PolicyIcon from '@mui/icons-material/Policy';
 import SettingsIcon from '@mui/icons-material/Settings';
 
 import AddModuleFields from './components/module_management';
+import InputFileUpload from './components/inputmask';
 /**
  * JSX structure representing the entire intern application.
  *
@@ -149,7 +150,17 @@ function App() {
           - The content can be customized for each tab.
         */}
         <TabPanel value="0">
+          <div>
+          <h3>
+            Manuell ein Modul zur Datenbank hinzufügen
+          </h3>
            <AddModuleFields/>
+           <h3>
+            Modulhandbuch hochladen
+           </h3>
+           <InputFileUpload/>
+           
+           </div>
         </TabPanel>
         <TabPanel value="1">
           <b>Second</b> tab panel content
