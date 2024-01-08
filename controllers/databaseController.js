@@ -21,11 +21,48 @@ const addModul = (req, res) => {
     .catch(err => {
       res.status(500).send({
         message:
-            err.message || 'Fehler beim Hinzufügen des Moduls'
+            err.message || 'Error adding module!'
+      });
+    });
+};
+
+/**
+ * If a request is made, the deleteModulById function of the database is called by the controller,
+ * and a response is sent based on the success or failure of the deletion.
+ * @param {Object} req - The request object
+ * @param {Object} res - The response object
+ * @returns {void} - Sends a response based on the success or failure of the deletion
+ */
+const deleteModulById = (req, res) => {
+  const moduleId = req.params.id; // Assuming the module ID is in the route parameters
+
+  if (!moduleId) {
+    res.status(400).send({
+      message: 'Module ID is required!'
+    });
+    return;
+  }
+
+  db.deleteModulById(moduleId)
+    .then(deleted => {
+      if (deleted) {
+        res.send({
+          message: 'Module was deleted successfully.'
+        });
+      } else {
+        res.status(404).send({
+          message: `Module with ID ${moduleId} not found.`
+        });
+      }
+    })
+    .catch(err => {
+      res.status(500).send({
+        message: err.message || 'Error deleting module!'
       });
     });
 };
 
 module.exports = {
-  addModul
+  addModul,
+  deleteModulById
 };
