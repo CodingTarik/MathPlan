@@ -67,6 +67,13 @@ const deleteModulById = (req, res) => {
     });
 };
 
+/**
+ * Handles the retrieval of all modules.
+ *
+ * @param {Object} req - The request object.
+ * @param {Object} res - The response object.
+ * @returns {void} - Sends a response with all modules or an error message.
+ */
 const getAllModuls = (req, res) => {
   db.getAllModuls()
     .then((data) => {
@@ -88,6 +95,13 @@ const getAllModuls = (req, res) => {
     });
 };
 
+/**
+ * Handles the retrieval of all modules with minimal information.
+ *
+ * @param {Object} req - The request object.
+ * @param {Object} res - The response object.
+ * @returns {void} - Sends a response with minimal information for each module or an error message.
+ */
 const getAllModulsMin = (req, res) => {
   db.getAllModuls()
     .then((data) => {
