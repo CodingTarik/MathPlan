@@ -1,10 +1,17 @@
 /**
  * @author Tarik Azzouzi
  */
-import { useRef, useEffect } from 'react';
 import schema from '../assets/examinationregulation.schema.json';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'font-awesome/css/font-awesome.css';
+import React, { useRef, useEffect, useState } from 'react';
+import { Button, Snackbar, IconButton, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, SnackbarContent, TextField} from '@mui/material';
+import SaveIcon from '@mui/icons-material/Save';
+import CloseIcon from '@mui/icons-material/Close';
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import ErrorIcon from '@mui/icons-material/Error';
+import { saveExamRegulationFunction } from '../database_services/ExamRegulationService.ts';
+
 /**
  * @typedef {import('./selectEditorExtend.js').SelectedExtend} SelectedExtend
  */
@@ -29,6 +36,11 @@ async function getSelectEditorExtend() {
   });
 }
 
+async function saveFunction(internalName: string): Promise<boolean> {
+  // Get the value of the editor
+  const examValue = window.JSONEditorInstance.getValue();
+  return saveExamRegulationFunction(examValue, internalName);
+}
 /**
  * Initializes the JSON Editor on a given DOM element.
  * @function
@@ -83,8 +95,7 @@ function watchEditorChanges(editor: any) {
           const module = editor.getEditor(match[0]).getValue();
           const creditPoints =
             match[1] + '.module' + '.' + match[2] + '.creditPoints';
-          const moduleID =
-            match[1] + '.module' + '.' + match[2] + '.moduleID';
+          const moduleID = match[1] + '.module' + '.' + match[2] + '.moduleID';
           // Will be used for maping, set CP field to coressponding module credit points if new module selected
           /** @todo: This is a temporary test solution, needs to be changed*/
           editor.getEditor(creditPoints).setValue(module.moduleCredits);
@@ -112,7 +123,46 @@ function watchEditorChanges(editor: any) {
     }
   });
 }
+interface CustomSnackbarContentProps {
+  message: string;
+  variant: 'success' | 'error';
+  onClose: (event: React.SyntheticEvent, reason: string) => void;
+}
 
+function CustomSnackbarContent({
+  message,
+  variant,
+  onClose
+}: CustomSnackbarContentProps) {
+  const icon = variant === 'success' ? <CheckCircleIcon /> : <ErrorIcon />;
+  const backgroundColor = variant === 'success' ? 'green' : 'red';
+
+  return (
+    <SnackbarContent
+      style={{
+        backgroundColor: backgroundColor,
+        display: 'flex',
+        alignItems: 'center'
+      }}
+      message={
+        <span style={{ display: 'flex', alignItems: 'center' }}>
+          {icon}
+          &nbsp;&nbsp;{message}
+        </span>
+      }
+      action={
+        <IconButton
+          size="small"
+          aria-label="close"
+          color="inherit"
+          onClick={(e) => onClose(e, 'clickaway')}
+        >
+          <CloseIcon fontSize="small" />
+        </IconButton>
+      }
+    />
+  );
+}
 /**
  * @description The component representing the Examination Regulation App.
  * @function
@@ -125,6 +175,42 @@ function ExaminationRegulationApp() {
    */
   const editorRef = useRef<HTMLDivElement | null>(null);
 
+  const [dialogOpen, setDialogOpen] = useState(false);
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState('');
+  const [saveSuccess, setSaveSuccess] = useState(false);
+  const [internalName, setInternalName] = useState('');
+  saveSuccess; // @todo   Remove this line once the variable is used
+  const handleSaveClick = () => {
+    setDialogOpen(true);
+  };
+
+  const handleConfirmSave = async () => {
+    // Hier sollte deine Funktion für das Speichern und die Verarbeitung des Rückgabewerts implementiert werden
+    // Zum Beispiel:
+    try {
+      // Annahme: saveFunction ist eine asynchrone Funktion, die true oder false zurückgibt
+      const saveResult = await saveFunction(internalName);
+
+      if (saveResult) {
+        setSnackbarMessage('Erfolgreich gespeichert!');
+        setSaveSuccess(true);
+      } else {
+        setSnackbarMessage('Fehler beim Speichern!');
+        setSaveSuccess(false);
+      }
+
+      setSnackbarOpen(true);
+    } catch (error) {
+      console.error('Fehler beim Speichern:', error);
+    }
+
+    setDialogOpen(false);
+  };
+
+  const handleSnackbarClose = () => {
+    setSnackbarOpen(false);
+  };
   /**
    * Effect hook for initializing the JSON Editor.
    */
@@ -135,7 +221,63 @@ function ExaminationRegulationApp() {
   // Render a div element and assign the ref
   return (
     <>
+      <div style={{ marginBottom: '16px' }}>
+        <TextField
+          label="Internal Name"
+          value={internalName}
+            onChange={(event: React.ChangeEvent<HTMLInputElement>) => setInternalName(event.target.value)}
+        />
+        <Button
+          variant="contained"
+          color="primary"
+          startIcon={<SaveIcon />}
+          onClick={handleSaveClick}
+        >
+          Speichern
+        </Button>
+      </div>
+
       <div ref={editorRef} />
+
+      <Dialog
+        open={dialogOpen}
+        onClose={() => setDialogOpen(false)}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle id="alert-dialog-title">Bestätigung</DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description">
+            Möchten Sie die Änderungen wirklich speichern?
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setDialogOpen(false)} color="primary">
+            Abbrechen
+          </Button>
+          <Button onClick={handleConfirmSave} color="primary" autoFocus>
+            Speichern
+          </Button>
+        </DialogActions>
+      </Dialog>
+
+      <Snackbar
+        anchorOrigin={{
+          vertical: 'bottom',
+          horizontal: 'center' // Änderung hier, um die Snackbar in der Mitte anzuzeigen
+        }}
+        open={snackbarOpen}
+        autoHideDuration={6000}
+        onClose={handleSnackbarClose}
+      >
+        <div>
+          <CustomSnackbarContent
+            message={snackbarMessage}
+            variant={saveSuccess ? 'success' : 'error'}
+            onClose={handleSnackbarClose}
+          />
+        </div>
+      </Snackbar>
     </>
   );
 }
