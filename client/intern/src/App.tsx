@@ -12,7 +12,7 @@ import ReceiptLongIcon from '@mui/icons-material/ReceiptLong';
 import PolicyIcon from '@mui/icons-material/Policy';
 import SettingsIcon from '@mui/icons-material/Settings';
 import $ from 'jquery';
-import ExaminationRegulationApp from './components/examinationregulations.tsx';
+import ExaminationRegulationApp from './components/examinationRegulationApp';
 //@ts-expect-error json-editor is not typed
 import * as JSONEditor from '@json-editor/json-editor';
 import 'select2/dist/css/select2.css';
