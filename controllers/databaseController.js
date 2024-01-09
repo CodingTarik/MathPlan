@@ -1,13 +1,15 @@
 const path = require('path');
 const db = require(path.join(__dirname, '../database/modulHelper.js'));
-
+const examRegulationHelper = require(
+  path.join(__dirname, '../database/examRegulationHelper.js')
+);
 /**
  * if a request is made the addModul function of the database is called by the controller and the added module is sent back as a response
  * @param  req
  * @param  res
  * @returns if the passed data is not sufficient as in does not contain a module id
  */
-const addModul = (req, res) => {
+const addModul = async (req, res) => {
   if (!req.body.id) {
     res.status(400).send({
       message: 'Content can not be empty!'
@@ -38,7 +40,7 @@ const addModul = (req, res) => {
  * @param {Object} res - The response object
  * @returns {void} - Sends a response based on the success or failure of the deletion
  */
-const deleteModulById = (req, res) => {
+const deleteModulById = async (req, res) => {
   const moduleId = req.params.id; // Assuming the module ID is in the route parameters
 
   if (!moduleId) {
@@ -102,7 +104,7 @@ const getAllModuls = (req, res) => {
  * @param {Object} res - The response object.
  * @returns {void} - Sends a response with minimal information for each module or an error message.
  */
-const getAllModulsMin = (req, res) => {
+const getAllModulsMin = async (req, res) => {
   db.getAllModuls()
     .then((data) => {
       // for json-editor we need to convert the
@@ -122,13 +124,12 @@ const getAllModulsMin = (req, res) => {
         for (const key in json[modulekey]) {
           // delete all keys that are not needed
           if (
-              key !== 'moduleID' &&
-              key !== 'moduleName' &&
-              key !== 'moduleCredits' &&
-              key !== 'moduleLanguage' &&
-              key !== 'moduleApplicability'
-            )
-          {
+            key !== 'moduleID' &&
+            key !== 'moduleName' &&
+            key !== 'moduleCredits' &&
+            key !== 'moduleLanguage' &&
+            key !== 'moduleApplicability'
+          ) {
             delete json[modulekey][key];
           }
         }
@@ -144,9 +145,60 @@ const getAllModulsMin = (req, res) => {
     });
 };
 
+/**
+ * Express controller function to handle the JSON schema of an exam regulation.
+ * This function assumes that the JSON schema is sent in the request body.
+ *
+ * @param {Object} req - The request object.
+ * @param {Object} res - The response object.
+ * @returns {void} - Sends a response based on the success or failure of processing the JSON schema.
+ */
+const addExamRegulation = async (req, res) => {
+  try {
+    // Access the JSON schema from the request body
+    const examRegulationSchemaRequest = req.body;
+    // check if contains fields examRegulation and internalName
+    if (
+      !examRegulationSchemaRequest.examRegulation ||
+      !examRegulationSchemaRequest.internalName
+    ) {
+      res.status(400).send({
+        message:
+          'Content can not be empty! Empty field: ' +
+          (!examRegulationSchemaRequest.examRegulation
+            ? 'examRegulation'
+            : 'internalName')
+      });
+      return;
+    }
+    const examRegulationSchema = examRegulationSchemaRequest.examRegulation;
+    const internalName = examRegulationSchemaRequest.internalName;
+
+    // Add schema to database
+    await examRegulationHelper.addExamRegulation(examRegulationSchema, internalName);
+
+    // Send a success response
+    res.status(200).json({
+      success: true,
+      message: 'Exam regulation schema processed successfully.'
+    });
+  } catch (error) {
+    // Handle any errors that occurred during processing
+    console.error('Error processing exam regulation schema:', error);
+
+    // Send an error response
+    res.status(500).json({
+      success: false,
+      message: 'Error processing exam regulation schema.',
+      error: error.message
+    });
+  }
+};
+
 module.exports = {
   addModul,
   deleteModulById,
   getAllModuls,
-  getAllModulsMin
+  getAllModulsMin,
+  addExamRegulation
 };

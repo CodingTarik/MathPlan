@@ -72,7 +72,7 @@ const deleteModulById = async (moduleID) => {
  * @returns {Promise<Array<ModulModel>>} A promise that resolves to an array of all modules
  */
 const getAllModuls = () => {
-  return Modul.findAll({raw: true});
+  return Modul.findAll({ raw: true });
 };
 
 module.exports = {

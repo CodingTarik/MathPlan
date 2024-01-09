@@ -60,7 +60,8 @@ export async function initializeJsonEditor(ref: React.MutableRefObject<null | HT
     watchEditorChanges(editor);
   }
 }
-
+// editor is not fully typed so we have to disable the eslint rule
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /**
  * @function watchEditorChanges
  * @description This function sets up a watcher for changes in the JSON editor. When a change is detected, it updates the credit points and module ID of the module that was changed.

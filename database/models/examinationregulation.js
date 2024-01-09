@@ -20,9 +20,15 @@ module.exports = (sequelize) => {
    * @property {string} jsonSchema - The JSON schema associated with the examination regulation.
    */
   const ExaminationRegulation = sequelize.define('ExaminationRegulation', {
+    id: {
+      type: DataTypes.INTEGER,
+      autoIncrement: true,
+      primaryKey: true
+    },
     name: {
       type: DataTypes.STRING,
-      allowNull: false
+      allowNull: false,
+      unique: true
     },
     jsonSchema: {
       type: DataTypes.STRING,
