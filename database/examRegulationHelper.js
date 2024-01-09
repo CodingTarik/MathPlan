@@ -40,11 +40,11 @@ const addExamRegulation = async (examRegulationSchema, internalName) => {
  * @param {string} internalName - The internal name of the examination regulation.
  * @returns {Promise<boolean>} Whether the examination regulation exists.
  */
-const isExamRegulationExists = (internalName) => {
+const isExamRegulationExists = async (internalName) => {
   // Find the examination regulation in the database.
-  return ExamRegulation.findOne({
+  return await ExamRegulation.findOne({
     where: {
-      internalName
+      name: internalName
     }
   }).then((result) => !!result); // Convert the result to a boolean. If the result is not null, the examination regulation exists.
 };
@@ -53,11 +53,11 @@ const isExamRegulationExists = (internalName) => {
  * @param {string} internalName the internal exam name
  * @returns {string} null if not found, else the exam regulation
  */
-const getExamRegulation = (internalName) => {
+const getExamRegulation = async (internalName) => {
   // Find the examination regulation in the database.
   return ExamRegulation.findOne({
     where: {
-      internalName
+      name: internalName
     }
   }).then((result) => result); // Convert the result to a boolean. If the result is not null, the examination regulation exists.
 };

@@ -1,6 +1,7 @@
 const request = require('supertest');
 const app = require('../app').app;
 const db = require('../database/database');
+const modulehelper = require('../database/modulHelper');
 
 describe('POST /api/intern/addModul', () => {
   beforeAll(async () => {
@@ -27,9 +28,9 @@ describe('POST /api/intern/addModul', () => {
     expect(response.statusCode).toBe(200);
     // Check if the module was added to the database, wait 3 sec
     await new Promise(resolve => setTimeout(resolve, 2000));
-    expect(await db.isModuleExists(newModule.id)).toBe(true);
-    expect(await db.isModuleExists('ISJDSJGDJGSDIJOGSIKGD')).toBe(false);
-    expect(await db.getAllModules()).toContainEqual(
+    expect(await modulehelper.isModuleExists(newModule.id)).toBe(true);
+    expect(await modulehelper.isModuleExists('ISJDSJGDJGSDIJOGSIKGD')).toBe(false);
+    expect(await modulehelper.getAllModuls()).toContainEqual(
       expect.objectContaining({
         moduleID: newModule.id,
         moduleName: newModule.name,
