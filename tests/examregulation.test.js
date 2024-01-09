@@ -51,7 +51,7 @@ describe('POST /api/intern/addExamRegulation', () => {
         newExamRegulationRequest.internalName
       )
     ).toBe(true);
-    let examReg = await dbhelper.getExamRegulation(
+    const examReg = await dbhelper.getExamRegulation(
       newExamRegulationRequest.internalName
     );
     expect(
