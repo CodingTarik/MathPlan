@@ -1,3 +1,5 @@
+/* eslint security/detect-object-injection: 0 */
+// disabled because of too many false positives, has to be analyzed in the security test
 const path = require('path');
 const db = require(path.join(__dirname, '../database/modulHelper.js'));
 const examRegulationHelper = require(
@@ -84,9 +86,9 @@ const getAllModuls = (req, res) => {
       // so every module in data array needs to be concated to json object but as an object element
       // like so {"0":{...},"1":{...}}
       const json = {};
-      for (let i = 0; i < data.length; i++) {
-        json[i] = data[i];
-      }
+      data.forEach((item, index) => {
+        json[index] = item;
+      });
       data = json;
       res.send(data);
     })
@@ -113,9 +115,9 @@ const getAllModulsMin = async (req, res) => {
       // like so {"0":{...},"1":{...}}
       // code duplicated here! @see getAllModuls, but code is to small to extract it to a function
       const json = {};
-      for (let i = 0; i < data.length; i++) {
-        json[i] = data[i];
-      }
+      data.forEach((item, index) => {
+        json[index] = item;
+      });
       // for the min version we only need moduleID, moduleName, moduleCredits, moduleLanguage, moduleApplicability
       // so we delete all other keys, create a new object and send it back
       // iterate through all modules
@@ -175,7 +177,10 @@ const addExamRegulation = async (req, res) => {
     const internalName = examRegulationSchemaRequest.internalName;
 
     // Add schema to database
-    await examRegulationHelper.addExamRegulation(examRegulationSchema, internalName);
+    await examRegulationHelper.addExamRegulation(
+      examRegulationSchema,
+      internalName
+    );
 
     // Send a success response
     res.status(200).json({

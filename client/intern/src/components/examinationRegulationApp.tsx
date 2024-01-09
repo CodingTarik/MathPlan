@@ -98,13 +98,8 @@ function ExaminationRegulationApp() {
   /**
    * @function handleSnackbarClose
    * @description Handler for when the snackbar is closed. Closes the snackbar.
-   * @param {React.SyntheticEvent | Event} _event - The event object.
-   * @param {string} _reason - The reason for the close.
    */
-  const handleSnackbarClose = (
-    _event: React.SyntheticEvent | Event,
-    _reason: string
-  ) => {
+  const handleSnackbarClose = () => {
     setSnackbarOpen(false);
   };
 
@@ -189,6 +184,8 @@ function ExaminationRegulationApp() {
 const AppWithoutStrictMode = () => <ExaminationRegulationApp />;
 
 // Declaration to extend the global Window interface with JSONEditor property
+/* eslint-disable @typescript-eslint/no-explicit-any */
+// json editor is not typed
 declare global {
   /**
    * @interface Window
@@ -199,5 +196,6 @@ declare global {
     JSONEditorInstance: any;
   }
 }
+/* eslint-enable @typescript-eslint/no-explicit-any */
 
 export default AppWithoutStrictMode;
