@@ -57,6 +57,7 @@
     "lint": "eslint .",
     "lint:fix": "eslint --fix .",
     "precommit": "npm run lint",
+    "gitHookUninstall": "git config --unset core.hooksPath",
     "prepare": "husky install",
     "format": "prettier --plugin=prettier-plugin-ejs --write \"**/*.{js,html,ejs,ts,json,css}\"",
     "test": "jest",
