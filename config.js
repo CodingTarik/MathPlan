@@ -62,7 +62,7 @@ const securityHeaderConfig = {
      * @policy
      * @directive script-src 'self' 'sha256-GC6sqCnhg9h2PIYTnsmfFvS16ZCgwoa54eMaC8jr/Zw=';
      *           // Allows scripts from the same origin (the domain of the web page).
-     *           // Allows scripts with the specified hash (the inline script in the index.ejs
+     *           // Allows scripts with the specified hash (the inline script in the index.ejs)
      * @directive default-src 'self';
      *            // Allows content only from the same origin (the domain of the web page).
      *
