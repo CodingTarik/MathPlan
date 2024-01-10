@@ -99,17 +99,18 @@ describe('Logger Zip Tests', () => {
         datePattern: 'YYYY-MM-DD',
         level: 'debug',
         zippedArchive: true,
-        maxSize: '1m',
+        maxSize: '1k',
         maxFiles: '7d'
       })
     );
     // log some messages to create a log file > 1mb
-    for (let i = 0; i < 10000; i++) {
-      logger.debug('test');
+    for (let i = 0; i < 10; i++) {
+      // simulate little break between log messages like in real application
+      await new Promise((resolve) => setTimeout(resolve, 10));
+      logger.debug('42ZIPZIPZIPZIPZIPZIPZIPZIPZIPZIPZIPZIPZIPZIPZIPZIPZIPZIPZIPZIPZIPZIPZIPZIPZIPZIPZIPZIP');
     }
     // Wait for logger to finish writing
     await new Promise((resolve) => setTimeout(resolve, 1000));
-
     const fs = require('fs');
     const path = require('path');
     // check for log files ziped from curent date
