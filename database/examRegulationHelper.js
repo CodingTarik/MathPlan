@@ -62,9 +62,18 @@ const getExamRegulation = async (internalName) => {
   }).then((result) => result); // Convert the result to a boolean. If the result is not null, the examination regulation exists.
 };
 
+/**
+ * @returns  Return all exam regulations
+ */
+const getAllExamRegulations = async () => {
+  // return all exam regulations
+  return await ExamRegulation.findAll();
+}
+
 // Export the functions.
 module.exports = {
   addExamRegulation,
   isExamRegulationExists,
-  getExamRegulation
+  getExamRegulation,
+  getAllExamRegulations
 };

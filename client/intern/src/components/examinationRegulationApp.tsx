@@ -15,6 +15,7 @@ import {
   saveFunction,
   initializeJsonEditor
 } from './examinationRegulationEditor';
+import ExamRegulationSelect from './examRegulationSelect';
 
 /**
  * The main component for the Examination Regulation Application.
@@ -111,6 +112,7 @@ function ExaminationRegulationApp() {
   // Render the UI for the application.
   return (
     <>
+      <ExamRegulationSelect></ExamRegulationSelect>
       <div style={{ marginBottom: '16px' }}>
         <TextField
           label="Internal Name"
@@ -142,7 +144,9 @@ function ExaminationRegulationApp() {
         <DialogTitle id="alert-dialog-title">Bestätigung</DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-description">
-            Möchten Sie die Änderungen wirklich speichern? Sollte der interne Name bereits in der Datenbank vorhanden sein, so wird diese Prüfungsordnung überschrieben.
+            Möchten Sie die Änderungen wirklich speichern? Sollte der interne
+            Name bereits in der Datenbank vorhanden sein, so wird diese
+            Prüfungsordnung überschrieben.
           </DialogContentText>
         </DialogContent>
         <DialogActions>
