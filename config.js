@@ -48,6 +48,11 @@ config.web.DEFAULT_LANGUAGE = process.env.DEFAULT_LANGUAGE || 'de';
 config.dev = {};
 config.dev.DEBUG = testBool(process.env.DEBUG) || false;
 
+/**
+ * For more information on the security headers, see:
+ * @see {@link https://owasp.org/www-project-secure-headers/index.html#configuration-proposal}
+ * @see {@link https://helmetjs.github.io/#reference}
+ * */
 const securityHeaderConfig = {
   contentSecurityPolicy: {
     /**
@@ -55,6 +60,9 @@ const securityHeaderConfig = {
      *
      * @description Defines security policies for various content on a web page.
      * @policy
+     * @directive script-src 'self' 'sha256-GC6sqCnhg9h2PIYTnsmfFvS16ZCgwoa54eMaC8jr/Zw=';
+     *           // Allows scripts from the same origin (the domain of the web page).
+     *           // Allows scripts with the specified hash (the inline script in the index.ejs
      * @directive default-src 'self';
      *            // Allows content only from the same origin (the domain of the web page).
      *
@@ -73,7 +81,10 @@ const securityHeaderConfig = {
      */
     directives: {
       // Added inlinescript hash for Cross-Site-Policy
-      'script-src': ["'self'", "'sha256-GC6sqCnhg9h2PIYTnsmfFvS16ZCgwoa54eMaC8jr/Zw='"],
+      'script-src': [
+        "'self'",
+        "'sha256-GC6sqCnhg9h2PIYTnsmfFvS16ZCgwoa54eMaC8jr/Zw='"
+      ],
       'default-src': ["'self'"],
       'form-action': ["'self'"],
       'object-src': ["'none'"],
