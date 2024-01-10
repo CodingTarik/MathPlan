@@ -59,29 +59,32 @@ app.set('views', path.join(__dirname, 'views'));
 // Routing
 app.use('/', pages);
 app.use('/api', api);
-
 try {
-// Datbase
-/* eslint-disable */
-db.sequelize.sync()
-// for changing the underlying database (delets all content, updates scheme) a line of code can be added as decribed in readme file
-  /* eslint-enable */
-    .then(() => {
-      console.log('Synced db.');
-    })
-    .catch((err) => {
-      console.log('Failed to sync db: ' + err.message);
-    });
-
   if (process.env.NODE_ENV !== 'test') {
-  // HTTP-Server
+    // Datbase
+    /* eslint-disable */
+    db.sequelize
+      .sync()
+      // for changing the underlying database (delets all content, updates scheme) a line of code can be added as decribed in readme file
+      /* eslint-enable */
+      .then(() => {
+        console.log('Synced db.');
+      })
+      .catch((err) => {
+        console.log('Failed to sync db: ' + err.message);
+      });
+    // HTTP-Server
     if (config.server.ALLOW_HTTP) {
       let httpServer = null;
       if (config.HTTP_REDIRECT) {
         httpServer = http.createServer((req, res) => {
           res.writeHead(301, {
             Location:
-            'https://' + config.server.host + ':' + config.PORT_HTTPS + req.url
+              'https://' +
+              config.server.host +
+              ':' +
+              config.PORT_HTTPS +
+              req.url
           });
         });
       } else {
