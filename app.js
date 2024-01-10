@@ -24,6 +24,12 @@ if (config.dev.DEBUG) {
   app.use(morgan('dev'));
 }
 
+// Register imprint middleware
+app.use((req, res, next) => {
+  res.locals.imprinturl = config.data.imprinturl;
+  next();
+});
+
 // Static assets
 app.use('/assets', express.static('public'));
 app.use(
@@ -55,9 +61,10 @@ app.use('/api', api);
 
 // Datbase
 /* eslint-disable */
-db.sequelize.sync()
-// for changing the underlying database (delets all content, updates scheme) a line of code can be added as decribed in readme file
-/* eslint-enable */
+db.sequelize
+  .sync()
+  // for changing the underlying database (delets all content, updates scheme) a line of code can be added as decribed in readme file
+  /* eslint-enable */
   .then(() => {
     console.log('Synced db.');
   })

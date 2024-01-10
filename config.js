@@ -52,6 +52,10 @@ config.web.DEFAULT_LANGUAGE = process.env.DEFAULT_LANGUAGE || 'de';
 config.dev = {};
 config.dev.DEBUG = testBool(process.env.DEBUG) || false;
 
+// Initalize data configuration object
+config.data = {};
+config.data.imprinturl = process.env.IMPRINT_URL || 'https://example.com';
+
 // Export the config object
 module.exports = config;
 
