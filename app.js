@@ -7,6 +7,7 @@ const https = require('https');
 const fs = require('fs');
 const logger = require('./logger');
 const chalk = require('chalk');
+const helmet = require('helmet');
 
 // Config
 const config = require(path.join(__dirname, 'config.js'));
@@ -20,6 +21,9 @@ const db = require(path.join(__dirname, '/database/database.js'));
 
 // Objects
 const app = express();
+
+// Register helmet
+app.use(helmet(config.server.HELMET));
 
 // Register logger for network requests
 if (config.dev.DEBUG) {
