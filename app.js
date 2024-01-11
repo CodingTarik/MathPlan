@@ -72,10 +72,10 @@ try {
       // for changing the underlying database (delets all content, updates scheme) a line of code can be added as decribed in readme file
       /* eslint-enable */
       .then(() => {
-        console.log('Synced db.');
+        logger.info('Synced db.');
       })
       .catch((err) => {
-        console.log('Failed to sync db: ' + err.message);
+        logger.info('Failed to sync db: ' + err.message);
       });
     // HTTP-Server
     if (config.server.ALLOW_HTTP) {
