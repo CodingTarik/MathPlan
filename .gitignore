@@ -11,6 +11,10 @@
 # Ignore build folder
 /client/build
 
+# ignore log folder
+/log
+/logs
+
 # Ignore logs and other runtime data
 npm-debug.log
 yarn-error.log
