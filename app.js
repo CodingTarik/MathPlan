@@ -53,6 +53,7 @@ app.set('views', path.join(__dirname, 'views'));
 app.use('/api', api);
 app.use('/', pages);
 
+
 // Datbase
 /* eslint-disable */
 db.sequelize.sync()

@@ -45,9 +45,25 @@ describe('POST /api/intern/addModul', () => {
     const response = await request(app).post('/api/intern/addModul');
     expect(response.statusCode).toBe(400);
   });
+
+  test('It should return the one matching module', async () => {
+    const newModule = {
+      id: '1FA',
+      name: 'Numerik',
+      credits: 5,
+      language: 'English',
+      applicability: 'B.Sc. Mathematik'
+    };
+    if (db.isModuleExists(newModule.id)==false) db.addModul(newModule.id, newModule.name, newModule.credits, newModule.language, newModule.applicability);
+    const response = await request(app)
+      .get(`/api/intern/getModules/${newModule.id}/${newModule.name}/${newModule.credits}/${newModule.language}/${newModule.applicability}`);
+    expect(response.statusCode).toBe(200);
+    await new Promise(resolve => setTimeout(resolve, 2000));
+    expect(response.body[0].moduleID).toBe('1FA');
+  })
 });
-/* 
-describe('GET /api/intern/getModules/:id/:name/:credits/:language/:applicability', () => {
+
+/* describe('GET /api/intern/getModules/:id/:name/:credits/:language/:applicability', () => {
   beforeAll(async () => {
     db.config.dialect = 'sqlite';
     db.config.storage = 'database.test.sqlite';
@@ -64,12 +80,12 @@ describe('GET /api/intern/getModules/:id/:name/:credits/:language/:applicability
       applicability: 'B.Sc. Mathematik'
     };
     db.addModul(newModule.id, newModule.name, newModule.credits, newModule.language, newModule.applicability);
-    const response = await request(app)
-      .get(`/api/intern/getModules/${newModule.id}/${newModule.name}/${newModule.credits}/${newModule.language}/${newModule.applicability}`);
-    expect(response.statusCode).toBe(200);
+    //const response = await request(app)
+    //  .get(`/api/intern/getModules/${newModule.id}/${newModule.name}/${newModule.credits}/${newModule.language}/${newModule.applicability}`);
+    //expect(response.statusCode).toBe(200);
     await new Promise(resolve => setTimeout(resolve, 2000));
-    expect(response.body[0].moduleID).toBe('1FA');
+    //expect(response.body[0].moduleID).toBe('1FA');
   })
 
 });
- */
+   */
