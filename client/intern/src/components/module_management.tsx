@@ -12,9 +12,7 @@ import ModuleServices from '../database_services/ModuleServices'; // for databas
 function handleButtonClick(values: string[]) {
   // wrapping module als json object
     const tmpModule = {
-      id: values[0].split('').map(char => {
-        return char.charCodeAt(0).toString(2);
-     }).join(' '),
+      id: values[0],
       name: values[1],
       credits: values[2],
       language: values[4],
@@ -69,11 +67,11 @@ function isAddButtonDisabled(values: string[]) {
  * @returns the UI for manually inserting modules into the database
  */
 export default function AddModuleFields() {
-  const [addModuleParameters, setAddModuleParameters] = React.useState(Array(5).fill(""));
+  const [moduleParameters, setmoduleParameters] = React.useState(Array(5).fill(""));
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>, entryIdentifier: number) => {
-    const nextModule = addModuleParameters.slice();
+    const nextModule = moduleParameters.slice();
     nextModule[entryIdentifier] = event.target.value;
-    setAddModuleParameters(nextModule);
+    setmoduleParameters(nextModule);
    };
  
   return (
@@ -87,7 +85,7 @@ export default function AddModuleFields() {
       autoComplete="off"
     >
       <div>
-        {/* Each of the TextFields updates its entry of the addModuleParameters array when changed */}
+        {/* Each of the TextFields updates its entry of the moduleParameters array when changed */}
         <TextField
           required
           id="Modulnummer"
@@ -128,7 +126,7 @@ export default function AddModuleFields() {
         />
       </div>
     </Box>
-    <Button variant="outlined" disabled = {isAddButtonDisabled(addModuleParameters)} onClick = {() => handleButtonClick(addModuleParameters)}>Speichern</Button>
+    <Button variant="outlined" disabled = {isAddButtonDisabled(moduleParameters)} onClick = {() => handleButtonClick(moduleParameters)}>Speichern</Button>
     </>
   );
 }

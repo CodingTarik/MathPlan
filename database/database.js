@@ -98,7 +98,7 @@ const addModul = (moduleID, moduleName, moduleCredits, moduleLanguage, moduleApp
  * @param {string} moduleApplicability - The applicability of the module
  * @returns {Promise} A promise that is rejected or fulfilled depending on the success of updating the module
  */
-const updateModul = (moduleID, moduleName, moduleCredits, moduleLanguage, moduleApplicability) => {
+const updateModul = (searchModuleID, moduleID, moduleName, moduleCredits, moduleLanguage, moduleApplicability) => {
   const modul = {
     moduleID,
     moduleName,
@@ -106,7 +106,7 @@ const updateModul = (moduleID, moduleName, moduleCredits, moduleLanguage, module
     moduleLanguage,
     moduleApplicability
   };
-  return Modul.update(modul, { where: { moduleID } });
+  return Modul.update(modul, { where: { moduleID: searchModuleID } });
 };
 
 /**
@@ -115,7 +115,11 @@ const updateModul = (moduleID, moduleName, moduleCredits, moduleLanguage, module
  * @returns {Promise} A promise that is rejected or fulfilled depending on the success of finding the module
  */
 const getOneModul = (moduleID) => {
-  return Modul.findByPk(moduleID);
+  return Modul.findOne({
+    where: {
+      moduleID
+    }
+  });
 };
 
 // TODO delete as findByPK exists?

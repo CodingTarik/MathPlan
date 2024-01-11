@@ -55,7 +55,7 @@ const getOneModul = (req, res) => {
 
 /**
  * If a request is made, the updateModul function of the database is called by the controller,
- * and a response is sent that contains the modified data in case of successful update.
+ * and a response is sent based on the success or failure of the update.
  * @param {Object} req - The request object
  * @param {Object} res - The response object
  * @returns {void} - Sends a response based on the success or failure of the deletion; has status 400, iff requests holds no new data for the module or no module id and status 500, iff updating the module was not successful
@@ -67,8 +67,14 @@ const updateModul = (req, res) => {
     });
     return;
   }
+  if (!req.params.id) {
+    res.status(400).send({
+      message: 'Params can not be empty!'
+    });
+    return;
+  }
 
-  db.updateModul(req.body.id, req.body.name, req.body.credits, req.body.language, req.body.applicability)
+  db.updateModul(req.params.id, req.body.id, req.body.name, req.body.credits, req.body.language, req.body.applicability)
     .then(data => {
       res.send(data);
     })
