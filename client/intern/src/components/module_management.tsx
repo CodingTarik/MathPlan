@@ -6,11 +6,12 @@ import TextField from '@mui/material/TextField';
 import ModuleServices from '../database_services/ModuleServices'; // for database functionality
 
 /**
- * Called when button is clicked to create new database entry and add it to database
+ * Called when button is clicked to create new database entry and add it to database or to modify existing entry
  * @param values The entries made by the user for each of the input fields (id, name, credits, language, applicability)
  */
 function handleButtonClick(values: string[]) {
-    const newModule = {
+  // wrapping module als json object
+    const tmpModule = {
       id: values[0].split('').map(char => {
         return char.charCodeAt(0).toString(2);
      }).join(' '),
@@ -20,15 +21,37 @@ function handleButtonClick(values: string[]) {
       applicability: values[3]
     };
 
-    ModuleServices.create(newModule)
-      .then((response: { data: object; }) => { 
-        console.log("Success at saving module");
-        console.log(response.data);
-      })
-      .catch((e: Error) => { 
-        console.log("Error while saving module");
-        console.log(e);
-      });
+  // test if module with ID tmpModule.id is already in database
+  ModuleServices.getByID(tmpModule.id)
+    .then((response: { data: object; }) => {
+      if (response.data) { // ID was found (data !== null)
+        console.log("trying retrieving modul by ID: data found");
+        // modifying module
+        ModuleServices.update(values[0], tmpModule)
+          .then((response: { data: object; }) => { 
+            console.log("Response data:");
+            console.log(response.data);
+          })
+          .catch((e: Error) => { 
+            console.log(e);
+          });
+      } else { // ID was not found (data === null)
+        console.log("trying retrieving modul by ID: data not found");
+        // inserting module
+        ModuleServices.create(tmpModule)
+          .then((response: { data: object; }) => { 
+            console.log("Success at saving module");
+            console.log(response.data);
+          })
+          .catch((e: Error) => { 
+            console.log("Error while saving module");
+            console.log(e);
+          });
+      }
+    })
+    .catch((e: Error) => {
+      console.log(e);
+    });
     
 }
 

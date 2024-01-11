@@ -90,6 +90,36 @@ const addModul = (moduleID, moduleName, moduleCredits, moduleLanguage, moduleApp
 };
 
 /**
+ * Updates a module in the database
+ * @param {string} moduleID - The module ID
+ * @param {string} moduleName - The module name
+ * @param {number} moduleCredits - The number of credits for the module
+ * @param {string} moduleLanguage - The language of the module
+ * @param {string} moduleApplicability - The applicability of the module
+ * @returns {Promise} A promise that is rejected or fulfilled depending on the success of updating the module
+ */
+const updateModul = (moduleID, moduleName, moduleCredits, moduleLanguage, moduleApplicability) => {
+  const modul = {
+    moduleID,
+    moduleName,
+    moduleCredits,
+    moduleLanguage,
+    moduleApplicability
+  };
+  return Modul.update(modul, { where: { moduleID } });
+};
+
+/**
+ * Finds a module with given moduleID in the database
+ * @param {string} moduleID - The module ID
+ * @returns {Promise} A promise that is rejected or fulfilled depending on the success of finding the module
+ */
+const getOneModul = (moduleID) => {
+  return Modul.findByPk(moduleID);
+};
+
+// TODO delete as findByPK exists?
+/**
  * Checks if a module with the given ID exists in the database
  * @param {string} moduleID - The module ID to check
  * @returns {Promise<boolean>} A promise that resolves to true if the module exists, false otherwise
@@ -142,6 +172,8 @@ module.exports = {
   sequelize,
   Modul,
   addModul,
+  updateModul,
+  getOneModul,
   isModuleExists,
   deleteModulById,
   getAllModules

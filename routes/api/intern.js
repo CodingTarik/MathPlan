@@ -14,6 +14,8 @@ const bookController = require(
 router.get('/:title', bookController.handleGetBook);
 
 router.post('/addModul', dbController.addModul);
+router.get('/getOneModul/:id', dbController.getOneModul);
+router.put('/updateModul/:id', dbController.updateModul);
 router.post('/deleteModulById', dbController.deleteModulById);
 
 module.exports = router;

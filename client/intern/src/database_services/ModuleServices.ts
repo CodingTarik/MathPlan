@@ -20,8 +20,32 @@ const create = (data : object) => {
   return http.post("/addModul", data);
 };
 
+/**
+ * send put request with modified database object with ID id
+ * @param id states the id of the database object to be modified
+ * @param data contains the entries made by the user for each of the input fields (id, name, credits, language, applicability)
+ * @returns a promise that is rejected or fulfilled depending on the success of updating the module
+ */
+const update = (id: string, data: object) => {
+  return http.put(`/updateModul/${id}`, data);
+};
+
+// !!! route PUT, POST, DELETE requests with api.js !!!
+// !!! route GET requests with pages.js !!! (TODO)
+
+/**
+ * send get request for ID id
+ * @param id states the id of the database object to be found
+ * @returns a promise that is rejected or fulfilled depending on the success of getting the module
+ */
+const getByID = (id : string) => {
+  return http.get(`/getOneModul/${id}`); //TODO not working yet
+};
+
 const ModuleServices = {
-  create
+  create,
+  update,
+  getByID
 };
 
 export default ModuleServices;
