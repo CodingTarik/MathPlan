@@ -62,7 +62,28 @@ const deleteModulById = (req, res) => {
     });
 };
 
+const getModules = (req, res) => {
+  db.getModules(req.params.id, req.params.name, req.params.credits, req.params.language, req.params.applicability)
+    .then(data => {
+      if (data.count <= 1) res.send(data.rows);
+      else throw new Error('The search request yielded more than 50 requests');
+    })
+    .catch(err => {
+      if (err.message === 'The search request yielded more than 50 requests') {
+        res.status(400).send(
+          'The search request yielded more than 50 requests'
+        );
+      } else {
+        res.status(500).send({
+          message:
+            err.message || 'Error getting module!'
+        });
+      }
+    });
+};
+
 module.exports = {
   addModul,
-  deleteModulById
+  deleteModulById,
+  getModules
 };

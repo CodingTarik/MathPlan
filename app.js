@@ -50,8 +50,8 @@ app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 
 // Routing
-app.use('/', pages);
 app.use('/api', api);
+app.use('/', pages);
 
 // Datbase
 /* eslint-disable */

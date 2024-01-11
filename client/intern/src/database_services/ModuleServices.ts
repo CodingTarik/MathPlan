@@ -20,8 +20,16 @@ const create = (data : object) => {
   return http.post("/addModul", data);
 };
 
+
+const getModules = (id:string, name:string, credits:string, language:string, applicability:string)  => {
+  return http.get(`/getModules/${id}/${name}/${credits}/${language}/${applicability}`)
+}
+
+
+
 const ModuleServices = {
-  create
+  create,
+  getModules
 };
 
 export default ModuleServices;

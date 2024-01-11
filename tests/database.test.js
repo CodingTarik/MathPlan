@@ -1,6 +1,7 @@
 const request = require('supertest');
 const app = require('../app').app;
 const db = require('../database/database');
+//const { describe } = require('node:test');
 
 describe('POST /api/intern/addModul', () => {
   beforeAll(async () => {
@@ -45,3 +46,30 @@ describe('POST /api/intern/addModul', () => {
     expect(response.statusCode).toBe(400);
   });
 });
+/* 
+describe('GET /api/intern/getModules/:id/:name/:credits/:language/:applicability', () => {
+  beforeAll(async () => {
+    db.config.dialect = 'sqlite';
+    db.config.storage = 'database.test.sqlite';
+    db.sequelize.sync();
+    // wait 3 sec
+    await new Promise(resolve => setTimeout(resolve, 3000));
+  });
+  test('It should return the one matching module', async () => {
+    const newModule = {
+      id: '1FA',
+      name: 'Numerik',
+      credits: 5,
+      language: 'English',
+      applicability: 'B.Sc. Mathematik'
+    };
+    db.addModul(newModule.id, newModule.name, newModule.credits, newModule.language, newModule.applicability);
+    const response = await request(app)
+      .get(`/api/intern/getModules/${newModule.id}/${newModule.name}/${newModule.credits}/${newModule.language}/${newModule.applicability}`);
+    expect(response.statusCode).toBe(200);
+    await new Promise(resolve => setTimeout(resolve, 2000));
+    expect(response.body[0].moduleID).toBe('1FA');
+  })
+
+});
+ */

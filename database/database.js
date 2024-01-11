@@ -136,6 +136,19 @@ const getAllModules = () => {
   return Modul.findAll();
 };
 
+const getModules = (moduleID, moduleName, moduleCredits, moduleLanguage, moduleApplicability) => {
+  const parameters = {};
+  if (!(moduleID === 'undefined')) parameters.moduleID = { [Sequelize.Op.like]: `%${moduleID}%` };
+  if (!(moduleName === 'undefined')) parameters.moduleName = { [Sequelize.Op.like]: `%${moduleName}%` };
+  if (!(moduleCredits === 'undefined')) parameters.moduleCredits = moduleCredits;
+  if (!(moduleLanguage === 'undefined')) parameters.moduleLanguage = moduleLanguage;
+  if (!(moduleApplicability === 'undefined')) parameters.moduleApplicability = moduleApplicability;
+  return Modul.findAndCountAll({
+    where: parameters,
+    limit: 1
+  });
+};
+
 module.exports = {
   config,
   Sequelize,
@@ -144,5 +157,6 @@ module.exports = {
   addModul,
   isModuleExists,
   deleteModulById,
-  getAllModules
+  getAllModules,
+  getModules
 };

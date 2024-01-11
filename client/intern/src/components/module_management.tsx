@@ -4,6 +4,8 @@ import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 
 import ModuleServices from '../database_services/ModuleServices'; // for database functionality
+import Table from '@mui/joy/Table';
+import { AxiosError } from 'axios';
 
 /**
  * Called when button is clicked to create new database entry and add it to database
@@ -11,13 +13,11 @@ import ModuleServices from '../database_services/ModuleServices'; // for databas
  */
 function handleButtonClick(values: string[]) {
     const newModule = {
-      id: values[0].split('').map(char => {
-        return char.charCodeAt(0).toString(2);
-     }).join(' '),
+      id: values[0],
       name: values[1],
       credits: values[2],
-      language: values[4],
-      applicability: values[3]
+      language: values[3],
+      applicability: values[4]
     };
 
     ModuleServices.create(newModule)
@@ -52,7 +52,30 @@ export default function AddModuleFields() {
     nextModule[entryIdentifier] = event.target.value;
     setAddModuleParameters(nextModule);
    };
- 
+  const  [rows, setRows] = React.useState(Array(0).fill({moduleID: "", moduleName: "", moduleCredits: NaN, moduleLanguage: "", moduleApplicability: ""}));
+  const handleSearchClick = (values: string[]) => {
+    const values_copy = Array(5).fill("")
+    for (let i = 0; i < 5; i++) {
+      if (values[i].length == 0) values_copy[i] = "undefined"
+      else values_copy[i] = values[i]
+    }
+    ModuleServices.getModules(values_copy[0], values_copy[1], values_copy[2], values_copy[3], values_copy[4])
+      .then((response: { data: { moduleID: string; moduleName: string; moduleCredits: number; moduleLanguage: string; moduleApplicability: string; createdAt: object; id: object, updatedAt: object}[]; }) => { 
+        console.log("Success at getting module");
+        console.log(response.data);
+        setRows(response.data);
+      })
+      .catch((e: AxiosError) => { 
+        if (e.response?.data == 'The search request yielded more than 50 requests') {
+          console.log('The search request yielded more than 50 requests')
+          setRows(Array(0).fill({moduleID: "", moduleName: "", moduleCredits: NaN, moduleLanguage: "", moduleApplicability: ""}))
+        }
+        else {
+          console.log("Error while getting module");
+          console.log(e);
+        }
+      });
+  }
   return (
     <>
     <Box
@@ -69,6 +92,7 @@ export default function AddModuleFields() {
           required
           id="Modulnummer"
           label="Modulnummer"
+          value = {addModuleParameters.slice()[0]}
           defaultValue=""
           onChange={(event: React.ChangeEvent<HTMLInputElement>) => {handleChange(event, 0)}}
         />
@@ -76,6 +100,7 @@ export default function AddModuleFields() {
           required
           id="Modulname"
           label="Modulname"
+          value = {addModuleParameters.slice()[1]}
           defaultValue=""
           onChange={(event: React.ChangeEvent<HTMLInputElement>) => {handleChange(event, 1)}}
         />
@@ -83,6 +108,7 @@ export default function AddModuleFields() {
           required
           id="CP-Anzahl"
           label="CP-Anzahl"
+          value = {addModuleParameters.slice()[2]}
           type="number"
           InputLabelProps={{
             shrink: true,
@@ -91,21 +117,53 @@ export default function AddModuleFields() {
         />
         <TextField
           required
-          id="Verwendbarkeit"
-          label="Verwendbarkeit"
+          id="Sprache"
+          label="Sprache"
+          value = {addModuleParameters.slice()[3]}
           defaultValue=""
           onChange={(event: React.ChangeEvent<HTMLInputElement>) => {handleChange(event, 3)}}
         />
-         <TextField
+        <TextField
           required
-          id="Sprache"
-          label="Sprache"
+          id="Verwendbarkeit"
+          label="Verwendbarkeit"
+          value = {addModuleParameters.slice()[4]}
           defaultValue=""
           onChange={(event: React.ChangeEvent<HTMLInputElement>) => {handleChange(event, 4)}}
         />
       </div>
-    </Box>
-    <Button variant="outlined" disabled = {isAddButtonDisabled(addModuleParameters)} onClick = {() => handleButtonClick(addModuleParameters)}>Speichern</Button>
-    </>
-  );
-}
+      </Box>
+        <Button variant="outlined" sx={{ marginTop: 2, marginBottom: 2 }} disabled = {isAddButtonDisabled(addModuleParameters)} onClick = {() => handleButtonClick(addModuleParameters)}>Speichern</Button>
+        <Button variant="outlined"  sx={{ marginTop: 2, marginBottom: 2 }} onClick = {() => handleSearchClick(addModuleParameters)}>Suchen</Button>
+        <Table hoverRow sx={{ '& tr > *:not(:first-child)': { textAlign: 'right' } }}>
+          <thead>
+            <tr>
+              <th>Modulnummer</th>
+              <th>Modulname</th>
+              <th>CP</th>
+              <th>Sprache</th>
+              <th>Verwendbarkeit</th>
+            </tr>
+          </thead>
+          <tbody>
+            {rows.map((row) => (
+              <tr key={row.moduleID} onClick = {() => {
+                const nextModule = Array(5).fill("");
+                nextModule[0] = row.moduleID;
+                nextModule[1] = row.moduleName;
+                nextModule[2] = row.moduleCredits;
+                nextModule[3] = row.moduleLanguage;
+                nextModule[4] = row.moduleApplicability;
+                setAddModuleParameters(nextModule);}}>
+                <td>{row.moduleID}</td>
+                <td>{row.moduleName}</td>
+                <td>{row.moduleCredits}</td>
+                <td>{row.moduleLanguage}</td>
+                <td>{row.moduleApplicability}</td>
+              </tr>
+            ))}
+          </tbody>
+        </Table>
+        </>
+      );
+    }

@@ -31,4 +31,5 @@ router.get('*', function (req, res) {
     body: '../pages/notfound.ejs'
   });
 });
+
 module.exports = router;
