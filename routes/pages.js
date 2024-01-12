@@ -10,7 +10,6 @@ router.get('/', (req, res, next) => {
 });
 
 const internPath = path.join(__dirname, '..', 'client', 'build', 'intern');
-console.log('Intern Path:', internPath);
 
 router.get('/intern', (req, res, next) => {
   res.render('layout/index', { body: '../../client/build/intern/index.html' });
