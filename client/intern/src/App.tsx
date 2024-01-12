@@ -13,7 +13,7 @@ import PolicyIcon from '@mui/icons-material/Policy';
 import SettingsIcon from '@mui/icons-material/Settings';
 
 import AddModuleFields from './components/module_management';
-import InputFileUpload from './components/inputmask';
+import PdfFileUpload from './components/inputmask';
 /**
  * JSX structure representing the entire intern application.
  *
@@ -158,7 +158,7 @@ function App() {
            <h3>
             Modulhandbuch hochladen
            </h3>
-           <InputFileUpload/>
+           <PdfFileUpload/>
            
            </div>
         </TabPanel>
