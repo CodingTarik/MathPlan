@@ -1,6 +1,7 @@
 const request = require('supertest');
 const app = require('../app').app;
 const db = require('../database/database');
+const configFile = require('../config.js');
 
 describe('POST /api/intern/addModul', () => {
   beforeAll(async () => {
@@ -10,6 +11,12 @@ describe('POST /api/intern/addModul', () => {
     // wait 3 sec
     await new Promise(resolve => setTimeout(resolve, 3000));
   });
+  afterAll(() => {
+    if (configFile.database.DB_DIALECT !== 'sqlite') {
+      db.sequelize.close();
+    }
+  });
+
   test('It should add a new module and respond with status code 200', async () => {
     // module with random id
     const newModule = {
@@ -25,7 +32,7 @@ describe('POST /api/intern/addModul', () => {
       .send(newModule);
 
     expect(response.statusCode).toBe(200);
-    // Check if the module was added to the database, wait 3 sec
+    // Check if the module was added to the database, wait 2 sec
     await new Promise(resolve => setTimeout(resolve, 2000));
     expect(await db.isModuleExists(newModule.id)).toBe(true);
     expect(await db.isModuleExists('ISJDSJGDJGSDIJOGSIKGD')).toBe(false);
