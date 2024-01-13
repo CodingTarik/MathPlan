@@ -60,6 +60,11 @@ function ExaminationRegulationApp() {
   const [internalName, setInternalName] = useState('');
 
   /**
+   * @descirption JSONEditor
+   */
+  const [jsoneditor, setJsoneditor] = useState<any>();
+
+  /**
    * @function handleSaveClick
    * @description Handler for when the save button is clicked. Opens the save dialog.
    */
@@ -106,13 +111,13 @@ function ExaminationRegulationApp() {
 
   // Initialize the JSON editor when the component is first rendered.
   useEffect(() => {
-    initializeJsonEditor(editorRef);
+    setJsoneditor(initializeJsonEditor(editorRef));
   }, []);
 
   // Render the UI for the application.
   return (
     <>
-      <ExamRegulationSelect></ExamRegulationSelect>
+      <ExamRegulationSelect jsoneditor={jsoneditor} setInternalName={setInternalName}></ExamRegulationSelect>
       <div style={{ marginBottom: '16px' }}>
         <TextField
           label="Internal Name"

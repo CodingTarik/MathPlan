@@ -220,8 +220,7 @@ const getAllExamRegulationsMin = async (req, res) => {
 
     // Send a success response
     res.status(200).send(finalExamRegulationSchemas);
-
-  } catch(error) {
+  } catch (error) {
     console.error('Error retrieving exam regulation schemas:', error);
 
     // Send an error response

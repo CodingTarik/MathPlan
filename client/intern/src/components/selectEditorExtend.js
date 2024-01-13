@@ -13,7 +13,13 @@ export class SelectedExtend extends window.JSONEditor.defaults.editors.select2 {
         ? this.select2_instance.val()
         : this.select2_instance.select2('val');
       this.updateValue(value);
-      this.onChange(true);
+      try {
+        this.onChange(true);
+      } catch(err) {
+        console.log("Error in onChange: "+err.message);
+        console.log(err.stack);
+      }
+       
     };
 
     this.select2_instance.on('change', this.selectChangeHandler);
@@ -25,22 +31,27 @@ export class SelectedExtend extends window.JSONEditor.defaults.editors.select2 {
     if (bubble) this.change();
   }
   setValue(value, initial) {
-    if (this.select2_instance) {
-      if (initial) this.is_dirty = false;
-      else if (this.jsoneditor.options.show_errors === 'change')
+    /* Change begins here */
+    // check if value is a string
+    if (typeof value === 'object') {
+      value = JSON.stringify(value);
+    }
+    if(this.select2_instance === undefined) {
+      super.setValue(value, initial);
+      this.afterInputReady();
+    }
+    if (this.select2_instance)
+    {
+      if (initial) {
+        this.is_dirty = false;
+      } else {
         this.is_dirty = true;
-
-      const sanitized =
-        this.updateValue(value); /* Sets this.value to sanitized value */
-
-      this.input.value = sanitized;
-
-      if (this.select2v4)
-        this.select2_instance.val(sanitized).trigger('change');
-      else this.select2_instance.select2('val', sanitized);
-
-      this.onChange(true);
-    } else super.setValue(value, initial);
+        this.updateValue(value);
+        this.select2_instance.val(value).trigger('change');
+      }
+    }
+    this.onChange(true);
+    /* Change ends here */
   }
   onWatchedFieldChange() {
     let vars;
