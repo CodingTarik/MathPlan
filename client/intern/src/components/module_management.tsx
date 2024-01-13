@@ -43,16 +43,19 @@ function isAddButtonDisabled(values: string[]) {
 
 /**
  * 
- * @returns the UI for manually inserting modules into the database
+ * @returns the UI for manually inserting modules into the database and searching for certain modules
  */
 export default function AddModuleFields() {
   const [addModuleParameters, setAddModuleParameters] = React.useState(Array(5).fill(""));
+  const  [rowsFound, setRowsFound] = React.useState(Array(0).fill({moduleID: "", moduleName: "", moduleCredits: NaN, moduleLanguage: "", moduleApplicability: ""}));
+
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>, entryIdentifier: number) => {
     const nextModule = addModuleParameters.slice();
     nextModule[entryIdentifier] = event.target.value;
     setAddModuleParameters(nextModule);
    };
-  const  [rows, setRows] = React.useState(Array(0).fill({moduleID: "", moduleName: "", moduleCredits: NaN, moduleLanguage: "", moduleApplicability: ""}));
+
+  // if the search button is clicked the empty fields are set to undefinded and then getModules is called
   const handleSearchClick = (values: string[]) => {
     const values_copy = Array(5).fill("")
     for (let i = 0; i < 5; i++) {
@@ -63,12 +66,12 @@ export default function AddModuleFields() {
       .then((response: { data: { moduleID: string; moduleName: string; moduleCredits: number; moduleLanguage: string; moduleApplicability: string; createdAt: object; id: object, updatedAt: object}[]; }) => { 
         console.log("Success at getting module");
         console.log(response.data);
-        setRows(response.data);
+        setRowsFound(response.data);
       })
       .catch((e: AxiosError) => { 
         if (e.response?.data == 'The search request yielded more than 50 requests') {
           console.log('The search request yielded more than 50 requests')
-          setRows(Array(0).fill({moduleID: "", moduleName: "", moduleCredits: NaN, moduleLanguage: "", moduleApplicability: ""}))
+          setRowsFound(Array(0).fill({moduleID: "", moduleName: "", moduleCredits: NaN, moduleLanguage: "", moduleApplicability: ""}))
         }
         else {
           console.log("Error while getting module");
@@ -146,15 +149,10 @@ export default function AddModuleFields() {
             </tr>
           </thead>
           <tbody>
-            {rows.map((row) => (
+            {/* If the search button is clicked and rowsFound is not empty the rows are displayed and the fields where one can add a module set if a module is clicked on */}
+            {rowsFound.map((row) => (
               <tr key={row.moduleID} onClick = {() => {
-                const nextModule = Array(5).fill("");
-                nextModule[0] = row.moduleID;
-                nextModule[1] = row.moduleName;
-                nextModule[2] = row.moduleCredits;
-                nextModule[3] = row.moduleLanguage;
-                nextModule[4] = row.moduleApplicability;
-                setAddModuleParameters(nextModule);}}>
+                setAddModuleParameters([row.moduleID, row.moduleName, row.moduleCredits, row.moduleLanguage, row.moduleApplicability]);}} >
                 <td>{row.moduleID}</td>
                 <td>{row.moduleName}</td>
                 <td>{row.moduleCredits}</td>

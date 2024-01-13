@@ -3,8 +3,8 @@ const db = require(path.join(__dirname, '../database/database.js'));
 
 /**
  * if a request is made the addModul function of the database is called by the controller and the added module is sent back as a response
- * @param  req
- * @param  res
+ * @param {Object} req
+ * @param {Object} res
  * @returns if the passed data is not sufficient as in does not contain a module id
  */
 const addModul = (req, res) => {
@@ -62,10 +62,16 @@ const deleteModulById = (req, res) => {
     });
 };
 
+/**
+ * if a request is made the getModules function of the database is called by the controller and the matching module(s)
+ * is sent back as a response if there are less than 50 matching modules and no other error occurs
+ * @param {Object} req
+ * @param {Object} res
+ */
 const getModules = (req, res) => {
   db.getModules(req.params.id, req.params.name, req.params.credits, req.params.language, req.params.applicability)
     .then(data => {
-      if (data.count <= 1) res.send(data.rows);
+      if (data.count <= 50) res.send(data.rows);
       else throw new Error('The search request yielded more than 50 requests');
     })
     .catch(err => {

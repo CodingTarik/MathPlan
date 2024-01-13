@@ -40,7 +40,7 @@ const sequelize = new Sequelize(config);
  * @property {string} moduleApplicability - The applicability of the module
  */
 
-const Modul /** @type {ModulModel} */ = sequelize.define('Modul', {
+let Modul /** @type {ModulModel} */ = sequelize.define('Modul', {
   id: {
     type: Sequelize.INTEGER,
     autoIncrement: true,
@@ -68,6 +68,14 @@ const Modul /** @type {ModulModel} */ = sequelize.define('Modul', {
     allowNull: false
   }
 });
+
+/**
+ * Modul setter
+ * @param {Object} newModul
+ */
+const setModul = (newModul) => {
+  Modul = newModul;
+};
 
 /**
  * Adds a module to the database
@@ -105,12 +113,7 @@ const isModuleExists = (moduleID) => {
 /**
  * Deletes a module from the database based on its ID
  * @param {string} moduleID - The module ID to delete
- * @returns {Promise} A promise that is rejected or fulfilled depending on the success of deleting the module
- */
-/**
- * Deletes a module from the database based on its ID
- * @param {string} moduleID - The module ID to delete
- * @returns {Promise<boolean>} A promise that resolves to true if the module is deleted, false otherwise
+ * @returns {boolean} True if the module is deleted, false otherwise
  */
 const deleteModulById = async (moduleID) => {
   try {
@@ -136,6 +139,22 @@ const getAllModules = () => {
   return Modul.findAll();
 };
 
+/**
+ * Gets the modules that match the parameters, match meaning:
+ * if a moduleID is provided: moduleID of returned modules must contain the given moduleID
+ * if a moduleName is provided: moduleName of returned modules must contain the given moduleName
+ * if a moduleCredits is provided: moduleCredits of returned modules must equal the given moduleCredits
+ * if a moduleLanguage is provided: moduleLanguage of returned modules must equal the given moduleLanguage
+ * if a moduleApplicability is provided: moduleApplicability of returned modules must equal the given moduleApplicability.
+ * If more than 50 modules match only the first 50 are returned.
+ * @param {string} moduleID
+ * @param {string} moduleName
+ * @param {string} moduleCredits
+ * @param {string} moduleLanguage
+ * @param {string} moduleApplicability
+ * @returns {Promise<{count: number; rows: Object[];}>} A promise that is rejected or fulfilled depending on the success of getting the module(s). If
+ * it is fulfilled it returns the number of matching modules and the modules themselves.
+ */
 const getModules = (moduleID, moduleName, moduleCredits, moduleLanguage, moduleApplicability) => {
   const parameters = {};
   if (!(moduleID === 'undefined')) parameters.moduleID = { [Sequelize.Op.like]: `%${moduleID}%` };
@@ -145,7 +164,8 @@ const getModules = (moduleID, moduleName, moduleCredits, moduleLanguage, moduleA
   if (!(moduleApplicability === 'undefined')) parameters.moduleApplicability = moduleApplicability;
   return Modul.findAndCountAll({
     where: parameters,
-    limit: 1
+    limit: 50,
+    order: [['moduleID', 'ASC']]
   });
 };
 
@@ -154,6 +174,7 @@ module.exports = {
   Sequelize,
   sequelize,
   Modul,
+  setModul,
   addModul,
   isModuleExists,
   deleteModulById,
