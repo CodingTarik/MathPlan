@@ -78,7 +78,7 @@ test('POST /api/intern/addModul: It should add a new module and respond with sta
       moduleApplicability: newModule.applicability
     })
   );
-  await db.deleteModulById(newModule.id);
+  db.deleteModulById(newModule.id);
 });
 
 test('POST /api/intern/addModul: It should respond with a 400 status if data is not provided', async () => {
@@ -105,7 +105,7 @@ test('GET /api/intern/getModules/:id/:name/:credits/:language/:applicability: It
   expect(response.statusCode).toBe(200);
   expect(response.body.length).toBe(1);
   expect(response.body).toContainEqual(expect.objectContaining(newModule));
-  await db.deleteModulById(newModule.moduleID);
+  db.deleteModulById(newModule.moduleID);
 });
 
 test('GET /api/intern/getModules/:id/:name/:credits/:language/:applicability: It should respond with a 400 status if more than 50 modules match the request', async () => {
@@ -126,7 +126,7 @@ test('GET /api/intern/getModules/:id/:name/:credits/:language/:applicability: It
   expect(response.statusCode).toBe(400);
   expect(response.text).toBe('The search request yielded more than 50 requests');
   for (let i = 0; i < 51; i++) {
-    await db.deleteModulById(newModules[parseInt(i)].moduleID);
+    db.deleteModulById(newModules[parseInt(i)].moduleID);
   }
 });
 
@@ -180,7 +180,7 @@ test('GET /api/intern/getModules/:id/:name/:credits/:language/:applicability: It
   console.log(response.body);
   expect(response.body).toContainEqual(expect.objectContaining(newModule1));
   expect(response.body).toContainEqual(expect.objectContaining(newModule2));
-  await db.deleteModulById(newModule1.moduleID);
-  await db.deleteModulById(newModule2.moduleID);
-  await db.deleteModulById(newModule3.moduleID);
+  db.deleteModulById(newModule1.moduleID);
+  db.deleteModulById(newModule2.moduleID);
+  db.deleteModulById(newModule3.moduleID);
 });
