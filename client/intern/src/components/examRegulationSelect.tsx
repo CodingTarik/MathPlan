@@ -1,13 +1,17 @@
-import { useState, useEffect } from 'react';
-import axios, { AxiosResponse } from 'axios';
-import SearchIcon from '@mui/icons-material/Search';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import Typography from '@mui/material/Typography';
-import DeleteIcon from '@mui/icons-material/Delete';
-import CloudDownloadIcon from '@mui/icons-material/CloudDownload';
+// Importing necessary hooks and utilities from React and Axios
+import { useState, useEffect } from 'react'; // React's useState and useEffect hooks
+import axios, { AxiosResponse } from 'axios'; // Axios for making HTTP requests
 
+// Importing necessary icons from Material UI
+import SearchIcon from '@mui/icons-material/Search'; // Icon for search functionality
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore'; // Icon for expand functionality
+import DeleteIcon from '@mui/icons-material/Delete'; // Icon for delete functionality
+import CloudDownloadIcon from '@mui/icons-material/CloudDownload'; // Icon for download functionality
+
+// Importing necessary components and utilities from Material UI
 import {
   Accordion,
+  Typography,
   Box,
   Button,
   AccordionSummary,
@@ -29,42 +33,66 @@ import {
   TablePagination,
   TextField,
   DialogContentText
-} from '@mui/material';
-import { Refresh } from '@mui/icons-material';
-import { CustomSnackbarContent } from './customSnackbarContent';
+} from '@mui/material'; // Material UI components for UI design
+import { Refresh } from '@mui/icons-material'; // Icon for refresh functionality
 
+// Importing custom components
+import { CustomSnackbarContent } from './customSnackbarContent'; // Custom Snackbar component for displaying messages
+
+/**
+ * @typedef {Object} ExamRegulation
+ * @property {string} name - The name of the exam regulation.
+ * @property {string} jsonSchema - The JSON schema of the exam regulation.
+ */
 interface ExamRegulation {
   name: string;
   jsonSchema: string;
 }
 
+/**
+ * @typedef {Object} ExamRegulationSelectProps
+ * @property {any} jsoneditor - The JSON editor instance.
+ * @property {React.Dispatch<React.SetStateAction<string>>} setInternalName - The state setter for the internal name.
+ */
 interface ExamRegulationSelectProps {
   jsoneditor: any;
   setInternalName: React.Dispatch<React.SetStateAction<string>>;
 }
 
+/**
+ * ExamRegulationSelect is a component that allows users to select, load, and delete exam regulations.
+ * It also provides a search functionality to filter through the exam regulations.
+ *
+ * @param {Object} props - The properties passed to this component.
+ * @param {any} props.jsoneditor - The JSON editor instance.
+ * @param {React.Dispatch<React.SetStateAction<string>>} props.setInternalName - The state setter for the internal name.
+ */
 const ExamRegulationSelect = ({
   jsoneditor,
   setInternalName
 }: ExamRegulationSelectProps) => {
-  const [examRegulations, setExamRegulations] = useState<ExamRegulation[]>([]);
-  const [selectedExamRegulation, setSelectedExamRegulation] =
-    useState<ExamRegulation | null>(null);
-  const [snackbarOpen, setSnackbarOpen] = useState(false);
-  const [snackbarMessage, setSnackbarMessage] = useState('');
-  const [saveSuccess, setSaveSuccess] = useState(false);
-  const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(5);
-  const [searchTerm, setSearchTerm] = useState('');
-  const [dialogOpen, setDialogOpen] = useState(false);
-  const [selectedDeleteExamRegulation, setSelectedDeleteExamRegulation] =
-    useState<ExamRegulation | null>(null);
+  // State variables
+  const [examRegulations, setExamRegulations] = useState<ExamRegulation[]>([]); // Holds the list of exam regulations
+  const [selectedExamRegulation, setSelectedExamRegulation] = useState<ExamRegulation | null>(null); // Holds the currently selected exam regulation
+  const [snackbarOpen, setSnackbarOpen] = useState(false); // Controls the visibility of the snackbar
+  const [snackbarMessage, setSnackbarMessage] = useState(''); // Holds the message to be displayed in the snackbar
+  const [saveSuccess, setSaveSuccess] = useState(false); // Indicates whether the last save operation was successful
+  const [page, setPage] = useState(0); // Holds the current page number for the table pagination
+  const [rowsPerPage, setRowsPerPage] = useState(5); // Holds the number of rows per page for the table pagination
+  const [searchTerm, setSearchTerm] = useState(''); // Holds the current search term for filtering exam regulations
+  const [dialogOpen, setDialogOpen] = useState(false); // Controls the visibility of the delete confirmation dialog
+  const [selectedDeleteExamRegulation, setSelectedDeleteExamRegulation] = useState<ExamRegulation | null>(null); // Holds the exam regulation to be deleted
 
+  /**
+   * Fetches the list of exam regulations from the server.
+   */
   const fetchExamRegulations = async () => {
     try {
+      // Send axios get request to /api/intern/getAllexamRegulationsMin
       const response: AxiosResponse<ExamRegulation[]> = await axios.get(
         '/api/intern/getAllexamRegulationsMin'
       );
+      // Update the state with the fetched exam regulations
       setExamRegulations(response.data);
     } catch (error) {
       console.error(error);
@@ -72,6 +100,11 @@ const ExamRegulationSelect = ({
     }
   };
 
+  /**
+   * Deletes an exam regulation from the server.
+   *
+   * @param {string} internalName - The internal name of the exam regulation to be deleted.
+   */
   const deleteExamRegulation = async (internalName: string) => {
     try {
       // Send axios post request to /api/intern/deleteExamRegulationByName
@@ -79,6 +112,7 @@ const ExamRegulationSelect = ({
         '/api/intern/deleteExamRegulationByName',
         internalName
       );
+      // Return the success status and error message (if any)
       if (response.status === 200) {
         return { success: true };
       } else {
@@ -90,6 +124,7 @@ const ExamRegulationSelect = ({
     }
   };
 
+  // Fetch exam regulations when the component mounts
   useEffect(() => {
     try {
       fetchExamRegulations();
@@ -98,6 +133,11 @@ const ExamRegulationSelect = ({
     }
   }, []);
 
+  /**
+   * Loads the selected exam regulation into the JSON editor.
+   *
+   * @param {ExamRegulation} examRegulation - The exam regulation to load.
+   */
   const handleLoadExamRegulation = async (examRegulation: ExamRegulation) => {
     try {
       setSelectedExamRegulation(examRegulation);
@@ -117,11 +157,19 @@ const ExamRegulationSelect = ({
     }
   };
 
+  /**
+   * Prepares to delete an exam regulation by setting it as the selected exam regulation for deletion and opening the confirmation dialog.
+   *
+   * @param {ExamRegulation} toDelete - The exam regulation to delete.
+   */
   const handleDeleteExamRegulation = (toDelete: ExamRegulation) => {
     setSelectedDeleteExamRegulation(toDelete);
     setDialogOpen(true);
   };
 
+  /**
+   * Deletes the selected exam regulation after confirmation and updates the list of exam regulations.
+   */
   const handleConfirmDelete = async () => {
     try {
       let reponse = null;
@@ -148,6 +196,9 @@ const ExamRegulationSelect = ({
     }
   };
 
+  /**
+   * Refreshes the list of exam regulations.
+   */
   const handleRefreshList = () => {
     fetchExamRegulations()
       .then(() => {
@@ -163,15 +214,29 @@ const ExamRegulationSelect = ({
       });
   };
 
+  /**
+   * Closes the snackbar.
+   */
   const handleSnackbarClose = () => {
     setSnackbarOpen(false);
   };
 
+  /**
+   * Changes the current page of the table pagination.
+   *
+   * @param {unknown} event - The event object.
+   * @param {number} newPage - The new page number.
+   */
   const handleChangePage = (event: unknown, newPage: number) => {
     event;
     setPage(newPage);
   };
 
+  /**
+   * Changes the number of rows per page of the table pagination and resets the page number to 0.
+   *
+   * @param {React.ChangeEvent<HTMLInputElement>} event - The event object.
+   */
   const handleChangeRowsPerPage = (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
@@ -179,10 +244,18 @@ const ExamRegulationSelect = ({
     setPage(0);
   };
 
+  /**
+   * Updates the search term for filtering exam regulations.
+   *
+   * @param {React.ChangeEvent<HTMLInputElement>} event - The event object.
+   */
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(event.target.value);
   };
 
+  /**
+   * Filters the list of exam regulations based on the search term.
+   */
   const filteredExamRegulations = examRegulations.filter((examRegulation) =>
     examRegulation.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
