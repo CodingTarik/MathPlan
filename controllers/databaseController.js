@@ -3,9 +3,9 @@ const db = require(path.join(__dirname, '../database/database.js'));
 
 /**
  * if a request is made the addModul function of the database is called by the controller and the added module is sent back as a response
- * @param  req
- * @param  res
- * @returns if the passed data is not sufficient as it does not contain a module id
+ * @param {Object} req - The request object
+ * @param {Object} res - The response object
+ * @returns {void} - if the passed data is not sufficient as it does not contain a module id
  */
 const addModul = (req, res) => {
   if (!req.body.id) {
@@ -32,16 +32,9 @@ const addModul = (req, res) => {
  * or with the module having the requested id is sent.
  * @param {Object} req - The request object
  * @param {Object} res - The response object
- * @returns {void} - Sends a response based on the success or failure of the deletion; has status 400, iff requests has no id as parameter and status 500, iff an error occured while searching for a module with requested id
+ * @returns {void} - Sends a response based on the success or failure of the deletion with status 500, iff an error occured while searching for a module with requested id
  */
 const getOneModul = (req, res) => {
-  if (!req.params.id) {
-    res.status(400).send({
-      message: 'Params can not be empty!'
-    });
-    return;
-  }
-
   db.getOneModul(req.params.id)
     .then(data => {
       res.send(data);
@@ -58,18 +51,12 @@ const getOneModul = (req, res) => {
  * and a response is sent based on the success or failure of the update.
  * @param {Object} req - The request object
  * @param {Object} res - The response object
- * @returns {void} - Sends a response based on the success or failure of the deletion; has status 400, iff requests holds no new data for the module or no module id and status 500, iff updating the module was not successful
+ * @returns {void} - Sends a response based on the success or failure of the deletion; has status 400, iff requests holds no new data for the module and status 500, iff updating the module was not successful
  */
 const updateModul = (req, res) => {
   if (!req.body.id) {
     res.status(400).send({
       message: 'Content can not be empty!'
-    });
-    return;
-  }
-  if (!req.params.id) {
-    res.status(400).send({
-      message: 'Params can not be empty!'
     });
     return;
   }
@@ -81,7 +68,7 @@ const updateModul = (req, res) => {
     .catch(err => {
       res.status(500).send({
         message:
-         err.message || 'Fehler beim Ändern des Moduls'
+         err.message || 'Mistake while modifying module'
       });
     });
 };
@@ -96,7 +83,7 @@ const updateModul = (req, res) => {
 const deleteModulById = (req, res) => {
   const moduleId = req.params.id; // Assuming the module ID is in the route parameters
 
-  if (!moduleId) {
+  if (!moduleId) { // mMn ist abfrage unnötig; wenn keine id gegeben, gibts eine 404, weil andere URL gesucht wird (eine ohne Parameter)
     res.status(400).send({
       message: 'Module ID is required!'
     });

@@ -25,7 +25,7 @@ const config /** @type {DatabaseConfig} */ = {
 };
 
 // create a sequelize object
-const sequelize = new Sequelize(config);
+let sequelize = new Sequelize(config);
 
 // the table with the courses and its attributes is defined
 // here and below as well we write 'modul' instead of 'module' to clarify that we mean university modules not NodeJS modules
@@ -40,7 +40,7 @@ const sequelize = new Sequelize(config);
  * @property {string} moduleApplicability - The applicability of the module
  */
 
-const Modul /** @type {ModulModel} */ = sequelize.define('Modul', {
+let Modul /** @type {ModulModel} */ = sequelize.define('Modul', {
   id: {
     type: Sequelize.INTEGER,
     autoIncrement: true,
@@ -68,6 +68,11 @@ const Modul /** @type {ModulModel} */ = sequelize.define('Modul', {
     allowNull: false
   }
 });
+
+const setModul = (newModul, newSequilize) => {
+  Modul = newModul;
+  sequelize = newSequilize;
+};
 
 /**
  * Adds a module to the database
@@ -175,6 +180,7 @@ module.exports = {
   Sequelize,
   sequelize,
   Modul,
+  setModul,
   addModul,
   updateModul,
   getOneModul,

@@ -26,9 +26,14 @@ function handleButtonClick(values: string[]) {
         console.log("trying retrieving modul by ID: data found");
         // modifying module
         ModuleServices.update(values[0], tmpModule)
-          .then((response: { data: object; }) => { 
-            console.log("Response data:");
-            console.log(response.data);
+          .then(() => { 
+            // TODO for means of debugging - can be commented out after development stage for better performance
+            console.log("modified module:");
+            ModuleServices.getByID(tmpModule.id).then((response: { data: object; }) => {
+              console.log(response.data);
+            }).catch((e: Error) => { 
+              console.log(e);
+            });
           })
           .catch((e: Error) => { 
             console.log(e);

@@ -30,16 +30,13 @@ const update = (id: string, data: object) => {
   return http.put(`/updateModul/${id}`, data);
 };
 
-// !!! route PUT, POST, DELETE requests with api.js !!!
-// !!! route GET requests with pages.js !!! (TODO)
-
 /**
  * send get request for ID id
  * @param id states the id of the database object to be found
  * @returns a promise that is rejected or fulfilled depending on the success of getting the module
  */
 const getByID = (id : string) => {
-  return http.get(`/getOneModul/${id}`); //TODO not working yet
+  return http.get(`/getOneModul/${id}`);
 };
 
 const ModuleServices = {
