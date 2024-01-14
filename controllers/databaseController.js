@@ -252,7 +252,7 @@ const deleteExamRegulationByName = async (req, res) => {
     console.error('Error deleting exam regulation schema:', error);
 
     // Send an error response
-    res.status(500).json({
+    res.status(400).json({
       success: false,
       message: 'Error deleting exam regulation schema.',
       error: error.message

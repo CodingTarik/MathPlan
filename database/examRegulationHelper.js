@@ -76,10 +76,13 @@ const getAllExamRegulations = async () => {
  * @returns delete exam regulation by name
  */
 const deleteExamRegulationByName = async (name) => {
-  // delete exam regulation by name
+  // check if exam regulation exists if not throw error
+  if (!(await isExamRegulationExists(name))) {
+    throw new Error('Exam regulation does not exist');
+  }
   return await ExamRegulation.destroy({
     where: {
-      name
+      name: name
     }
   });
 };
