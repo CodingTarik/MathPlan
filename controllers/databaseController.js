@@ -231,7 +231,37 @@ const getAllExamRegulationsMin = async (req, res) => {
     });
   }
 };
+/**
+ * Deletes exam regulation by name
+ * @param {*} req the request
+ * @param {*} res the result
+ */
+const deleteExamRegulationByName = async (req, res) => {
+  try {
+    // the data is the name to delete
+    const name = req.body.name;
+    // delete the exam regulation by name
+    await examRegulationHelper.deleteExamRegulationByName(name);
+    // send a success response
+    res.status(200).json({
+      success: true,
+      message: 'Exam regulation schema deleted successfully.'
+    });
+  } catch (error) {
+    // Handle any errors that occurred during processing
+    console.error('Error deleting exam regulation schema:', error);
+
+    // Send an error response
+    res.status(500).json({
+      success: false,
+      message: 'Error deleting exam regulation schema.',
+      error: error.message
+    });
+  }
+};
+
 module.exports = {
+  deleteExamRegulationByName,
   addModul,
   deleteModulById,
   getAllModuls,

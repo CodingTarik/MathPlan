@@ -70,8 +70,23 @@ const getAllExamRegulations = async () => {
   return await ExamRegulation.findAll();
 };
 
+/**
+ *
+ * @param {*} name the name of the exam regulation
+ * @returns delete exam regulation by name
+ */
+const deleteExamRegulationByName = async (name) => {
+  // delete exam regulation by name
+  return await ExamRegulation.destroy({
+    where: {
+      name
+    }
+  });
+};
+
 // Export the functions.
 module.exports = {
+  deleteExamRegulationByName,
   addExamRegulation,
   isExamRegulationExists,
   getExamRegulation,

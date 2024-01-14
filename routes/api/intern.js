@@ -16,6 +16,7 @@ router.get('/getAllModuls', dbController.getAllModuls);
 router.get('/getAllModulsMin', dbController.getAllModulsMin);
 router.post('/addExamRegulation', dbController.addExamRegulation);
 router.get('/getAllExamRegulationsMin', dbController.getAllExamRegulationsMin);
+router.post('/deleteExamRegulationByName', dbController.deleteExamRegulationByName);
 
 // Example-API
 router.get('/:title', bookController.handleGetBook);

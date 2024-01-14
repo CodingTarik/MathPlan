@@ -1,4 +1,4 @@
-// disabled temporary const logger = require('../logger.js');
+// disable temporary const logger = require('../logger.js');
 const Modul = require('./database.js').models.Modul;
 /**
  * Adds a module to the database
@@ -52,7 +52,7 @@ const isModuleExists = (moduleID) => {
  */
 const deleteModulById = async (moduleID) => {
   try {
-    // logger.info(`Deleting module with ID ${moduleID}...`);
+    // todo activate if merged logger.info(`Deleting module with ID ${moduleID}...`);
     const affectedRows = await Modul.destroy({
       where: {
         moduleID

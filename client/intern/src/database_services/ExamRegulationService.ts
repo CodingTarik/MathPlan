@@ -1,4 +1,5 @@
-import axios from 'axios';
+import axios, { AxiosResponse } from 'axios';
+import { ExamRegulation } from '../components/examRegulationSelect';
 
 /**
  * Sends an exam regulation to the server.
@@ -29,3 +30,22 @@ export async function saveExamRegulationFunction(examRegulationAsJSON: unknown, 
         return false;
     }
 }
+
+/**
+ * Fetches the list of exam regulations from the server.
+ */
+export const fetchExamRegulations = async (
+    setExamRegulations: React.Dispatch<React.SetStateAction<ExamRegulation[]>>
+  ) => {
+    try {
+      // Send axios get request to /api/intern/getAllexamRegulationsMin
+      const response: AxiosResponse<ExamRegulation[]> = await axios.get(
+        '/api/intern/getAllexamRegulationsMin'
+      );
+      // Update the state with the fetched exam regulations
+      setExamRegulations(response.data);
+    } catch (error) {
+      console.error(error);
+      throw error;
+    }
+  };

@@ -15,7 +15,8 @@ import {
   saveFunction,
   initializeJsonEditor
 } from './examinationRegulationEditor';
-import ExamRegulationSelect from './examRegulationSelect';
+import ExamRegulationSelect, { ExamRegulation} from './examRegulationSelect';
+import { fetchExamRegulations } from '../database_services/ExamRegulationService';
 
 /**
  * The main component for the Examination Regulation Application.
@@ -23,6 +24,7 @@ import ExamRegulationSelect from './examRegulationSelect';
  * @returns {JSX.Element} The rendered component.
  */
 function ExaminationRegulationApp() {
+  const [examRegulations, setExamRegulations] = useState<ExamRegulation[]>([]); // Holds the list of exam regulations
   /**
    * @type {React.MutableRefObject<HTMLDivElement | null>}
    * @description Reference to the div that will contain the JSON editor.
@@ -59,11 +61,13 @@ function ExaminationRegulationApp() {
    */
   const [internalName, setInternalName] = useState('');
 
+/* eslint-disable @typescript-eslint/no-explicit-any */
+// jsoneditor is not typed
   /**
    * @descirption JSONEditor
    */
   const [jsoneditor, setJsoneditor] = useState<any>();
-
+/* eslint-enable @typescript-eslint/no-explicit-any */
   /**
    * @function handleSaveClick
    * @description Handler for when the save button is clicked. Opens the save dialog.
@@ -84,6 +88,7 @@ function ExaminationRegulationApp() {
 
       // Update the state based on whether the save was successful.
       if (saveResult) {
+        fetchExamRegulations(setExamRegulations);
         setSnackbarMessage('Erfolgreich gespeichert!');
         setSaveSuccess(true);
       } else {
@@ -117,7 +122,7 @@ function ExaminationRegulationApp() {
   // Render the UI for the application.
   return (
     <>
-      <ExamRegulationSelect jsoneditor={jsoneditor} setInternalName={setInternalName}></ExamRegulationSelect>
+      <ExamRegulationSelect jsoneditor={jsoneditor} setInternalName={setInternalName} examRegulations={examRegulations} setExamRegulations={setExamRegulations}></ExamRegulationSelect>
       <div style={{ marginBottom: '16px' }}>
         <TextField
           label="Internal Name"

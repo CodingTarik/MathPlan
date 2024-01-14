@@ -38,17 +38,19 @@ import { Refresh } from '@mui/icons-material'; // Icon for refresh functionality
 
 // Importing custom components
 import { CustomSnackbarContent } from './customSnackbarContent'; // Custom Snackbar component for displaying messages
+import { fetchExamRegulations } from '../database_services/ExamRegulationService';
 
 /**
  * @typedef {Object} ExamRegulation
  * @property {string} name - The name of the exam regulation.
  * @property {string} jsonSchema - The JSON schema of the exam regulation.
  */
-interface ExamRegulation {
+export interface ExamRegulation {
   name: string;
   jsonSchema: string;
 }
-
+// editor is not fully typed so we have to disable the eslint rule
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /**
  * @typedef {Object} ExamRegulationSelectProps
  * @property {any} jsoneditor - The JSON editor instance.
@@ -57,7 +59,12 @@ interface ExamRegulation {
 interface ExamRegulationSelectProps {
   jsoneditor: any;
   setInternalName: React.Dispatch<React.SetStateAction<string>>;
+  examRegulations: ExamRegulation[];
+  setExamRegulations: React.Dispatch<React.SetStateAction<ExamRegulation[]>>;
 }
+/* eslint-enable @typescript-eslint/no-explicit-any */
+
+
 
 /**
  * ExamRegulationSelect is a component that allows users to select, load, and delete exam regulations.
@@ -69,11 +76,13 @@ interface ExamRegulationSelectProps {
  */
 const ExamRegulationSelect = ({
   jsoneditor,
-  setInternalName
+  setInternalName,
+  examRegulations,
+  setExamRegulations
 }: ExamRegulationSelectProps) => {
   // State variables
-  const [examRegulations, setExamRegulations] = useState<ExamRegulation[]>([]); // Holds the list of exam regulations
-  const [selectedExamRegulation, setSelectedExamRegulation] = useState<ExamRegulation | null>(null); // Holds the currently selected exam regulation
+  const [selectedExamRegulation, setSelectedExamRegulation] =
+    useState<ExamRegulation | null>(null); // Holds the currently selected exam regulation
   const [snackbarOpen, setSnackbarOpen] = useState(false); // Controls the visibility of the snackbar
   const [snackbarMessage, setSnackbarMessage] = useState(''); // Holds the message to be displayed in the snackbar
   const [saveSuccess, setSaveSuccess] = useState(false); // Indicates whether the last save operation was successful
@@ -81,24 +90,8 @@ const ExamRegulationSelect = ({
   const [rowsPerPage, setRowsPerPage] = useState(5); // Holds the number of rows per page for the table pagination
   const [searchTerm, setSearchTerm] = useState(''); // Holds the current search term for filtering exam regulations
   const [dialogOpen, setDialogOpen] = useState(false); // Controls the visibility of the delete confirmation dialog
-  const [selectedDeleteExamRegulation, setSelectedDeleteExamRegulation] = useState<ExamRegulation | null>(null); // Holds the exam regulation to be deleted
-
-  /**
-   * Fetches the list of exam regulations from the server.
-   */
-  const fetchExamRegulations = async () => {
-    try {
-      // Send axios get request to /api/intern/getAllexamRegulationsMin
-      const response: AxiosResponse<ExamRegulation[]> = await axios.get(
-        '/api/intern/getAllexamRegulationsMin'
-      );
-      // Update the state with the fetched exam regulations
-      setExamRegulations(response.data);
-    } catch (error) {
-      console.error(error);
-      throw error;
-    }
-  };
+  const [selectedDeleteExamRegulation, setSelectedDeleteExamRegulation] =
+    useState<ExamRegulation | null>(null); // Holds the exam regulation to be deleted
 
   /**
    * Deletes an exam regulation from the server.
@@ -110,7 +103,7 @@ const ExamRegulationSelect = ({
       // Send axios post request to /api/intern/deleteExamRegulationByName
       const response: AxiosResponse = await axios.post(
         '/api/intern/deleteExamRegulationByName',
-        internalName
+        { name: internalName }
       );
       // Return the success status and error message (if any)
       if (response.status === 200) {
@@ -127,11 +120,11 @@ const ExamRegulationSelect = ({
   // Fetch exam regulations when the component mounts
   useEffect(() => {
     try {
-      fetchExamRegulations();
+      fetchExamRegulations(setExamRegulations);
     } catch (error) {
       console.error(error);
     }
-  }, []);
+  });
 
   /**
    * Loads the selected exam regulation into the JSON editor.
@@ -176,7 +169,7 @@ const ExamRegulationSelect = ({
       if (selectedDeleteExamRegulation !== null)
         reponse = await deleteExamRegulation(selectedDeleteExamRegulation.name);
       else throw new Error('selectedDeleteExamRegulation cannot be null');
-      if(!reponse.success) {
+      if (!reponse.success) {
         throw new Error(reponse.error);
       }
       setSelectedExamRegulation(null);
@@ -188,11 +181,14 @@ const ExamRegulationSelect = ({
       setSnackbarMessage('Exam Regulation deleted successfully.');
       setSaveSuccess(true);
       setSnackbarOpen(true);
-    } catch (error: any) {
+      setDialogOpen(false);
+    } catch (error: unknown) {
       console.error(error);
-      setSnackbarMessage('Error deleting Exam Regulation. ' + error.message);
+      if (error instanceof Error)
+        setSnackbarMessage('Error deleting Exam Regulation. ' + error.message);
       setSaveSuccess(false);
       setSnackbarOpen(true);
+      setDialogOpen(false);
     }
   };
 
@@ -200,7 +196,7 @@ const ExamRegulationSelect = ({
    * Refreshes the list of exam regulations.
    */
   const handleRefreshList = () => {
-    fetchExamRegulations()
+    fetchExamRegulations(setExamRegulations)
       .then(() => {
         setSnackbarMessage('Exam Regulations list refreshed.');
         setSaveSuccess(true);
@@ -290,7 +286,7 @@ const ExamRegulationSelect = ({
           aria-controls="panel1a-content"
           id="panel1a-header"
         >
-          <Typography>Control Description</Typography>
+          <Typography>Prüfungsordnungen</Typography>
         </AccordionSummary>
         <AccordionDetails>
           <TableContainer component={Paper}>
@@ -298,7 +294,7 @@ const ExamRegulationSelect = ({
               <TableHead>
                 <TableRow>
                   <TableCell>
-                    Internal Name
+                    Prüfungsordnungsname
                     <IconButton color="primary" onClick={handleRefreshList}>
                       <Refresh />
                     </IconButton>
