@@ -129,18 +129,13 @@ test('GET /api/intern/getOneModul/:id: It should return an existing module and r
     applicability: 'Computer Science'
   };
 
-  const response = await request(app)
-    .post('/api/intern/addModul')
-    .send(newModule);
-  expect(response.statusCode).toBe(200);
-  // Check if the module was added to the database, wait 2 sec
-  await new Promise(resolve => setTimeout(resolve, 2000));
+  await db.addModul(newModule.id, newModule.name, newModule.credits, newModule.language, newModule.applicability);
   expect(await db.isModuleExists(newModule.id)).toBe(true);
 
-  const response2 = await request(app)
+  const response = await request(app)
     .get(`/api/intern/getOneModul/${id}`);
-  const returnedModule = JSON.parse(response2.text);
-  expect(response2.statusCode).toBe(200);
+  const returnedModule = JSON.parse(response.text);
+  expect(response.statusCode).toBe(200);
   expect(returnedModule.moduleID).toBe(newModule.id);
   expect(returnedModule.moduleCredits).toBe(newModule.credits);
   expect(returnedModule.moduleName).toBe(newModule.name);
@@ -159,14 +154,7 @@ test('PUT /api/intern/updateModul/:id: It should modify an existing module and r
     applicability: 'Computer Science'
   };
 
-  const response = await request(app)
-    .post('/api/intern/addModul')
-    .send(newModule);
-
-  expect(response.statusCode).toBe(200);
-  // Check if the module was added to the database, wait 2 sec
-  await new Promise(resolve => setTimeout(resolve, 2000));
-  expect(await db.isModuleExists(newModule.id)).toBe(true);
+  await db.addModul(newModule.id, newModule.name, newModule.credits, newModule.language, newModule.applicability);
   expect(await db.getAllModules()).toContainEqual(
     expect.objectContaining({
       moduleID: newModule.id,
@@ -186,11 +174,11 @@ test('PUT /api/intern/updateModul/:id: It should modify an existing module and r
     applicability: 'Computer Science'
   };
 
-  const response2 = await request(app)
+  const response = await request(app)
     .put(`/api/intern/updateModul/${id}`)
     .send(modifiedModule);
 
-  expect(response2.statusCode).toBe(200);
+  expect(response.statusCode).toBe(200);
   // Check if the module was modified in the database, wait 2 sec
   await new Promise(resolve => setTimeout(resolve, 2000));
   expect(await db.isModuleExists(newModule.id)).toBe(true);
