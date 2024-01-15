@@ -34,6 +34,7 @@ export default function PdfFileUpload() {
       setSelectedFiles(event.target.files);
       console.log(selectedFiles);
     }
+    handleUplaod();
   };
   const handleUplaod = async () => {
     try{
@@ -46,7 +47,7 @@ export default function PdfFileUpload() {
       formData.append('file', selectedFiles![i]);
     }
     
-     const response=  await axios.post('./routes/api/intern.js', FormData, {
+     const response=  await axios.post('./routes/api/intern.js', formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
@@ -62,7 +63,6 @@ export default function PdfFileUpload() {
         Modulhandbuch auswählen
       <VisuallyHiddenInput type="file"
       onChange={handleFileChange}
-      onClick={handleUplaod}
       accept='.pdf'
       multiple />
     </Button>
@@ -70,5 +70,5 @@ export default function PdfFileUpload() {
   
   );
 
-  };
+  }
   
