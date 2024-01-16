@@ -33,8 +33,9 @@ export default function PdfFileUpload() {
     if (event.target.files) {
       setSelectedFiles(event.target.files);
       console.log(selectedFiles);
+      handleUplaod();
     }
-    handleUplaod();
+    
   };
   const handleUplaod = async () => {
     try{
@@ -47,7 +48,7 @@ export default function PdfFileUpload() {
       formData.append('file', selectedFiles![i]);
     }
     
-     const response=  await axios.post('./routes/api/intern.js', formData, {
+     const response=  await axios.post( 'api/intern/uploadPDF', formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },

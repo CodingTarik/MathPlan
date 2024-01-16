@@ -10,8 +10,8 @@ const bookController = require(
   path.join(__dirname, '../../controllers/bookController.js')
 );
 
-const pdfUploaderController = require(
-  path.join(__dirname, '../../controllers/pdfUploaderController.js')
+const pdfUploadController = require(
+  path.join(__dirname, '../../controllers/pdfUploadController.js')
 );
 
 // Example-API
@@ -20,6 +20,6 @@ router.get('/:title', bookController.handleGetBook);
 router.post('/addModul', dbController.addModul);
 router.post('/deleteModulById', dbController.deleteModulById);
 
-router.post('/uploadPDF', pdfUploaderController.uploadPDF);
+router.post('/uploadPDF', pdfUploadController.uploadPDF);
 
 module.exports = router;
