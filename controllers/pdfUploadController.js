@@ -1,5 +1,5 @@
 // uploadHandler.js
-//const { readAndFilterData } = require('../utils/moduleDescriptionParser.js');
+// const { readAndFilterData } = require('../utils/moduleDescriptionParser.js');
 const multer = require('multer');
 
 const readAndFilterData = require('../utils/moduleDescriptionParser.js');
@@ -12,24 +12,22 @@ const uploadPDF = (req, res) => {
     if (err) {
       console.error('Error while uploading files:'); console.error(err);
       res.status(500).send('Error while uploading files');
-    }
-    else {
+    } else {
       console.log('Controller wurde angesteuert');
       const uploadPDF = req.files;
-      //console.log(uploadPDF);
-      //console.log('Buffer: ' + uploadPDF[0].buffer)
-      //handleUpload(req, res);
+      // console.log(uploadPDF);
+      // console.log('Buffer: ' + uploadPDF[0].buffer)
+      // handleUpload(req, res);
       readAndFilterData(uploadPDF, 'Modulbeschreibung')
-    .then((modules) => {
-      console.log(modules);
-      res.send(modules);
-      //alert(modules);
-    }).catch((error) => { console.error('Error while parsing the pdf file:'); console.error(error); process.exit(2); });
-
+        .then((modules) => {
+          console.log(modules);
+          res.send(modules);
+          // alert(modules);
+        }).catch((error) => { console.error('Error while parsing the pdf file:'); console.error(error); process.exit(2); });
     }
   });
   // Hier kannst du die hochgeladenen Dateien weiter verarbeiten
-  
+
   res.send('Dateien erfolgreich hochgeladen');
 };
 
