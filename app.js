@@ -61,8 +61,9 @@ app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 
 // Routing
-app.use('/', pages);
 app.use('/api', api);
+app.use('/', pages);
+
 try {
   if (process.env.NODE_ENV !== 'test') {
     // Datbase
