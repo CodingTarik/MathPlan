@@ -35,6 +35,12 @@ if (config.dev.DEBUG) {
   app.use(morgan('dev', { stream: morganStream }));
 }
 
+// Register imprint middleware
+app.use((req, res, next) => {
+  res.locals.imprinturl = config.data.imprinturl;
+  next();
+});
+
 // Static assets
 app.use('/assets', express.static('public'));
 app.use(
