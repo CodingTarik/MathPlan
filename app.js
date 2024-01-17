@@ -63,6 +63,7 @@ app.set('views', path.join(__dirname, 'views'));
 // Routing
 app.use('/api', api);
 app.use('/', pages);
+
 try {
   if (process.env.NODE_ENV !== 'test') {
     // Datbase

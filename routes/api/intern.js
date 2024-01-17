@@ -18,4 +18,6 @@ router.get('/getOneModul/:id', dbController.getOneModul);
 router.put('/updateModul/:id', dbController.updateModul);
 router.post('/deleteModulById', dbController.deleteModulById);
 
+router.get('/getModules/:id/:name/:credits/:language/:applicability', dbController.getModules);
+
 module.exports = router;
