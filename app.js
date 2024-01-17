@@ -41,6 +41,7 @@ app.use(
   '/assets/bootstrap',
   express.static(path.join(__dirname, 'node_modules/bootstrap/dist'))
 );
+app.use('/assets/animate', express.static(path.join(__dirname, 'node_modules/animate.css')));
 
 // parse requests of content-type - application/json
 app.use(express.json());

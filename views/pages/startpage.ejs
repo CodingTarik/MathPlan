@@ -1,19 +1,239 @@
-<h1>Hello World! Willkommen bei Materno!</h1>
-<h2>
-  Nachricht:
-  <%= title %>
-</h2>
-<p>
-  Materno ist Ihr zuverlässiges Lehrveranstaltungsmanagement- und
-  Prüfungsplanungstool. Mit Materno können Sie ganz einfach Ihren Stundenplan
-  verwalten, Prüfungstermine planen und mehr.
-</p>
-<p>Unsere Funktionen umfassen:</p>
-<ul>
-  <li>Erstellen und verwalten Sie Ihren persönlichen Stundenplan.</li>
-  <li>Planen Sie Prüfungstermine und erhalten Sie Erinnerungen.</li>
-</ul>
-<p>
-  Starten Sie noch heute mit Materno und organisieren Sie Ihr Studium
-  effizienter!
-</p>
+<!-- Einführung -->
+<section
+  class="section section-header text-dark py-5 d-flex align-items-center animate__animated animate__fadeIn"
+>
+  <div class="container text-center">
+    <div class="row justify-content-center">
+      <div class="col-12 col-md-8 text-center bg-light">
+        <h1 class="display-3 font-weight-bold mb-4 text-primary">Materno.</h1>
+        <p class="lead mb-5">
+          Materno ist Ihr zuverlässiges Prüfungsplanungstool. Mit Materno können
+          Sie mühelos Ihren Prüfungsplan erstellen, validieren und genehmigen
+          lassen.
+        </p>
+        <a href="#" class="btn btn-outline-primary btn-lg mb-4"
+          >Jetzt starten!</a
+        >
+        <br>
+        <p><b>Ein Projekt des Fachbereich Mathematik der TU Darmstadt:</b></p>
+        <img
+        class="mx-auto"
+        height="100"
+        src="/assets/images/TU_Darmstadt_Logo.svg"
+        alt="Status picture"
+      />
+      <br>
+      <br>
+      </div>
+      <div class="col-12 col-md-11 mt-4">
+        <img
+          class="d-md-inline-block img-fluid mx-auto"
+          src="/assets/images/undraw_scrum_board_re_wk7v.svg"
+          alt="Status picture"
+        />
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Vorteile -->
+<div class="row">
+  <div class="col-md-4 mb-4 animate__animated animate__fadeInLeft" >
+    <div class="card border-0 text-center p-4">
+      <i class="fa fa-calendar fa-3x mb-3 text-primary"></i>
+      <h2 class="h3 text-dark">Planen</h2>
+      <p>Mühelos Ihren Prüfungsplan erstellen und organisieren.</p>
+    </div>
+  </div>
+
+  <div class="col-md-4 mb-4">
+    <div class="card border-0 text-center p-4 animate__animated animate__fadeInUp">
+      <i class="fa fa-check-circle fa-3x mb-3 text-primary"></i>
+      <h2 class="h3 text-dark">Validieren</h2>
+      <p>Real-time Updates für die Validierung Ihres Prüfungsplans.</p>
+    </div>
+  </div>
+
+  <div class="col-md-4">
+    <div class="card border-0 text-center p-4 animate__animated animate__fadeInRight">
+      <i class="fa fa-thumbs-up fa-3x mb-3 text-primary"></i>
+      <h2 class="h3 text-dark">Genehmigen</h2>
+      <p>Einfache Genehmigung und Anpassung Ihrer Prüfungsplanung.</p>
+    </div>
+  </div>
+</div>
+
+<!-- Open source-->
+<div class="row row-grid align-items-center mb-5 mb-lg-7 animate__animated animate__fadeIn">
+  <div class="col-12 col-lg-5">
+    <h2 class="mb-4">Entdecke die Welt des Open Source</h2>
+    <p>
+      Wir setzen auf Open Source und sind stolz darauf, unter der GPL-3.0-Lizenz
+      zu stehen!
+    </p>
+    <p>
+      Möchtest du mitwirken oder hast eine großartige Idee, die du umsetzen
+      möchtest? Dann laden wir dich herzlich dazu ein, an unserem Projekt
+      teilzunehmen. Erstelle jederzeit Pull Requests, Issues oder Feature
+      Requests auf GitHub oder forke das Projekt, um es weiterzuentwickeln.
+    </p>
+    <a
+      href="https://github.com/materno"
+      class="btn btn-dark mt-3 animate-up-2"
+      >Erfahre mehr
+      <span class="icon icon-xs ml-2"><i class="fa fa-github"></i></span
+    ></a>
+  </div>
+  <div class="col-12 col-lg-6 ml-lg-auto">
+    <img
+      src="/assets/images/undraw_pair_programming_re_or4x.svg"
+      class="w-100 img-fluid"
+      alt="Pair Programming"
+    />
+  </div>
+</div>
+
+<!-- FAQ -->
+<div class="container mb-5 animate__animated animate__fadeIn">
+  <div class="row justify-content-center mb-5">
+    <div class="col-12 text-center mb-4 mb-lg-5">
+      <h2 class="display-3 mb-4">Häufig gestellte Fragen</h2>
+      <p class="lead">
+        Du hast eine Frage? Hier findest du Antworten auf die am häufigsten gestellten Fragen. Wenn deine Frage nicht dabei ist, kontaktiere uns gerne per E-Mail!🙂
+      </p>
+    </div>
+  </div>
+  <div class="accordion" id="faqAccordion">
+    <div class="card">
+      <div class="card-header" id="faqHeading1">
+        <h5 class="mb-0">
+          <button
+            class="btn btn-link"
+            data-bs-toggle="collapse"
+            data-bs-target="#faqCollapse1"
+            aria-expanded="true"
+            aria-controls="faqCollapse1"
+          >
+            <i class="fa fa-question-circle mr-2"></i> Wie kann ich Materno nutzen?
+          </button>
+        </h5>
+      </div>
+      <div
+        id="faqCollapse1"
+        class="collapse show"
+        aria-labelledby="faqHeading1"
+        data-bs-parent="#faqAccordion"
+      >
+        <div class="card-body">
+          Du kannst Materno nutzen, indem du dich über das Single-Sign-On der TU Darmstadt anmeldest und anschließend deinen Prüfungsplan erstellst, validierst und genehmigen lässt.
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-header" id="faqHeading2">
+        <h5 class="mb-0">
+          <button
+            class="btn btn-link"
+            data-bs-toggle="collapse"
+            data-bs-target="#faqCollapse2" 
+            aria-expanded="false"
+            aria-controls="faqCollapse2"
+          >
+            <i class="fa fa-question-circle mr-2"></i> Wie kann ich euch kontaktieren?
+          </button>
+        </h5>
+      </div>
+      <div
+        id="faqCollapse2"
+        class="collapse"
+        aria-labelledby="faqHeading2"
+        data-bs-parent="#faqAccordion" 
+      >
+        <div class="card-body">
+          Du kannst uns per E-Mail unter <a href="mailto:info@materno.com"
+            >info@materno.tu-darmstadt.de</a
+          > erreichen. Wir freuen uns auf deine Anfrage!
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-header" id="faqHeading3">
+        <h5 class="mb-0">
+          <button
+            class="btn btn-link"
+            data-bs-toggle="collapse"
+            data-bs-target="#faqCollapse3" 
+            aria-expanded="false"
+            aria-controls="faqCollapse3"
+          >
+            <i class="fa fa-question-circle mr-2"></i> Warum gibt es Materno?
+          </button>
+        </h5>
+      </div>
+      <div
+        id="faqCollapse3"
+        class="collapse"
+        aria-labelledby="faqHeading3"
+        data-bs-parent="#faqAccordion" 
+      >
+        <div class="card-body">
+          Materno ist ein Projekt des Fachbereichs Mathematik der TU Darmstadt. Es soll die Planung, Validierung und Genehmigung von Prüfungsplänen vereinfachen, welche bisher auf Papier stattfand. Digitale Prüfungsplanung ist ein wichtiger Schritt in Richtung Digitalisierung der TU Darmstadt.
+        </div>
+      </div>
+    </div>
+    
+    <div class="card">
+      <div class="card-header" id="faqHeading4">
+        <h5 class="mb-0">
+          <button
+            class="btn btn-link"
+            data-bs-toggle="collapse"
+            data-bs-target="#faqCollapse4" 
+            aria-expanded="false"
+            aria-controls="faqCollapse4"
+          >
+            <i class="fa fa-question-circle mr-2"></i> An wen kann ich mich bei Fragen melden?
+          </button>
+        </h5>
+      </div>
+      <div
+        id="faqCollapse4"
+        class="collapse"
+        aria-labelledby="faqHeading4"
+        data-bs-parent="#faqAccordion" 
+      >
+        <div class="card-body">
+          Bei Fragen kannst du dich an das Lehrveranstaltungsmanagement Mathematik wenden. Die Kontaktinformationen findest du im Footer.
+        </div>
+      </div>
+    </div>
+    
+    <div class="card">
+      <div class="card-header" id="faqHeading5">
+        <h5 class="mb-0">
+          <button
+            class="btn btn-link"
+            data-bs-toggle="collapse"
+            data-bs-target="#faqCollapse5" 
+            aria-expanded="false"
+            aria-controls="faqCollapse5"
+          >
+            <i class="fa fa-question-circle mr-2"></i> Wie ist das Projekt entstanden?
+          </button>
+        </h5>
+      </div>
+      <div
+        id="faqCollapse5"
+        class="collapse"
+        aria-labelledby="faqHeading5"
+        data-bs-parent="#faqAccordion" 
+      >
+        <div class="card-body">
+          Das Projekt entstand im Rahmen des Bachelorpraktikums Informatik, beauftragt durch das Lehrveranstaltungsmanagement Mathematik und programmiert von Tobias Henig, Isabelle Sauer, Julie Weiß, Mathias Bus und Tarik Azzouzi.
+        </div>
+      </div>
+    </div>
+ </div>
+</div>
+    
+
