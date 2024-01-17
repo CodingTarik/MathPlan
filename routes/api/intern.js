@@ -16,4 +16,6 @@ router.get('/:title', bookController.handleGetBook);
 router.post('/addModul', dbController.addModul);
 router.post('/deleteModulById', dbController.deleteModulById);
 
+router.get('/getModules/:id/:name/:credits/:language/:applicability', dbController.getModules);
+
 module.exports = router;

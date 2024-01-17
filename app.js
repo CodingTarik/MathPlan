@@ -5,6 +5,9 @@ const morgan = require('morgan');
 const http = require('http');
 const https = require('https');
 const fs = require('fs');
+const logger = require('./logger');
+const chalk = require('chalk');
+const helmet = require('helmet');
 
 // Config
 const config = require(path.join(__dirname, 'config.js'));
@@ -19,9 +22,17 @@ const db = require(path.join(__dirname, '/database/database.js'));
 // Objects
 const app = express();
 
-// Register logger
+// Register helmet
+app.use(helmet(config.server.HELMET));
+
+// Register logger for network requests
 if (config.dev.DEBUG) {
-  app.use(morgan('dev'));
+  const morganStream = {
+    write: (message) => {
+      logger.network(message.trim());
+    }
+  };
+  app.use(morgan('dev', { stream: morganStream }));
 }
 
 // Register imprint middleware
@@ -56,59 +67,73 @@ app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 
 // Routing
-app.use('/', pages);
 app.use('/api', api);
+app.use('/', pages);
 
-// Datbase
-/* eslint-disable */
-db.sequelize
-  .sync()
-  // for changing the underlying database (delets all content, updates scheme) a line of code can be added as decribed in readme file
-  /* eslint-enable */
-  .then(() => {
-    console.log('Synced db.');
-  })
-  .catch((err) => {
-    console.log('Failed to sync db: ' + err.message);
-  });
-
-if (process.env.NODE_ENV !== 'test') {
-  // HTTP-Server
-  if (config.server.ALLOW_HTTP) {
-    let httpServer = null;
-    if (config.HTTP_REDIRECT) {
-      httpServer = http.createServer((req, res) => {
-        res.writeHead(301, {
-          Location:
-            'https://' + config.server.host + ':' + config.PORT_HTTPS + req.url
-        });
-        res.end();
+try {
+  if (process.env.NODE_ENV !== 'test') {
+    // Datbase
+    /* eslint-disable */
+    db.sequelize
+      .sync()
+      // for changing the underlying database (delets all content, updates scheme) a line of code can be added as decribed in readme file
+      /* eslint-enable */
+      .then(() => {
+        logger.info('Synced db.');
+      })
+      .catch((err) => {
+        logger.info('Failed to sync db: ' + err.message);
       });
-    } else {
-      httpServer = http.createServer(app);
+    // HTTP-Server
+    if (config.server.ALLOW_HTTP) {
+      let httpServer = null;
+      if (config.HTTP_REDIRECT) {
+        httpServer = http.createServer((req, res) => {
+          res.writeHead(301, {
+            Location:
+              'https://' +
+              config.server.host +
+              ':' +
+              config.PORT_HTTPS +
+              req.url
+          });
+        });
+      } else {
+        httpServer = http.createServer(app);
+      }
+
+      httpServer.listen(config.server.PORT_HTTP, () => {
+        logger.info(
+          `Die Anwendung ist auf ${chalk.cyanBright(
+            `http://${config.server.HOST}:${config.server.PORT_HTTP}`
+          )} verfügbar.`
+        );
+      });
     }
 
-    httpServer.listen(config.server.PORT_HTTP, () => {
-      console.log(
-        `Die Anwendung ist auf http://${config.server.HOST}:${config.server.PORT_HTTP} verfügbar.`
-      );
-    });
-  }
+    // HTTPS-Server
+    /* eslint-disable security/detect-non-literal-fs-filename */
+    if (config.server.ALLOW_HTTPS) {
+      const options = {
+        key: fs.readFileSync(config.server.CERT_PATH, 'utf8'),
+        cert: fs.readFileSync(config.server.CERT_SECRET_PATH, 'utf8')
+      };
+      /* eslint-enable security/detect-non-literal-fs-filename */
 
-  // HTTPS-Server
-  /* eslint-disable security/detect-non-literal-fs-filename */
-  if (config.server.ALLOW_HTTPS) {
-    const options = {
-      key: fs.readFileSync(config.server.CERT_PATH, 'utf8'),
-      cert: fs.readFileSync(config.server.CERT_SECRET_PATH, 'utf8')
-    };
-    /* eslint-enable security/detect-non-literal-fs-filename */
-
-    https.createServer(options, app).listen(config.server.PORT_HTTPS, () => {
-      console.log(
-        `Die Anwendung ist auf https://${config.server.HOST}:${config.server.PORT_HTTPS} verfügbar.`
-      );
-    });
+      https.createServer(options, app).listen(config.server.PORT_HTTPS, () => {
+        logger.info(
+          chalk.green(
+            `Die Anwendung ist auf ${chalk.cyanBright(
+              `https://${config.server.HOST}:${config.server.PORT_HTTPS}`
+            )} verfügbar.`
+          )
+        );
+      });
+    }
   }
+} catch (ex) {
+  // if an fatal error occurs, log it and exit the application
+  logger.error(ex);
 }
+
 module.exports.app = app;
