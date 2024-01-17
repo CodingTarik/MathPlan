@@ -4,7 +4,6 @@ const db = require('../database/database');
 const configFile = require('../config.js');
 const Sequelize = require('sequelize');
 
-
 // setup
 beforeAll(async () => {
   /**

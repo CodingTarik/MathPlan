@@ -69,7 +69,6 @@ let Modul /** @type {ModulModel} */ = sequelize.define('Modul', {
   }
 });
 
-
 /**
  * Modul setter
  * @param {Object} newModul
@@ -78,8 +77,6 @@ const setModul = (newModul, newSequilize) => {
   Modul = newModul;
   sequelize = newSequilize;
 };
-
-
 
 /**
  * Adds a module to the database
