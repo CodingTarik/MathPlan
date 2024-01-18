@@ -115,7 +115,7 @@ function buildModules(parsedProperties, numberOfModules) {
   for (let i = 0; i < numberOfModules; i++) {
     const module = {};
     for (const property of moduleProperties) {
-      let parsedProperty = parsedProperties[property.propertyName][i];
+      let parsedProperty = parsedProperties[property.propertyName][parseInt(i)];
 
       // if needed, remove excess characters from property value
       if (property.excess) {
@@ -168,9 +168,9 @@ function filterAndAppendNextWords(originalString, readFrom, readTo) {
 
   // Remove searchTerm and keyWordBis from matches
   for (let i = 0; i < matches.length; i++) {
-    matches[i] = matches[i].replace(new RegExp(`^${readFrom}`), '');
-    matches[i] = matches[i].replace(new RegExp(`${readTo}$`), '');
-    matches[i] = matches[i].trim();
+    matches[parseInt(i)] = matches[parseInt(i)].replace(new RegExp(`^${readFrom}`), '');
+    matches[parseInt(i)] = matches[parseInt(i)].replace(new RegExp(`${readTo}$`), '');
+    matches[parseInt(i)] = matches[parseInt(i)].trim();
   }
 
   return matches;
