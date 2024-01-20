@@ -2,7 +2,7 @@
  * Array of strings for animated text.
  * @type {string[]}
  */
-var introTexts = [
+const introTexts = [
   'Validieren.',
   'Planen.',
   'Genehmigen.',
@@ -22,7 +22,7 @@ var introTexts = [
  * Typed instance to handle animated text.
  * @type {Typed}
  */
-var typed = new Typed('#animatedText', {
+const typed = new Typed('#animatedText', {
   /**
    * Array of strings to be typed.
    * @type {string[]}
