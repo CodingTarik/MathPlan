@@ -55,10 +55,10 @@
             <i class="fa fa-flag"></i> 🇩🇪
           </button>
           <div class="dropdown-menu" aria-labelledby="languageDropdown">
-            <a class="dropdown-item" href="#" onclick="setLanguage('de')">
+            <a class="dropdown-item" href="#" id="languageDe">
               <i class="fa fa-flag"></i> Deutsch
             </a>
-            <a class="dropdown-item" href="#" onclick="setLanguage('en')">
+            <a class="dropdown-item" href="#" id="languageEn">
               <i class="fa fa-flag"></i> English
             </a>
           </div>
@@ -68,13 +68,7 @@
   </div>
 </nav>
 
-<script>
-  function setLanguage(language) {
-    document.cookie = 'language=' + language;
-    document.getElementById('languageDropdown').innerHTML =
-      '<i class="fa fa-flag"></i> ' + (language == 'de' ? '🇩🇪' : '🇬🇧');
-  }
-</script>
+<script src="/assets/js/language.js"></script>
 
 <style>
   nav.navbar {

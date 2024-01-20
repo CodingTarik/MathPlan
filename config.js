@@ -87,7 +87,7 @@ const securityHeaderConfig = {
       // Added inlinescript hash for Cross-Site-Policy
       'script-src': [
         "'self'",
-        "'sha256-GC6sqCnhg9h2PIYTnsmfFvS16ZCgwoa54eMaC8jr/Zw='"
+        "'sha256-IDUqR6tWhL1G3sb2OcqoFkgpOOaNXEb5Ey7yfuaH8xU='"
       ],
       'default-src': ["'self'"],
       'form-action': ["'self'"],

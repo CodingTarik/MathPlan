@@ -41,8 +41,19 @@ app.use(
   '/assets/bootstrap',
   express.static(path.join(__dirname, 'node_modules/bootstrap/dist'))
 );
-app.use('/assets/animate', express.static(path.join(__dirname, 'node_modules/animate.css')));
-
+app.use(
+  '/assets/animate',
+  express.static(path.join(__dirname, 'node_modules/animate.css'))
+);
+app.use(
+  '/assets/animateonscroll',
+  express.static(path.join(__dirname, 'node_modules/aos/dist'))
+);
+app.use(
+  '/assets/typed',
+  express.static(path.join(__dirname, 'node_modules/typed.js/dist'))
+);
+app.use('/assets/sweetalert2', express.static(path.join(__dirname, 'node_modules/sweetalert2/dist')));
 // parse requests of content-type - application/json
 app.use(express.json());
 

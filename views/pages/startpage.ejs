@@ -1,4 +1,11 @@
-<!-- Einführung -->
+<!-- init animate on scroll-->
+<script src="/assets/js/animateInit.js"></script>
+<!-- init typed.js-->
+<script src="/assets/typed/typed.umd.js"></script>
+<!-- init sweetalert2-->
+<script src="/assets/sweetalert2/sweetalert2.js"></script>
+
+<!-- introduction-->
 <section
   class="section section-header text-dark py-5 d-flex align-items-center animate__animated animate__fadeIn"
 >
@@ -6,12 +13,13 @@
     <div class="row justify-content-center">
       <div class="col-12 col-md-8 text-center bg-light">
         <h1 class="display-3 font-weight-bold mb-4 text-primary">Materno.</h1>
+          <!-- Setup and start animation! -->
         <p class="lead mb-5">
           Materno ist Ihr zuverlässiges Prüfungsplanungstool. Mit Materno können
           Sie mühelos Ihren Prüfungsplan erstellen, validieren und genehmigen
           lassen.
         </p>
-        <a href="#" class="btn btn-outline-primary btn-lg mb-4"
+        <a href="#" class="btn btn-outline-primary btn-lg mb-4" id="startButton"
           >Jetzt starten!</a
         >
         <br>
@@ -36,9 +44,9 @@
   </div>
 </section>
 
-<!-- Vorteile -->
+<!-- advantages -->
 <div class="row">
-  <div class="col-md-4 mb-4 animate__animated animate__fadeInLeft" >
+  <div class="col-md-4 mb-4" data-aos="zoom-in-right">
     <div class="card border-0 text-center p-4">
       <i class="fa fa-calendar fa-3x mb-3 text-primary"></i>
       <h2 class="h3 text-dark">Planen</h2>
@@ -47,7 +55,7 @@
   </div>
 
   <div class="col-md-4 mb-4">
-    <div class="card border-0 text-center p-4 animate__animated animate__fadeInUp">
+    <div class="card border-0 text-center p-4" data-aos="zoom-in-up">
       <i class="fa fa-check-circle fa-3x mb-3 text-primary"></i>
       <h2 class="h3 text-dark">Validieren</h2>
       <p>Real-time Updates für die Validierung Ihres Prüfungsplans.</p>
@@ -55,7 +63,7 @@
   </div>
 
   <div class="col-md-4">
-    <div class="card border-0 text-center p-4 animate__animated animate__fadeInRight">
+    <div class="card border-0 text-center p-4" data-aos="zoom-in-left">
       <i class="fa fa-thumbs-up fa-3x mb-3 text-primary"></i>
       <h2 class="h3 text-dark">Genehmigen</h2>
       <p>Einfache Genehmigung und Anpassung Ihrer Prüfungsplanung.</p>
@@ -64,7 +72,7 @@
 </div>
 
 <!-- Open source-->
-<div class="row row-grid align-items-center mb-5 mb-lg-7 animate__animated animate__fadeIn">
+<div class="row row-grid align-items-center mb-5 mb-lg-7" data-aos="fade-in" data-aos-duration="3000">
   <div class="col-12 col-lg-5">
     <h2 class="mb-4">Entdecke die Welt des Open Source</h2>
     <p>
@@ -94,7 +102,7 @@
 </div>
 
 <!-- FAQ -->
-<div class="container mb-5 animate__animated animate__fadeIn">
+<div class="container mb-5" data-aos="fade-in">
   <div class="row justify-content-center mb-5">
     <div class="col-12 text-center mb-4 mb-lg-5">
       <h2 class="display-3 mb-4">Häufig gestellte Fragen</h2>
@@ -235,5 +243,18 @@
     </div>
  </div>
 </div>
-    
+<div class="container text-center">
+  <div class="row justify-content-center">
+    <div class="col-12 col-md-8 text-center" style="background-color: #f8f9fa; padding: 20px; border-radius: 10px; box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.1); min-height: 150px;">
+      <!-- Element to contain animated typing -->
+      <span id="animatedText" style="display: block; font-size: 24px; font-weight: bold; color: #007bff; margin-top: 20px;"></span>
+      <script src="/assets/js/animatedIntroText.js"></script>
+    </div>
+  </div>
+</div>
+<!-- init sweetalert2-->
+<script src="/assets/js/startNowClick.js"></script>
+<link rel="stylesheet" href="/assets/sweetalert2/sweetalert2.css" />
+
+
 
