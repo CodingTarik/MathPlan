@@ -20,6 +20,6 @@ router.get('/:title', bookController.handleGetBook);
 router.post('/addModul', dbController.addModul);
 router.post('/deleteModulById', dbController.deleteModulById);
 
-router.post('/uploadPDF', pdfUploadController.uploadPDF);
+router.post('/uploadPDFtoServer', pdfUploadController.uploadPDF);
 
 module.exports = router;
