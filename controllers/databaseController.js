@@ -7,8 +7,8 @@ const examRegulationHelper = require(
 );
 /**
  * if a request is made the addModul function of the database is called by the controller and the added module is sent back as a response
- * @param  req
- * @param  res
+ * @param {Object} req
+ * @param {Object} res
  * @returns if the passed data is not sufficient as in does not contain a module id
  */
 const addModul = async (req, res) => {
@@ -199,11 +199,42 @@ const addExamRegulation = async (req, res) => {
     });
   }
 };
+/**
+ * if a request is made the getModules function of the database is called by the controller and the matching module(s)
+ * is sent back as a response if there are less than 50 matching modules and no other error occurs
+ * @param {Object} req
+ * @param {Object} res
+ */
+const getModules = (req, res) => {
+  db.getModules(
+    req.params.id,
+    req.params.name,
+    req.params.credits,
+    req.params.language,
+    req.params.applicability
+  )
+    .then((data) => {
+      if (data.count <= 50) res.send(data.rows);
+      else throw new Error('The search request yielded more than 50 requests');
+    })
+    .catch((err) => {
+      if (err.message === 'The search request yielded more than 50 requests') {
+        res
+          .status(400)
+          .send('The search request yielded more than 50 requests');
+      } else {
+        res.status(500).send({
+          message: err.message || 'Error getting module!'
+        });
+      }
+    });
+};
 
 module.exports = {
   addModul,
   deleteModulById,
   getAllModuls,
   getAllModulsMin,
-  addExamRegulation
+  addExamRegulation,
+  getModules
 };

@@ -8,7 +8,12 @@ lint:
     - npm install
     - npm run build
     - npm run lint
-  only:
-    - merge_requests
-  tags:
-    - linrunner
+
+jest:
+  stage: test
+  image: node
+  script:
+    - npm install
+    - npm run build
+    - npm run test
+
