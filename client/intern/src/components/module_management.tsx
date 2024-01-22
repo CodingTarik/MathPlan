@@ -2,7 +2,9 @@ import React from 'react';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
-
+import DeleteIcon from '@mui/icons-material/Delete';
+import EditIcon from '@mui/icons-material/Edit';
+import IconButton from '@mui/material/IconButton';
 import ModuleServices from '../database_services/ModuleServices'; // for database functionality
 import Table from '@mui/joy/Table';
 import { AxiosError } from 'axios';
@@ -138,7 +140,8 @@ export default function AddModuleFields() {
       </Box>
         <Button variant="outlined" sx={{ marginTop: 2, marginBottom: 2 }} disabled = {isAddButtonDisabled(addModuleParameters)} onClick = {() => handleButtonClick(addModuleParameters)}>Speichern</Button>
         <Button variant="outlined"  sx={{ marginTop: 2, marginBottom: 2 }} onClick = {() => handleSearchClick(addModuleParameters)}>Suchen</Button>
-        <Table hoverRow sx={{ '& tr > *:not(:first-child)': { textAlign: 'right' } }}>
+        <Table hoverRow sx={{ '& tr > *:not(:first-child)': { textAlign: 'right' }
+            }}>
           <thead>
             <tr>
               <th>Modulnummer</th>
@@ -146,18 +149,38 @@ export default function AddModuleFields() {
               <th>CP</th>
               <th>Sprache</th>
               <th>Verwendbarkeit</th>
+              
+ <th style={{ width: 120 }} ></th>
             </tr>
           </thead>
           <tbody>
             {/* If the search button is clicked and rowsFound is not empty the rows are displayed and the fields where one can add a module set if a module is clicked on */}
             {rowsFound.map((row) => (
-              <tr key={row.moduleID} onClick = {() => {
-                setAddModuleParameters([row.moduleID, row.moduleName, row.moduleCredits, row.moduleLanguage, row.moduleApplicability]);}} >
+              <tr key={row.moduleID} onClick = {() => {}} >
                 <td>{row.moduleID}</td>
                 <td>{row.moduleName}</td>
                 <td>{row.moduleCredits}</td>
                 <td>{row.moduleLanguage}</td>
                 <td>{row.moduleApplicability}</td>
+                <td >
+                <Box sx={{ display: 'flex', gap: 1 }}>
+                        <IconButton
+                          color="secondary"
+                          onClick={() => {1;}
+                          }
+                        >
+                          <DeleteIcon />
+                        </IconButton>
+                        <IconButton
+                          color="secondary"
+                          onClick={() => {setAddModuleParameters([row.moduleID, row.moduleName, row.moduleCredits, row.moduleLanguage, row.moduleApplicability]); window.scrollTo(0, 0);}
+                          }
+                        >
+                          <EditIcon />
+                        </IconButton>
+                        </Box>
+                </td>
+
               </tr>
             ))}
           </tbody>
