@@ -18,9 +18,10 @@ const customLevels = {
   warn: 1,
   info: 2,
   network: 3, // Custom level for network-related events
-  verbose: 4,
-  debug: 5,
-  silly: 6
+  database: 4, // custom level for database-related events
+  verbose: 5,
+  debug: 6,
+  silly: 7
 };
 /**
  * Colors associated with custom log levels for better console output.
@@ -38,6 +39,7 @@ const colors = {
   warn: 'yellow',
   info: 'green',
   network: 'blue', // Custom color for network-related events
+  database: 'blue', // Custom color for database-related events
   verbose: 'cyan',
   debug: 'grey',
   silly: 'magenta'

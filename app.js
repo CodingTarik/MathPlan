@@ -108,9 +108,9 @@ try {
 
       httpServer.listen(config.server.PORT_HTTP, () => {
         logger.info(
-          `Die Anwendung ist auf ${chalk.cyanBright(
+          `The application is available on ${chalk.cyanBright(
             `http://${config.server.HOST}:${config.server.PORT_HTTP}`
-          )} verfügbar.`
+          )}.`
         );
       });
     }
@@ -127,9 +127,9 @@ try {
       https.createServer(options, app).listen(config.server.PORT_HTTPS, () => {
         logger.info(
           chalk.green(
-            `Die Anwendung ist auf ${chalk.cyanBright(
+            `The application is available on ${chalk.cyanBright(
               `https://${config.server.HOST}:${config.server.PORT_HTTPS}`
-            )} verfügbar.`
+            )}.`
           )
         );
       });
