@@ -52,6 +52,10 @@ config.web.DEFAULT_LANGUAGE = process.env.DEFAULT_LANGUAGE || 'de';
 config.dev = {};
 config.dev.DEBUG = testBool(process.env.DEBUG) || false;
 
+// Initalize data configuration object
+config.data = {};
+config.data.imprinturl = process.env.IMPRINT_URL || 'https://example.com';
+
 /**
  * For more information on the security headers, see:
  * @see {@link https://owasp.org/www-project-secure-headers/index.html#configuration-proposal}

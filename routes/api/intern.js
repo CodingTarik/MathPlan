@@ -22,4 +22,6 @@ router.post('/deleteModulById', dbController.deleteModulById);
 
 router.post('/uploadPDFtoServer', pdfUploadController.uploadPDF);
 
+router.get('/getModules/:id/:name/:credits/:language/:applicability', dbController.getModules);
+
 module.exports = router;

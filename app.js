@@ -35,6 +35,12 @@ if (config.dev.DEBUG) {
   app.use(morgan('dev', { stream: morganStream }));
 }
 
+// Register imprint middleware
+app.use((req, res, next) => {
+  res.locals.imprinturl = config.data.imprinturl;
+  next();
+});
+
 // Static assets
 app.use('/assets', express.static('public'));
 app.use(
@@ -61,8 +67,9 @@ app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 
 // Routing
-app.use('/', pages);
 app.use('/api', api);
+app.use('/', pages);
+
 try {
   if (process.env.NODE_ENV !== 'test') {
     // Datbase
