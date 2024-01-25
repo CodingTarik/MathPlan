@@ -151,15 +151,9 @@ function App() {
         */}
         <TabPanel value="0">
           <div>
-          <h3>
-            Manuell ein Modul zur Datenbank hinzufügen
-          </h3>
            <AddModuleFields/>
-           <h3>
-            Modulhandbuch hochladen
-           </h3>
+           <hr style={{ height: '4px', borderWidth: 0, color: 'gray', backgroundColor: 'gray' }} /> {/*horizontal line*/}
            <PdfFileUpload/>
-           
            </div>
         </TabPanel>
         <TabPanel value="1">

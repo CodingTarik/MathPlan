@@ -71,7 +71,7 @@ async function readAndFilterData(dataBuffer, searchTerm) {
     // build target objects from parsed properties
     return buildModules(parsedProperties, numberOfModules);
   } catch (error) {
-    console.error('Error while parsing the pdf file:', error);
+    throw new Error('Error while parsing the pdf file:', error);
   }
 }
 

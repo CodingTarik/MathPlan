@@ -33,21 +33,19 @@ export default function PdfFileUpload() {
       for (let i=0 ; i < files.length ; i++) {
         formData.append('file', files[i]); 
       }
+      try {
       const response =  await axios.post( 'api/intern/uploadPDFtoServer', formData, {
           headers: {
             'Content-Type': 'multipart/form-data',
           },
         });
-        if(response.status===500){
+        console.log('Upload successfull: ', response.data); 
+        uploadPdftoDatabase(response.data); // functionality not yet implemented
+      }catch (error) {
           console.error("Upload fehlgeschlagen");
-          
-        }
-        else{
-        console.log('Upload successfull: ', response); 
-        //console.log(response.data);
-        uploadPdftoDatabase(response.data);
-      }
-    }  
+          alert("Upload fehlgeschlagen");  
+          }
+        }          
     };
   return (
     <div>
