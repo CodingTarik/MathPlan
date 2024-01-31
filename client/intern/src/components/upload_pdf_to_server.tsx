@@ -3,6 +3,7 @@ import Button from '@mui/material/Button';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import React from 'react';
 import axios from 'axios';
+import ModuleServices from '../database_services/ModuleServices';
 
 /**
  * Styled component for the input element of the file upload button
@@ -64,8 +65,47 @@ export default function PdfFileUpload() {
   }
   
   function uploadPdftoDatabase(data:Array<Array<JSON>>|null){
-    // not yet implemented
-    console.log('Nun sollten die Module in die Datenbank geschrieben werden: ');
-    console.dir(data);
-  }
+    data?.forEach((element) => {
+      element.forEach((module) => {
+        let newModule: { [key: string]: string } = {};
+        for (let key in module){
+          console.log(key, (module as any)[key] ); // Logs each property name and value
+          //newModule[key] = (module as any)[key];
+        }
+        for (let key in module){
+          if (key == "moduleID") newModule["id"] = (module as any)[key];
+          if (key == "moduleName") newModule["name"] = (module as any)[key];
+          if (key == "moduleCredits") newModule["credits"] = (module as any)[key];
+          if (key == "moduleLanguage") newModule["language"] = (module as any)[key];
+          if (key == "moduleApplicability") newModule["applicability"] = (module as any)[key];
+        
+        }
+        console.log(newModule);
+        try {
+          ModuleServices.getModules(newModule.id,'','','','')
+            .then((response: { data: { moduleID: string; moduleName: string; moduleCredits: number; moduleLanguage: string; moduleApplicability: string; createdAt: object; id: object, updatedAt: object}[]; }) => { 
+              console.log("Already in database");
+              console.log(response.data);
+            }).catch((e: Error) => {
+            throw new Error("Not in database, needs to be created "+e);
+            });
+
+        } catch (error) {
+          console.log("Error while getting module we we create one: "  +error);
+          ModuleServices.create(newModule)
+            .then((response: { data: object; }) => { 
+              console.log("Success at saving module");
+              console.log(response.data);
+            })
+            .catch((e: Error) => { 
+              console.log("Error while saving module");
+              console.log(e);
+            });
+          }
+      //add those modules to the database
+      //ModuleServices.create( (module.moduleID, module.module ))
+      });
+    });
+
+}
   
