@@ -67,18 +67,19 @@ export default function PdfFileUpload() {
   function uploadPdftoDatabase(data:Array<Array<JSON>>|null){
     data?.forEach((element) => {
       element.forEach((module) => {
-        let newModule: { [key: string]: string } = {};
-        for (let key in module){
-          console.log(key, (module as any)[key] ); // Logs each property name and value
+        const newModule: { [key: string]: string } = {};
+        //for (const key in module){
+          //console.log(key, (module as object)[key] ); // Logs each property name and value
           //newModule[key] = (module as any)[key];
-        }
-        for (let key in module){
+        //7}
+        /* eslint-disable */        
+        for (const key in module){
           if (key == "moduleID") newModule["id"] = (module as any)[key];
           if (key == "moduleName") newModule["name"] = (module as any)[key];
           if (key == "moduleCredits") newModule["credits"] = (module as any)[key];
           if (key == "moduleLanguage") newModule["language"] = (module as any)[key];
           if (key == "moduleApplicability") newModule["applicability"] = (module as any)[key];
-        
+        /*eslint-enable */
         }
         console.log(newModule);
         try {
