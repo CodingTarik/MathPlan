@@ -35,10 +35,15 @@ const getModules = (id:string, name:string, credits:string, language:string, app
 }
 
 
+const deleteModule = (id:string) => {
+  return http.delete(`/deleteModule/${id}`)
+}
+
 
 const ModuleServices = {
   create,
-  getModules
+  getModules,
+  deleteModule
 };
 
 export default ModuleServices;

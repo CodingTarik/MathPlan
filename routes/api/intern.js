@@ -17,5 +17,6 @@ router.post('/addModul', dbController.addModul);
 router.post('/deleteModulById', dbController.deleteModulById);
 
 router.get('/getModules/:id/:name/:credits/:language/:applicability', dbController.getModules);
+router.delete('/deleteModule/:id', dbController.deleteModulById);
 
 module.exports = router;

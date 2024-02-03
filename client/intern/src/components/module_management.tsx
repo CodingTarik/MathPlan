@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
@@ -8,6 +8,8 @@ import IconButton from '@mui/material/IconButton';
 import ModuleServices from '../database_services/ModuleServices'; // for database functionality
 import Table from '@mui/joy/Table';
 import { AxiosError } from 'axios';
+import { CustomSnackbarContent } from './customSnackbarContent';
+import {Dialog, DialogTitle, DialogContent, DialogActions, DialogContentText, Snackbar} from '@mui/material';
 
 /**
  * Called when button is clicked to create new database entry and add it to database
@@ -31,7 +33,6 @@ function handleButtonClick(values: string[]) {
         console.log("Error while saving module");
         console.log(e);
       });
-    
 }
 
 /**
@@ -48,9 +49,51 @@ function isAddButtonDisabled(values: string[]) {
  * @returns the UI for manually inserting modules into the database and searching for certain modules
  */
 export default function AddModuleFields() {
+  const [rowsFound, setRowsFound] = useState(Array(0).fill({moduleID: "", moduleName: "", moduleCredits: NaN, moduleLanguage: "", moduleApplicability: ""}));
   const [addModuleParameters, setAddModuleParameters] = React.useState(Array(5).fill(""));
-  const  [rowsFound, setRowsFound] = React.useState(Array(0).fill({moduleID: "", moduleName: "", moduleCredits: NaN, moduleLanguage: "", moduleApplicability: ""}));
+  const [moduleToBeDeleted, setmoduleToBeDeleted] = useState<string | null>(null);
+  const [dialogOpen, setDialogOpen] = useState(false); 
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [saveSuccess, setSaveSuccess] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState('');
 
+  /**
+   * if delete button is clicked the dialog box is opened and the id of the module saved
+   * @param id the moduleID of the module to be deleted
+   */
+  function handleDelete(id: string){
+    setmoduleToBeDeleted(id);
+    setDialogOpen(true);
+  }
+
+  /**
+   * if delete is clicked in the dialog box then the module is deleted,
+   * the rows displayed are updated, and the success/failure of deleting the 
+   * module is shown to the user
+   */
+  function handleConfirmDelete() {
+    if (moduleToBeDeleted !== null)
+      ModuleServices.deleteModule(moduleToBeDeleted)
+        .then(() => {
+          setmoduleToBeDeleted(null);
+          setRowsFound (rowsFound.filter(
+            (row) => row.moduleID !== moduleToBeDeleted
+          ));
+          setSnackbarMessage('Modul wurde erfolgreich entfernt.');
+          setSaveSuccess(true);
+          setSnackbarOpen(true);
+          setDialogOpen(false);
+        })
+        .catch((e: Error) => {
+          console.error(e);
+          setSnackbarMessage('Fehler beim Löschen des Moduls. ' + e.message);
+          setSaveSuccess(false);
+          setSnackbarOpen(true);
+          setDialogOpen(false);
+        });
+    else console.error('moduleToBeDeleted cannot be null'); 
+  }
+  
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>, entryIdentifier: number) => {
     const nextModule = addModuleParameters.slice();
     nextModule[entryIdentifier] = event.target.value;
@@ -82,7 +125,29 @@ export default function AddModuleFields() {
       });
   }
   return (
-    <>
+    <> 
+    <Dialog
+        open={dialogOpen}
+        onClose={() => setDialogOpen(false)}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle id="alert-dialog-title">Bestätigung</DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description">
+            Bist du dir sicher, dass du das Modul mit ID 
+            {moduleToBeDeleted}, löschen möchtest?
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setDialogOpen(false)} color="primary">
+            Abbrechen
+          </Button>
+          <Button onClick={handleConfirmDelete} color="primary" autoFocus>
+            Löschen
+          </Button>
+        </DialogActions>
+    </Dialog>
     <Box
       component="form"
       sx={{
@@ -149,8 +214,7 @@ export default function AddModuleFields() {
               <th>CP</th>
               <th>Sprache</th>
               <th>Verwendbarkeit</th>
-              
- <th style={{ width: 120 }} ></th>
+              <th style={{ width: 120 }} ></th>
             </tr>
           </thead>
           <tbody>
@@ -164,27 +228,43 @@ export default function AddModuleFields() {
                 <td>{row.moduleApplicability}</td>
                 <td >
                 <Box sx={{ display: 'flex', gap: 1 }}>
-                        <IconButton
-                          color="secondary"
-                          onClick={() => {1;}
-                          }
-                        >
-                          <DeleteIcon />
-                        </IconButton>
-                        <IconButton
-                          color="secondary"
-                          onClick={() => {setAddModuleParameters([row.moduleID, row.moduleName, row.moduleCredits, row.moduleLanguage, row.moduleApplicability]); window.scrollTo(0, 0);}
-                          }
-                        >
-                          <EditIcon />
-                        </IconButton>
-                        </Box>
+                  <IconButton
+                    color="secondary"
+                    onClick={() => {handleDelete(row.moduleID);}
+                    }
+                  >
+                    <DeleteIcon />
+                  </IconButton>
+                  <IconButton
+                    color="secondary"
+                    onClick={() => {setAddModuleParameters([row.moduleID, row.moduleName, row.moduleCredits, row.moduleLanguage, row.moduleApplicability]); window.scrollTo(0, 0);}
+                    }
+                  >
+                    <EditIcon />
+                  </IconButton>
+                  </Box>
                 </td>
-
               </tr>
             ))}
           </tbody>
         </Table>
+        <Snackbar
+          anchorOrigin={{
+            vertical: 'bottom',
+            horizontal: 'center'
+          }}
+          open={snackbarOpen}
+          autoHideDuration={6000}
+          onClose={() => {setSnackbarOpen(false);}}
+        >
+          <div>
+            <CustomSnackbarContent
+              message={snackbarMessage}
+              variant={saveSuccess ? 'success' : 'error'}
+              onClose={() => {setSnackbarOpen(false);}}
+            />
+          </div>
+        </Snackbar>
         </>
       );
     }

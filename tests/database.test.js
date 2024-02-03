@@ -184,3 +184,25 @@ test('GET /api/intern/getModules/:id/:name/:credits/:language/:applicability: It
   db.deleteModulById(newModule2.moduleID);
   db.deleteModulById(newModule3.moduleID);
 });
+
+
+test('DELETE /api/intern/deleteModule/:id: It should respond with a 404 status if the module was not found', async () => {
+  const moduleId =  Math.floor(Math.random() * 10000000).toString()
+  const response = await request(app)
+    .delete(`/api/intern/deleteModule/${moduleId}`);
+  expect(response.statusCode).toBe(404);
+});
+
+test('DELETE /api/intern/deleteModule/:id: It should delete an existing module', async () => {
+  const newModule = {
+    moduleID: Math.floor(Math.random() * 10000000).toString(),
+    moduleName: 'Numerik',
+    moduleCredits: 5,
+    moduleLanguage: 'English',
+    moduleApplicability: 'B.Sc. Mathematik'
+  };
+  await db.addModul(newModule.moduleID, newModule.moduleName, newModule.moduleCredits, newModule.moduleLanguage, newModule.moduleApplicability);
+  const response = await request(app)
+    .delete(`/api/intern/deleteModule/${newModule.moduleID}`);
+  expect(response.statusCode).toBe(200);
+});
