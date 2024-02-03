@@ -79,6 +79,26 @@ export default function AddModuleFields() {
         }
       });
   }
+
+  const handleIncompleteSearchClick = () => {
+    ModuleServices.getIncompleteModules()
+    .then((response: { data: { moduleID: string; moduleName: string; moduleCredits: number; moduleLanguage: string; moduleApplicability: string; createdAt: object; id: object, updatedAt: object}[]; }) => { 
+      console.log("Success at getting incomplete modules");
+      console.log(response.data);
+      setRowsFound(response.data);
+    })
+    .catch((e: AxiosError) => { 
+      /*if (e.response?.data == 'The search request yielded more than 50 requests') {
+        console.log('The search request yielded more than 50 requests')
+        setRowsFound(Array(0).fill({moduleID: "", moduleName: "", moduleCredits: NaN, moduleLanguage: "", moduleApplicability: ""}))
+      }
+      else {*/
+        console.log("Error while getting module");
+        console.log(e);
+      //}
+    });
+  }
+
   return (
     <>
     <Box
@@ -138,6 +158,7 @@ export default function AddModuleFields() {
       </Box>
         <Button variant="outlined" sx={{ marginTop: 2, marginBottom: 2 }} disabled = {isAddButtonDisabled(addModuleParameters)} onClick = {() => handleButtonClick(addModuleParameters)}>Speichern</Button>
         <Button variant="outlined"  sx={{ marginTop: 2, marginBottom: 2 }} onClick = {() => handleSearchClick(addModuleParameters)}>Suchen</Button>
+        <Button variant="outlined"  sx={{ marginTop: 2, marginBottom: 2 }} onClick = {() => handleIncompleteSearchClick()}>Unvollständige Module suchen</Button>
         <Table hoverRow sx={{ '& tr > *:not(:first-child)': { textAlign: 'right' } }}>
           <thead>
             <tr>

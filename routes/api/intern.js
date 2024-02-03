@@ -11,11 +11,12 @@ const bookController = require(
 );
 
 // Example-API
-router.get('/:title', bookController.handleGetBook);
+//router.get('/:title', bookController.handleGetBook);
 
 router.post('/addModul', dbController.addModul);
 router.post('/deleteModulById', dbController.deleteModulById);
 
 router.get('/getModules/:id/:name/:credits/:language/:applicability', dbController.getModules);
+router.get('/getIncompleteModules', dbController.getIncompleteModules);
 
 module.exports = router;

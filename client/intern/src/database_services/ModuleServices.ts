@@ -31,14 +31,28 @@ const create = (data : object) => {
  * @returns a promise that is rejected or fulfilled depending on the success of getting the module(s), it rejects if there is a problem with the database or more than 50 modules match the request
  */
 const getModules = (id:string, name:string, credits:string, language:string, applicability:string)  => {
-  return http.get(`/getModules/${id}/${name}/${credits}/${language}/${applicability}`)
+  return http.get(`/getModules/${id}/${name}/${credits}/${language}/${applicability}`);
 }
 
-
+/**
+ * sends get request with the parameters of the module(s) that want to be retrieved
+ * @param id 
+ * @param name 
+ * @param credits 
+ * @param language 
+ * @param applicability 
+ * @returns a promise that is rejected or fulfilled depending on the success of getting the module(s), it rejects if there is a problem with the database or more than 50 modules match the request
+ */
+const getIncompleteModules = ()  => {
+  //TODO code
+  //TODO comments
+  return http.get("/getIncompleteModules");
+}
 
 const ModuleServices = {
   create,
-  getModules
+  getModules,
+  getIncompleteModules
 };
 
 export default ModuleServices;

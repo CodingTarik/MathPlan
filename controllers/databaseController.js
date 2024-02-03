@@ -88,8 +88,29 @@ const getModules = (req, res) => {
     });
 };
 
+/**
+ * if a request is made the getModules function of the database is called by the controller and the matching module(s)
+ * is sent back as a response if there are less than 50 matching modules and no other error occurs
+ * @param {Object} req
+ * @param {Object} res
+ */
+const getIncompleteModules = (req, res) => {
+  //TODO comments
+  db.getIncompleteModules()
+    .then(data => {
+      res.send(data.rows);
+    })
+    .catch(err => {
+        res.status(500).send({
+          message:
+            err.message || 'Error getting module!'
+    });
+  });
+};
+
 module.exports = {
   addModul,
   deleteModulById,
-  getModules
+  getModules,
+  getIncompleteModules
 };

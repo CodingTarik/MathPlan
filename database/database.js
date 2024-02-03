@@ -53,19 +53,19 @@ let Modul /** @type {ModulModel} */ = sequelize.define('Modul', {
   },
   moduleName: {
     type: Sequelize.STRING,
-    allowNull: false
+    allowNull: true
   },
   moduleCredits: {
     type: Sequelize.INTEGER,
-    allowNull: false
+    allowNull: true
   },
   moduleLanguage: {
     type: Sequelize.STRING,
-    allowNull: false
+    allowNull: true
   },
   moduleApplicability: {
     type: Sequelize.STRING,
-    allowNull: false
+    allowNull: true
   }
 });
 
@@ -162,12 +162,44 @@ const getModules = (moduleID, moduleName, moduleCredits, moduleLanguage, moduleA
   if (!(moduleCredits === 'undefined')) parameters.moduleCredits = moduleCredits;
   if (!(moduleLanguage === 'undefined')) parameters.moduleLanguage = moduleLanguage;
   if (!(moduleApplicability === 'undefined')) parameters.moduleApplicability = moduleApplicability;
+  console.log(parameters);
   return Modul.findAndCountAll({
     where: parameters,
     limit: 50,
     order: [['moduleID', 'ASC']]
   });
 };
+
+const getIncompleteModules = () => {
+  console.log("testing getting incomplete modules...")
+  //TODO comments
+  const parameters = {/*
+    $or: [
+      {
+        moduleName: null
+      }, 
+      {
+        moduleCredits: null
+      }, 
+      {
+        moduleLanguage: null
+      }, 
+      {
+        moduleApplicability: null
+      }, 
+    ]*/
+  };
+  return Modul.findAll({
+    where: //parameters,
+    {
+      moduleName: null,
+      //moduleCredits: null,
+      //moduleLanguage: null,
+      //moduleApplicability: null
+    }
+    //order: [['moduleID', 'ASC']]
+  })
+}
 
 module.exports = {
   config,
@@ -179,5 +211,6 @@ module.exports = {
   isModuleExists,
   deleteModulById,
   getAllModules,
-  getModules
+  getModules,
+  getIncompleteModules
 };
