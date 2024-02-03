@@ -185,9 +185,8 @@ test('GET /api/intern/getModules/:id/:name/:credits/:language/:applicability: It
   db.deleteModulById(newModule3.moduleID);
 });
 
-
 test('DELETE /api/intern/deleteModule/:id: It should respond with a 404 status if the module was not found', async () => {
-  const moduleId =  Math.floor(Math.random() * 10000000).toString()
+  const moduleId = Math.floor(Math.random() * 10000000).toString();
   const response = await request(app)
     .delete(`/api/intern/deleteModule/${moduleId}`);
   expect(response.statusCode).toBe(404);
