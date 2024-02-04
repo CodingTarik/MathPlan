@@ -35,6 +35,15 @@ if (config.dev.DEBUG) {
   app.use(morgan('dev', { stream: morganStream }));
 }
 
+// Register imprint middleware
+app.use((req, res, next) => {
+  res.locals.imprinturl = config.web.IMPRINT_URL;
+  res.locals.faqurl = config.web.FAQ_URL;
+  res.locals.faqurlactivemenu = config.web.FAQ_URL_ACTIVE;
+  res.locals.faqactivatestartpage = config.web.FAQ_STARTPAGE_ACTIVE;
+  next();
+});
+
 // Static assets
 app.use('/assets', express.static('public'));
 app.use(
@@ -73,15 +82,16 @@ app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 
 // Routing
-app.use('/', pages);
 app.use('/api', api);
+app.use('/', pages);
+
 try {
   if (process.env.NODE_ENV !== 'test') {
     // Datbase
     /* eslint-disable */
     db.sequelize
       .sync()
-      // for changing the underlying database (delets all content, updates scheme) a line of code can be added as decribed in readme file
+      // for changing the underlying database (delets all content, updates scheme) adjust the line above as decribed in the readme file
       /* eslint-enable */
       .then(() => {
         logger.info('Synced db.');
