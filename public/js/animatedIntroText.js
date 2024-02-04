@@ -12,10 +12,10 @@ const introTexts = [
   'Digital.',
   'Effizient.',
   'Für Mathematiker.',
-  'Besser als Inferno. 😂',
-  'Erstellt mit ❤️.',
+  'Besser als Inferno 😂',
+  'Erstellt mit ❤️',
   'Mathebau.',
-  'Einfach Materno.🌍'
+  'Einfach Materno🌍'
 ];
 
 /**

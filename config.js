@@ -48,6 +48,13 @@ config.web = {};
 // Set the default language for the web, defaulting to 'de' if not provided
 config.web.DEFAULT_LANGUAGE = process.env.DEFAULT_LANGUAGE || 'de';
 
+// the faq url the website will redirect if faq_url_activate is active
+config.web.FAQ_URL = process.env.FAQ_URL || 'www.example.org';
+// defined if faq item in menu banner is activate redirects to faq_url
+config.web.FAQ_URL_ACTIVE = testBool(process.env.ACTIVATE_FAQ);
+// Defines if faq on startpage is active
+config.web.FAQ_STARTPAGE_ACTIVE = testBool(process.env.FAQ_STARTPAGE_ACTIVE);
+
 // Initialize an empty dev configuration object
 config.dev = {};
 config.dev.DEBUG = testBool(process.env.DEBUG) || false;
