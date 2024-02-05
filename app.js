@@ -41,6 +41,10 @@ app.use((req, res, next) => {
   res.locals.faqurl = config.web.FAQ_URL;
   res.locals.faqurlactivemenu = config.web.FAQ_URL_ACTIVE;
   res.locals.faqactivatestartpage = config.web.FAQ_STARTPAGE_ACTIVE;
+  res.locals.scoialmedia = config.web.SOCIAL_MEDIA_ACTIVE;
+  res.locals.facebookurl = config.web.FACEBOOK_URL;
+  res.locals.twitterurl = config.web.TWITTER_URL;
+  res.locals.instagramurl = config.web.INSTAGRAM_URL;
   next();
 });
 

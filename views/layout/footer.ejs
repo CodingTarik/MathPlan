@@ -28,14 +28,16 @@
       </div>
     </div>
     <hr class="bg-light" />
+    <% if(scoialmedia) {%>
     <div class="row">
       <div class="col-md-12 text-center">
         <!-- Social-Media-Icons -->
-        <a href="#" class="text-light mx-2"><i class="fa fa-facebook-f"></i></a>
-        <a href="#" class="text-light mx-2"><i class="fa fa-twitter"></i></a>
-        <a href="#" class="text-light mx-2"><i class="fa fa-instagram"></i></a>
+        <a href="<%=facebookurl %>" class="text-light mx-2"><i class="fa fa-facebook-f"></i></a>
+        <a href="<%=twitterurl %>" class="text-light mx-2"><i class="fa fa-twitter"></i></a>
+        <a href="<%=instagramurl %>" class="text-light mx-2"><i class="fa fa-instagram"></i></a>
       </div>
     </div>
+    <% } %>
   </div>
   <div class="text-center">
     <a

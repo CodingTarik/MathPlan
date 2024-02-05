@@ -1,5 +1,6 @@
 /**
  * Array of strings for animated text.
+ * This are test strings for the animated text. Has to be replaced with the final strings.
  * @type {string[]}
  */
 const introTexts = [

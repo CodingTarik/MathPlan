@@ -15,37 +15,39 @@
     <button
       class="navbar-toggler"
       type="button"
-      data-toggle="collapse"
-      data-target="#navbarNav"
+      data-bs-toggle="collapse"
+      data-bs-target="#navbarNav"
       aria-controls="navbarNav"
       aria-expanded="false"
       aria-label="Toggle navigation"
     >
       <span class="navbar-toggler-icon"></span>
     </button>
-    <div class="collapse navbar-collapse" id="navbarNav">
+    <div class="collapse navbar-collapse" id="navbarNav" style="color: white;">
       <ul class="navbar-nav ml-auto">
         <li class="nav-item active">
-          <a class="nav-link" href="/">Startseite</a>
+          <div class="d-flex align-items-center">
+            <a class="nav-link" href="/"><i class="fa fa-window-maximize"></i> Startseite</a>
+          </div>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="/about">Meine Prüfungspläne</a>
+          <a class="nav-link" href="/about"><i class="fa fa-list-alt"></i> Meine Prüfungspläne</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="/teach">Dozierende</a>
+          <a class="nav-link" href="/teach"><i class="fa fa-university"></i> Dozierende</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="/intern">Intern</a>
+          <a class="nav-link" href="/intern"><i class="fa fa-inbox"></i> Intern</a>
         </li>
         <% if(faqurlactivemenu) { %>
           <li class="nav-item">
-            <a class="nav-link" href="<%=faqurl%>">FAQ</a>
+            <a class="nav-link" href="<%=faqurl%>"><i class="fa fa-question-circle"></i> FAQ</a>
           </li>
         <% } %>
       </ul>
       <ul class="navbar-nav" style="margin-left: auto">
         <li class="nav-item">
-          <button class="btn btn-outline-light rounded-pill mx-2">
+          <button class="btn btn-outline-light rounded-pill me-2">
             <i class="fa fa-user"></i> Login
           </button>
         </li>

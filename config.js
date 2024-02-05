@@ -56,6 +56,12 @@ config.web.FAQ_URL_ACTIVE = testBool(process.env.FAQ_URL_ACTIVE);
 config.web.FAQ_STARTPAGE_ACTIVE = testBool(process.env.FAQ_STARTPAGE_ACTIVE);
 // imprint url for redirect
 config.web.IMPRINT_URL = process.env.IMPRINT_URL || 'https://example.com';
+// social media links for footer
+config.web.SOCIAL_MEDIA_ACTIVE = testBool(process.env.SOCIAL_MEDIA_ACTIVE);
+// social media links
+config.web.FACEBOOK_URL = process.env.FACEBOOK_URL || 'https://www.facebook.com/';
+config.web.TWITTER_URL = process.env.TWITTER_URL || 'https://twitter.com/';
+config.web.INSTAGRAM_URL = process.env.INSTAGRAM_URL || 'https://www.instagram.com/';
 // Initialize an empty dev configuration object
 config.dev = {};
 config.dev.DEBUG = testBool(process.env.DEBUG) || false;
