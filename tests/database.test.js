@@ -3,7 +3,7 @@ const app = require('../app').app;
 const db = require('../database/database');
 const modulehelper = require('../database/modulHelper');
 
-describe('POST /api/intern/addModul', () => {
+describe('Modules API Tests', () => {
   beforeAll(async () => {
     db.config.dialect = 'sqlite';
     db.config.storage = 'database.test.sqlite';

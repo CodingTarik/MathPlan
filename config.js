@@ -6,6 +6,8 @@ require('dotenv').config();
  * @typedef {Object} AppConfig
  * @property {Object} database - Database configuration.
  * @property {string} database.DB_HOST - Database host.
+ * @property {string} database.DB_USER - Database user.
+ * @property {string} database.DB_DIALECT - Database dialect. Currently supports 'mysql' and 'sqlite'.
  * @property {string} database.DB_PASSWORD - Database password.
  * @property {string} database.DB_DATABASE - Database name.
  * @property {Object} server - Server configuration.

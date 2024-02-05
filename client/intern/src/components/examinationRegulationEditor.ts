@@ -20,12 +20,12 @@ export async function getSelectEditorExtend() {
 
 /**
  * @async
- * @function saveFunction
+ * @function saveExamRegulation
  * @description This function gets the current value of the examination regulation from the JSON editor and saves it to the database.
  * @param {string} internalName - The internal name of the examination regulation.
  * @returns {Promise<boolean>} Whether the save was successful.
  */
-export async function saveFunction(internalName: string): Promise<boolean> {
+export async function saveExamRegulation(internalName: string): Promise<boolean> {
   // Get the current value of the examination regulation from the JSON editor.
   const examValue = window.JSONEditorInstance.getValue();
 

@@ -6,11 +6,9 @@ const dbController = require(
   path.join(__dirname, '../../controllers/databaseController.js')
 );
 
-router.post('/addModul', dbController.addModul);
-router.post('/deleteModulById', dbController.deleteModulById);
-router.get('/getAllModuls', dbController.getAllModuls);
+router.get('/getAllModuls', dbController.getAllModulsForJSONEditor);
 router.get('/getAllModulsMin', dbController.getAllModulsMin);
-router.post('/addExamRegulation', dbController.addExamRegulation);
+router.post('/addExamRegulation', dbController.addOrUpdateExamRegulation);
 router.post('/addModul', dbController.addModul);
 router.post('/deleteModulById', dbController.deleteModulById);
 router.get(

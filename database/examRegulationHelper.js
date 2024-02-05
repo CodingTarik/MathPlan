@@ -8,7 +8,7 @@ const ExamRegulation = require('./database.js').models.ExaminationRegulation;
  * @param {string} internalName - The internal name of the examination regulation.
  * @returns {Promise<Object>} The created or updated examination regulation.
  */
-const addExamRegulation = async (examRegulationSchema, internalName) => {
+const addOrUpdateExamRegulation = async (examRegulationSchema, internalName) => {
   // Check if the examination regulation with the given internal name already exists.
   const existingRegulation = await ExamRegulation.findOne({
     where: {
@@ -18,8 +18,7 @@ const addExamRegulation = async (examRegulationSchema, internalName) => {
 
   if (existingRegulation) {
     // If the regulation exists, update it with the new schema.
-    existingRegulation.jsonSchema = JSON.stringify(examRegulationSchema);
-    return existingRegulation.save();
+    return existingRegulation.update({ jsonSchema: JSON.stringify(examRegulationSchema) });
   } else {
     // If the regulation does not exist, create a new one.
     const newRegulation = {
@@ -59,12 +58,12 @@ const getExamRegulation = async (internalName) => {
     where: {
       name: internalName
     }
-  }).then((result) => result); // Convert the result to a boolean. If the result is not null, the examination regulation exists.
+  }).then((result) => result);
 };
 
 // Export the functions.
 module.exports = {
-  addExamRegulation,
+  addOrUpdateExamRegulation,
   isExamRegulationExists,
   getExamRegulation
 };

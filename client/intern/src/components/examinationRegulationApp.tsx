@@ -12,7 +12,7 @@ import {
 import SaveIcon from '@mui/icons-material/Save';
 import { CustomSnackbarContent } from './customSnackbarContent';
 import {
-  saveFunction,
+  saveExamRegulation,
   initializeJsonEditor
 } from './examinationRegulationEditor';
 
@@ -74,7 +74,7 @@ function ExaminationRegulationApp() {
   const handleConfirmSave = async () => {
     try {
       // Attempt to save the examination regulation.
-      const saveResult = await saveFunction(internalName);
+      const saveResult = await saveExamRegulation(internalName);
 
       // Update the state based on whether the save was successful.
       if (saveResult) {

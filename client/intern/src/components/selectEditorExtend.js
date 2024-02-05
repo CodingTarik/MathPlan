@@ -1,7 +1,7 @@
 /**
  * @description Represents an extension of the Select2 editor with additional $ref loading functionality for enumSource.
  * @extends window.JSONEditor.defaults.editors.select2
- * @see {@link https://github.com/json-editor/json-editor/blob/b846b41697039134ac48b0078cd7056ea5d15faa/src/editors/select2.js}
+ * @see {@link https://github.com/json-editor/json-editor/blob/b846b41697039134ac48b0078cd7056ea5d15faa/src/editors/select2.js, https://github.com/json-editor/json-editor/blob/164d6a3d2445ad0be93101e9c78fca1c6d25d6de/src/editors/select.js#L4}
  */
 export class SelectedExtend extends window.JSONEditor.defaults.editors.select2 {
   afterInputReady() {
@@ -191,7 +191,7 @@ export class SelectedExtend extends window.JSONEditor.defaults.editors.select2 {
     else if (this.schema.type === 'number') return 1 * value || 0;
     else if (this.schema.type === 'integer') return Math.floor(value * 1 || 0);
     else if (this.schema.enum && value === undefined) return undefined;
-    /* Begin change to convert this to string automatically */
+    /* Begin change to not convert this to string automatically */
     return value;
     /* End change */
   }
