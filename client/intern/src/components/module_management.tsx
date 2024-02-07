@@ -11,7 +11,7 @@ import { AxiosError } from 'axios';
  * Called when button is clicked to create new database entry and add it to database
  * @param values The entries made by the user for each of the input fields (id, name, credits, language, applicability)
  */
-function handleButtonClick(values: string[]) {
+export function handleButtonClick(values: string[]) {
     const newModule = {
       id: values[0],
       name: values[1],

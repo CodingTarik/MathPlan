@@ -3,7 +3,9 @@ import Button from '@mui/material/Button';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import React from 'react';
 import axios from 'axios';
-import ModuleServices from '../database_services/ModuleServices';
+//import ModuleServices from '../database_services/ModuleServices';
+import  { handleButtonClick } from './module_management';
+//import ModuleServices from '../database_services/ModuleServices';
 
 /**
  * Styled component for the input element of the file upload button
@@ -65,48 +67,50 @@ export default function PdfFileUpload() {
   }
   
   function uploadPdftoDatabase(data:Array<Array<JSON>>|null){
+    let numAddedModules =0;
+    let numChangedModules =0;
+    let numUnChangedModules =0;
+    let numErrorModules =0;
+/*
+    const compareModules = (module: { moduleID: string; moduleName: string; moduleCredits: number; moduleLanguage: string; moduleApplicability: string; createdAt: object; id: object, updatedAt: object}, values: string[]) => {
+      if (module.moduleID == values[0] && module.moduleName == values[1] && module.moduleCredits == parseInt(values[2]) && module.moduleLanguage == values[3] && module.moduleApplicability == values[4]) {
+        numUnChangedModules++;
+      } else {
+        numChangedModules++;
+        /*TODO: wieder einfügen, sobald update im branch ist!!!
+        ModuleServices.update(module.id, {
+          moduleID: values[0],
+          moduleName: values[1],
+          moduleCredits: parseInt(values[2]),
+          moduleLanguage: values[3],
+          moduleApplicability: values[4]
+        })//
+      }
+    }*/
     data?.forEach((element) => {
-      element.forEach((module) => {
-        const newModule: { [key: string]: string } = {};
-        //for (const key in module){
-          //console.log(key, (module as object)[key] ); // Logs each property name and value
-          //newModule[key] = (module as any)[key];
-        //7}
-        /* eslint-disable */        
-        for (const key in module){
-          if (key == "moduleID") newModule["id"] = (module as any)[key];
-          if (key == "moduleName") newModule["name"] = (module as any)[key];
-          if (key == "moduleCredits") newModule["credits"] = (module as any)[key];
-          if (key == "moduleLanguage") newModule["language"] = (module as any)[key];
-          if (key == "moduleApplicability") newModule["applicability"] = (module as any)[key];
-        /*eslint-enable */
+      element.forEach((tmp) => {
+        let values = Object.values(tmp);
+        values[2] = values[2].slice(0, -3);
+        try{
+          handleButtonClick(values);
+        }catch (e) {
+          numErrorModules++;
+          /*ModuleServices.getModules(values[0],'','','','')
+            .then((response: { data: { moduleID: string; moduleName: string; moduleCredits: number; moduleLanguage: string; moduleApplicability: string; createdAt: object; id: object, updatedAt: object}[]; }) => {
+              if (response.data.length == 0) {
+                numAddedModules++;
+                handleButtonClick(values);
+              } else {
+                compareModules(response.data[0], values);
+              }
+            });*/
         }
-        console.log(newModule);
-        try {
-          ModuleServices.getModules(newModule.id,'','','','')
-            .then((response: { data: { moduleID: string; moduleName: string; moduleCredits: number; moduleLanguage: string; moduleApplicability: string; createdAt: object; id: object, updatedAt: object}[]; }) => { 
-              console.log("Already in database");
-              console.log(response.data);
-            }).catch((e: Error) => {
-            throw new Error("Not in database, needs to be created "+e);
-            });
 
-        } catch (error) {
-          console.log("Error while getting module we we create one: "  +error);
-          ModuleServices.create(newModule)
-            .then((response: { data: object; }) => { 
-              console.log("Success at saving module");
-              console.log(response.data);
-            })
-            .catch((e: Error) => { 
-              console.log("Error while saving module");
-              console.log(e);
-            });
-          }
-      //add those modules to the database
-      //ModuleServices.create( (module.moduleID, module.module ))
+         
+
       });
+      alert("Anzahl hinzugefügter Module: " + numAddedModules + "\nAnzahl geänderter Module: " + numChangedModules + "\nAnzahl unveränderter Module: " + numUnChangedModules + "\nAnzahl nicht hinzugefügter Module: " + numErrorModules);
     });
-
+    
 }
   

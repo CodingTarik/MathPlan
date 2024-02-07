@@ -75,7 +75,7 @@ try {
     // Datbase
     /* eslint-disable */
     db.sequelize
-      .sync()
+      .sync({force:true})
       // for changing the underlying database (delets all content, updates scheme) a line of code can be added as decribed in readme file
       /* eslint-enable */
       .then(() => {
