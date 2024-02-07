@@ -12,7 +12,7 @@ router.get('/', (req, res, next) => {
 router.get('/teach', (req, res, next) => {
   res.render('layout/index', {
     body: '../pages/teach.ejs',
-    title: 'Dozentenbereich'
+    title: 'Dozierende'
   });
 });
 

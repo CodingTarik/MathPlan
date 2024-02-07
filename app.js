@@ -35,7 +35,7 @@ if (config.dev.DEBUG) {
   app.use(morgan('dev', { stream: morganStream }));
 }
 
-// Register imprint middleware
+// Register middleware for static variable and configurable data for rendering
 app.use((req, res, next) => {
   res.locals.imprinturl = config.web.IMPRINT_URL;
   res.locals.faqurl = config.web.FAQ_URL;
@@ -45,6 +45,9 @@ app.use((req, res, next) => {
   res.locals.facebookurl = config.web.FACEBOOK_URL;
   res.locals.twitterurl = config.web.TWITTER_URL;
   res.locals.instagramurl = config.web.INSTAGRAM_URL;
+  res.locals.pagename = config.web.PAGE_NAME;
+  res.locals.privacypolicyurl = config.web.PRIVACY_POLICY_URL;
+  res.locals.supportemail = config.web.SUPPORT_EMAIL;
   next();
 });
 
