@@ -31,7 +31,7 @@ module.exports = (sequelize) => {
       unique: true
     },
     jsonSchema: {
-      type: DataTypes.STRING,
+      type: DataTypes.TEXT('long'),
       allowNull: false
     }
   });

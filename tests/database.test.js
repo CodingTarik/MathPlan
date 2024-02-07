@@ -88,7 +88,38 @@ describe('Modules API Tests', () => {
     const response = await request(app).post('/api/intern/addModul');
     expect(response.statusCode).toBe(400);
   });
+  test('GET /api/intenr/getAllModulsMin: It should return all modules with minimal information parsed for json editor', async () => {
+    const newModule = {
+      moduleID: Math.floor(Math.random() * 10000000).toString(),
+      moduleName: 'Numerik',
+      moduleCredits: 5,
+      moduleLanguage: 'English',
+      moduleApplicability: 'B.Sc. Mathematik'
+    };
+    await modulehelper.addModul(
+      newModule.moduleID,
+      newModule.moduleName,
+      newModule.moduleCredits,
+      newModule.moduleLanguage,
+      newModule.moduleApplicability
+    );
+    const response = await request(app).get('/api/intern/getAllModulsMin');
+    expect(response.statusCode).toBe(200);
+    let containsNewModule = false;
+    const item = response.body;
+    for (const key in response.body) {
+      if (
+        typeof item[key] === 'object' &&
+        item[key].moduleID === newModule.moduleID
+      ) {
+        containsNewModule = true;
+        break;
+      }
+    }
 
+    expect(containsNewModule).toBe(true);
+    modulehelper.deleteModulById(newModule.moduleID);
+  });
   test('GET /api/intern/getModules/:id/:name/:credits/:language/:applicability: It should return the one matching module', async () => {
     const newModule = {
       moduleID: Math.floor(Math.random() * 10000000).toString(),
