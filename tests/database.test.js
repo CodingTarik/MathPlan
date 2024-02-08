@@ -76,7 +76,7 @@ beforeAll(async () => {
   // wait 3 sec
   await new Promise(resolve => setTimeout(resolve, 3000));
 });
-// realeasing open connections
+// releasing open connections
 afterAll(() => {
   if (configFile.database.DB_DIALECT !== 'sqlite') {
     db.sequelize.close();
