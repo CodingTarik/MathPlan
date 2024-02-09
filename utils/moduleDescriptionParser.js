@@ -1,13 +1,5 @@
 const pdf = require('pdf-parse');
 const fs = require('fs');
-const path = require('path');
-
-/**
- * @constant {string} CONFIG_FOLDER
- * @default
- * The folder where the configuration files for the module description parser are located.
- */
-const CONFIG_FOLDER = path.join(__dirname, 'moduleDescriptionParserConfig');
 
 /**
  * @global
@@ -18,26 +10,25 @@ let config;
 /**
  * Reads the module description configuration file with the given name from the CONFIG_FOLDER
  * and stores the configuration in the global variable "config".
- * @param fileName The name of the module description configuration file to be read.
+ * @param configPath The path to the module description configuration file to be read.
  * @returns {void}
  * @throws {Error} If the configuration file cannot be accessed or parsed.
  */
-function readConfigFile(fileName) {
-  const filePath = path.join(CONFIG_FOLDER, fileName);
+function readConfigFile(configPath) {
   let fileContent;
 
   try {
-    fileContent = fs.readFileSync(filePath);
+    fileContent = fs.readFileSync(configPath);
   }
   catch (error) {
-    throw new Error(`Error while accessing the configuration file ${fileName}: ${error.message}`);
+    throw new Error(`Error while accessing the configuration file ${configPath}: ${error.message}`);
   }
 
   try {
     config = JSON.parse(fileContent);
   }
   catch (error) {
-    throw new Error(`Error while parsing the configuration file ${fileName}: ${error.message}`);
+    throw new Error(`Error while parsing the configuration file ${configPath}: ${error.message}`);
   }
 }
 
@@ -81,23 +72,35 @@ const moduleProperties = [
  * Parses the properties specified in "moduleProperties" from the given data buffer.
  *
  * @param {Buffer} dataBuffer The data buffer of the pdf file to be parsed.
- * @param {string} searchTerm The search term to be used to check if the data buffer contains module information.
+ * @param {string} configPath The path to the module description configuration file to be used for parsing.
  * @returns {Promise<Array>} The parsed module descriptions: An array of objects, each object representing one module.
  */
-async function readAndFilterData(dataBuffer, searchTerm) {
+async function readAndFilterData(dataBuffer, configPath) {
+
+  // load the configuration file
+  readConfigFile(configPath);
+
+  // read the content from the given data buffer (pdf file)
+  let data;
   try {
-    // read content from pdf file
-    const data = await pdf(dataBuffer);
+    data = await pdf(dataBuffer);
+  }
+  catch (error) {
+    throw new Error(`Failed to read the PDF file: ${error.message}`);
+  }
 
-    // extract text from pdf and do some preprocessing
-    const pdfText = moduleDescriptionsPreprocessing(data.text);
+  // extract text from pdf (with pdf-parse) and do preprocessing
+  const pdfText = moduleDescriptionsPreprocessing(data.text);
 
-    // TODO: searchTerm wieder entfernen? Sehe den Sinn nicht so ganz...
-    // filter text for searchTerm
-    if (!pdfText.includes(searchTerm)) {
-      throw new Error(`Search term ${searchTerm} not found in data buffer!`);
-    }
+  // split the text: each array entry contains the text of exactly one module description
+  const moduleDescriptionTexts = pdfText.split(config.moduleTitle);
 
+  // remove the first entry, as it just contains all the text before the first module description
+  moduleDescriptionTexts.shift();
+
+  return moduleDescriptionTexts;
+
+    /*
     // count number of modules
     const numberOfModules = (pdfText.match(/Modulbeschreibung/g) || []).length;
     if (numberOfModules === 0) {
@@ -112,6 +115,7 @@ async function readAndFilterData(dataBuffer, searchTerm) {
   } catch (error) {
     console.error('Error while parsing the pdf file:', error);
   }
+  */
 }
 
 /**
@@ -234,4 +238,4 @@ function basic_test() {
   console.dir(config, { maxArrayLength: null, depth: null });
 }
 
-basic_test();
+//basic_test();
