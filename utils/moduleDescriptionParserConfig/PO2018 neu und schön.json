@@ -5,6 +5,11 @@
       "find": "Arbeits aufwand",
       "flags": "g",
       "replace": "Arbeitsaufwand"
+    },
+    {
+      "find": "\\uf0b7\\s*",
+      "flags": "g",
+      "replace": ""
     }
   ],
   "moduleTitle": "Modulbeschreibung",
