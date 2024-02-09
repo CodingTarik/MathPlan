@@ -1,6 +1,45 @@
 const pdf = require('pdf-parse');
+const fs = require('fs');
+const path = require('path');
 
-module.exports = readAndFilterData;
+/**
+ * @constant {string} CONFIG_FOLDER
+ * @default
+ * The folder where the configuration files for the module description parser are located.
+ */
+const CONFIG_FOLDER = path.join(__dirname, 'moduleDescriptionParserConfig');
+
+/**
+ * @global
+ * The current configuration for the module description parser as read from the module description config file.
+ */
+let config;
+
+/**
+ * Reads the module description configuration file with the given name from the CONFIG_FOLDER
+ * and stores the configuration in the global variable "config".
+ * @param fileName The name of the module description configuration file to be read.
+ * @returns {void}
+ * @throws {Error} If the configuration file cannot be accessed or parsed.
+ */
+function readConfigFile(fileName) {
+  const filePath = path.join(CONFIG_FOLDER, fileName);
+  let fileContent;
+
+  try {
+    fileContent = fs.readFileSync(filePath);
+  }
+  catch (error) {
+    throw new Error(`Error while accessing the configuration file ${fileName}: ${error.message}`);
+  }
+
+  try {
+    config = JSON.parse(fileContent);
+  }
+  catch (error) {
+    throw new Error(`Error while parsing the configuration file ${fileName}: ${error.message}`);
+  }
+}
 
 // TODO: Diese Infos ggf. aus Konfigurationsdatei einlesen?
 
@@ -185,3 +224,14 @@ function filterAndAppendNextWords(originalString, readFrom, readTo) {
 function toRegexString(str) {
   return str.replace(/\./g, '\\.');
 }
+
+module.exports = readAndFilterData;
+
+//TODO remove this
+function basic_test() {
+  console.log('Hello World!');
+  readConfigFile('PO2018 neu und schön.json');
+  console.dir(config, { maxArrayLength: null, depth: null });
+}
+
+basic_test();
