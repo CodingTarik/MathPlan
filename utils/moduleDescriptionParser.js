@@ -227,7 +227,7 @@ function findKeywordMatches(originalString, readFrom, readTo) {
 
 module.exports = readAndFilterData;
 
-//TODO remove this
+//TODO remove everything below this
 function basic_test() {
   console.log('Hello World!');
   readConfigFile('PO2018 neu und schön.json');
