@@ -171,15 +171,28 @@ function buildModules(parsedProperties, numberOfModules) {
 }
 
 /**
- * Preprocesses the module descriptions: harmonizes whitespaces and removes line breaks.
+ * Preprocesses the module descriptions
+ * - harmonizes whitespaces and removes line breaks if enableDefaultPreprocessing is true in config
+ * - applies additional preprocessing (find and replace) as specified in config
  * @param moduleDescriptions The un-preprocessed module descriptions text.
  * @returns {string} The preprocessed module descriptions text.
  */
 function moduleDescriptionsPreprocessing(moduleDescriptions) {
-  moduleDescriptions = moduleDescriptions
-    .replace(/(\r\n|\n|\r)/gm, ' ') // remove line breaks
-    .replace(/\s+/g, ' ') // harmonize spaces
-    .replace(/Arbeits aufwand/g, 'Arbeitsaufwand'); // fix additional line break in Arbeitsaufwand
+
+  // default preprocessing if enabled in config
+  if (config.enableDefaultPreprocessing) {
+    moduleDescriptions = moduleDescriptions
+      .replace(/(\r\n|\n|\r)/gm, ' ') // remove line breaks
+      .replace(/\s+/g, ' '); // harmonize spaces
+  }
+
+  // additional preprocessing as specified in config
+  for (const findAndReplaceItem of config.additionalPreprocessing) {
+    moduleDescriptions = moduleDescriptions.replace(
+      new RegExp(findAndReplaceItem.find, findAndReplaceItem.flags),
+      findAndReplaceItem.replace
+    );
+  }
 
   return moduleDescriptions;
 }
