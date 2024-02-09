@@ -192,10 +192,7 @@ function moduleDescriptionsPreprocessing(moduleDescriptions) {
  * @param readTo The end of the match to be filtered.
  * @returns {Array} An array of all matches.
  */
-function filterAndAppendNextWords(originalString, readFrom, readTo) {
-  // Escape special characters in search terms
-  readFrom = toRegexString(readFrom);
-  readTo = toRegexString(readTo);
+function findKeywordMatches(originalString, readFrom, readTo) {
 
   // Find all matches of readFrom ... readTo
   const regex = new RegExp(`${readFrom}.*?${readTo}`, 'gm');
@@ -205,7 +202,7 @@ function filterAndAppendNextWords(originalString, readFrom, readTo) {
     return [];
   }
 
-  // Remove searchTerm and keyWordBis from matches
+  // Remove readFrom and readTo from matches
   for (let i = 0; i < matches.length; i++) {
     matches[i] = matches[i].replace(new RegExp(`^${readFrom}`), '');
     matches[i] = matches[i].replace(new RegExp(`${readTo}$`), '');
