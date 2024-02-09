@@ -50,6 +50,7 @@ export async function initializeJsonEditor(ref: React.MutableRefObject<null | HT
       theme: 'bootstrap5',
       iconlib: 'fontawesome4',
       schema: schema,
+      no_additional_properties: true,
       ajax: true,
     });
 
