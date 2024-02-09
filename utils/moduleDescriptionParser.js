@@ -215,16 +215,6 @@ function filterAndAppendNextWords(originalString, readFrom, readTo) {
   return matches;
 }
 
-/**
- * Helper function to escape special characters in a string so that the string becomes a valid RegEx.
- *
- * @param str The string to be escaped.
- * @returns {string} The escaped string.
- */
-function toRegexString(str) {
-  return str.replace(/\./g, '\\.');
-}
-
 module.exports = readAndFilterData;
 
 //TODO remove this
