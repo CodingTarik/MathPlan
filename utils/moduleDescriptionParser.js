@@ -20,16 +20,18 @@ function readConfigFile(configPath) {
 
   try {
     fileContent = fs.readFileSync(configPath);
-  }
-  catch (error) {
-    throw new Error(`Error while accessing the configuration file ${configPath}: ${error.message}`);
+  } catch (error) {
+    throw new Error(
+      `Error while accessing the configuration file ${configPath}: ${error.message}`
+    );
   }
 
   try {
     config = JSON.parse(fileContent);
-  }
-  catch (error) {
-    throw new Error(`Error while parsing the configuration file ${configPath}: ${error.message}`);
+  } catch (error) {
+    throw new Error(
+      `Error while parsing the configuration file ${configPath}: ${error.message}`
+    );
   }
 }
 
@@ -41,7 +43,6 @@ function readConfigFile(configPath) {
  * @returns {Promise<Array>} The parsed module descriptions: An array of objects, each object representing one module.
  */
 async function readAndFilterData(dataBuffer, configPath) {
-
   // load the configuration file
   readConfigFile(configPath);
 
@@ -49,8 +50,7 @@ async function readAndFilterData(dataBuffer, configPath) {
   let data;
   try {
     data = await pdf(dataBuffer);
-  }
-  catch (error) {
+  } catch (error) {
     throw new Error(`Failed to read the PDF file: ${error.message}`);
   }
 
@@ -65,7 +65,7 @@ async function readAndFilterData(dataBuffer, configPath) {
 
   // parse each module description
   const parsedModules = [];
-  for (singleModuleDescription of moduleDescriptionTexts) {
+  for (const singleModuleDescription of moduleDescriptionTexts) {
     parsedModules.push(parseSingleModuleDescription(singleModuleDescription));
   }
 
@@ -88,9 +88,12 @@ function parseSingleModuleDescription(moduleDescriptionText) {
   const module = {};
 
   for (const propertyToExtract of config.moduleProperties) {
-
     // find the correct match of readFrom ... readTo
-    let matches = findKeywordMatches(moduleDescriptionText, propertyToExtract.readFrom, propertyToExtract.readTo);
+    const matches = findKeywordMatches(
+      moduleDescriptionText,
+      propertyToExtract.readFrom,
+      propertyToExtract.readTo
+    );
     let extractedText = matches[propertyToExtract.useResultAtIndex] || '';
 
     // if needed, do additional postprocessing as specified in config
@@ -119,7 +122,6 @@ function parseSingleModuleDescription(moduleDescriptionText) {
  * @returns {string} The preprocessed module descriptions text.
  */
 function moduleDescriptionsPreprocessing(moduleDescriptions) {
-
   // default preprocessing if enabled in config
   if (config.enableDefaultPreprocessing) {
     moduleDescriptions = moduleDescriptions
@@ -150,7 +152,6 @@ function moduleDescriptionsPreprocessing(moduleDescriptions) {
  * @returns {Array} An array of all matches.
  */
 function findKeywordMatches(originalString, readFrom, readTo) {
-
   // Find all matches of readFrom ... readTo
   const regex = new RegExp(`${readFrom}.*?${readTo}`, 'gm');
   const matches = originalString.match(regex);

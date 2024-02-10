@@ -2,7 +2,9 @@
 
 const path = require('path');
 const fs = require('fs');
-const readAndFilterData = require(path.join(__dirname, '../utils/moduleDescriptionParser.js'));
+const readAndFilterData = require(
+  path.join(__dirname, '../utils/moduleDescriptionParser.js')
+);
 
 /**
  * @global
@@ -12,8 +14,14 @@ const readAndFilterData = require(path.join(__dirname, '../utils/moduleDescripti
 const INPUT_DATA = [
   {
     description: 'Modulhandbuch PO 2018',
-    filePath: path.join(__dirname, 'resources/ModulhandbuchPO2018_neu_und_schn_Stand_15_Dez_21.pdf'),
-    configPath: path.join(__dirname, '../utils/moduleDescriptionParserConfig/PO2018 neu und schön.json'),
+    filePath: path.join(
+      __dirname,
+      'resources/ModulhandbuchPO2018_neu_und_schn_Stand_15_Dez_21.pdf'
+    ),
+    configPath: path.join(
+      __dirname,
+      '../utils/moduleDescriptionParserConfig/PO2018 neu und schön.json'
+    ),
     expectedModules: 226
   }
 ];
@@ -31,7 +39,6 @@ let OUTPUT_DATA = [];
  * @returns {Promise<void>}
  */
 async function prepareData() {
-
   // initialize the output data array to the same length as the input data array
   OUTPUT_DATA = Array(INPUT_DATA.length);
 
@@ -64,13 +71,14 @@ test('ist die Modulstruktur korrekt aufgebaut', async () => {
       expect(modules[j]).toHaveProperty('moduleLanguage');
       expect(modules[j]).toHaveProperty('moduleApplicability');
 
-      for (const property in modules[j]) { expect(typeof modules[j][property]).toBe('string'); }
+      for (const property in modules[j]) {
+        expect(typeof modules[j][property]).toBe('string');
+      }
     }
   }
 });
 
 test('Format von der Modulnummer korrekt', async () => {
-
   for (let i = 0; i < OUTPUT_DATA.length; i++) {
     const modules = OUTPUT_DATA[i];
 
@@ -81,7 +89,6 @@ test('Format von der Modulnummer korrekt', async () => {
 });
 
 test('Format von der Creditpoints ist korrekt', async () => {
-
   for (let i = 0; i < OUTPUT_DATA.length; i++) {
     const modules = OUTPUT_DATA[i];
 
@@ -92,7 +99,6 @@ test('Format von der Creditpoints ist korrekt', async () => {
 });
 
 test('Format von der Sprache ist korrekt', async () => {
-
   for (let i = 0; i < OUTPUT_DATA.length; i++) {
     const modules = OUTPUT_DATA[i];
 
