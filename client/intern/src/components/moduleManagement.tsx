@@ -12,7 +12,7 @@ import { AxiosError } from 'axios';
  * @param values The entries made by the user for each of the input fields (id, name, credits, language, applicability)
  */
 function handleButtonClick(values: string[]) {
-  // wrapping module als json object
+  // wrapping module as javascript object (is automatically converted into JSON by axios)
     const tmpModule = {
       id: values[0],
       name: values[1],
@@ -25,12 +25,11 @@ function handleButtonClick(values: string[]) {
   ModuleServices.getByID(tmpModule.id)
     .then((response: { data: object; }) => {
       if (response.data) { // ID was found (data !== null)
-        console.log("trying retrieving modul by ID: data found");
+        console.log("trying retrieving module by ID: data found");
         // modifying module
         ModuleServices.update(values[0], tmpModule)
-          .then(() => { 
-            // TODO for means of debugging - can be commented out after development stage for better performance
-            console.log("modified module:");
+          .then(() => {
+            console.log("module modification successful");
             ModuleServices.getByID(tmpModule.id).then((response: { data: object; }) => {
               console.log(response.data);
             }).catch((e: Error) => { 
@@ -41,7 +40,7 @@ function handleButtonClick(values: string[]) {
             console.log(e);
           });
       } else { // ID was not found (data === null)
-        console.log("trying retrieving modul by ID: data not found");
+        console.log("trying retrieving module by ID: data not found");
         // inserting module
         ModuleServices.create(tmpModule)
           .then((response: { data: object; }) => { 
@@ -74,13 +73,13 @@ function isAddButtonDisabled(values: string[]) {
  * @returns the UI for manually inserting modules into the database and searching for certain modules
  */
 export default function AddModuleFields() {
-  const [moduleParameters, setmoduleParameters] = React.useState(Array(5).fill(""));
+  const [moduleParameters, setModuleParameters] = React.useState(Array(5).fill(""));
   const  [rowsFound, setRowsFound] = React.useState(Array(0).fill({moduleID: "", moduleName: "", moduleCredits: NaN, moduleLanguage: "", moduleApplicability: ""}));
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>, entryIdentifier: number) => {
     const nextModule = moduleParameters.slice();
     nextModule[entryIdentifier] = event.target.value;
-    setmoduleParameters(nextModule);
+    setModuleParameters(nextModule);
    };
 
   // if the search button is clicked the empty fields are set to undefinded and then getModules is called
@@ -180,7 +179,7 @@ export default function AddModuleFields() {
             {/* If the search button is clicked and rowsFound is not empty the rows are displayed and the fields where one can add a module set if a module is clicked on */}
             {rowsFound.map((row) => (
               <tr key={row.moduleID} onClick = {() => {
-                setmoduleParameters([row.moduleID, row.moduleName, row.moduleCredits, row.moduleLanguage, row.moduleApplicability]);}} >
+                setModuleParameters([row.moduleID, row.moduleName, row.moduleCredits, row.moduleLanguage, row.moduleApplicability]);}} >
                 <td>{row.moduleID}</td>
                 <td>{row.moduleName}</td>
                 <td>{row.moduleCredits}</td>

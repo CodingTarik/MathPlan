@@ -5,16 +5,16 @@ const db = require(path.join(__dirname, '../database/database.js'));
  * if a request is made the addModul function of the database is called by the controller and the added module is sent back as a response
  * @param {Object} req - The request object
  * @param {Object} res - The response object
- * @returns {void} - if the passed data is not sufficient as it does not contain a module id
+ * @returns {void} - Sends a response with if the passed data is not sufficient as it does not contain a module id
  */
-const addModul = (req, res) => {
+const addModule = (req, res) => {
   if (!req.body.id) {
     res.status(400).send({
       message: 'Content can not be empty!'
     });
     return;
   }
-  db.addModul(req.body.id, req.body.name, req.body.credits, req.body.language, req.body.applicability)
+  db.addModule(req.body.id, req.body.name, req.body.credits, req.body.language, req.body.applicability)
     .then(data => {
       res.send(data);
     })
@@ -32,10 +32,10 @@ const addModul = (req, res) => {
  * or with the module having the requested id is sent.
  * @param {Object} req - The request object
  * @param {Object} res - The response object
- * @returns {void} - Sends a response based on the success or failure of the deletion with status 500, iff an error occured while searching for a module with requested id
+ * @returns {void} - Sends a response based on the success or failure of the search with status 200 in case of success and with status 500, iff an error occured while searching for a module with requested id
  */
-const getOneModul = (req, res) => {
-  db.getOneModul(req.params.id)
+const getOneModule = (req, res) => {
+  db.getOneModule(req.params.id)
     .then(data => {
       res.send(data);
     })
@@ -51,9 +51,9 @@ const getOneModul = (req, res) => {
  * and a response is sent based on the success or failure of the update.
  * @param {Object} req - The request object
  * @param {Object} res - The response object
- * @returns {void} - Sends a response based on the success or failure of the deletion; has status 400, iff requests holds no new data for the module and status 500, iff updating the module was not successful
+ * @returns {void} - Sends a response based on the success or failure of the modification; has status 200 in case of success, has status 400, iff requests holds no new data for the module and status 500, iff updating the module was not successful
  */
-const updateModul = (req, res) => {
+const updateModule = (req, res) => {
   if (!req.body.id) {
     res.status(400).send({
       message: 'Content can not be empty!'
@@ -61,7 +61,7 @@ const updateModul = (req, res) => {
     return;
   }
 
-  db.updateModul(req.params.id, req.body.id, req.body.name, req.body.credits, req.body.language, req.body.applicability)
+  db.updateModule(req.params.id, req.body.id, req.body.name, req.body.credits, req.body.language, req.body.applicability)
     .then(data => {
       res.send(data);
     })
@@ -80,7 +80,7 @@ const updateModul = (req, res) => {
  * @param {Object} res - The response object
  * @returns {void} - Sends a response based on the success or failure of the deletion
  */
-const deleteModulById = (req, res) => {
+const deleteModuleById = (req, res) => {
   const moduleId = req.params.id; // Assuming the module ID is in the route parameters
 
   if (!moduleId) { // mMn ist abfrage unnötig; wenn keine id gegeben, gibts eine 404, weil andere URL gesucht wird (eine ohne Parameter)
@@ -90,7 +90,7 @@ const deleteModulById = (req, res) => {
     return;
   }
 
-  db.deleteModulById(moduleId)
+  db.deleteModuleById(moduleId)
     .then(deleted => {
       if (deleted) {
         res.send({
@@ -136,9 +136,9 @@ const getModules = (req, res) => {
 };
 
 module.exports = {
-  addModul,
-  updateModul,
-  getOneModul,
-  deleteModulById,
+  addModule,
+  updateModule,
+  getOneModule,
+  deleteModuleById,
   getModules
 };

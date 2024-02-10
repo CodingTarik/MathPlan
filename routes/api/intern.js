@@ -6,17 +6,10 @@ const dbController = require(
   path.join(__dirname, '../../controllers/databaseController.js')
 );
 
-const bookController = require(
-  path.join(__dirname, '../../controllers/bookController.js')
-);
-
-// Example-API
-router.get('/:title', bookController.handleGetBook);
-
-router.post('/addModul', dbController.addModul);
-router.get('/getOneModul/:id', dbController.getOneModul);
-router.put('/updateModul/:id', dbController.updateModul);
-router.post('/deleteModulById', dbController.deleteModulById);
+router.post('/addModule', dbController.addModule);
+router.get('/getOneModule/:id', dbController.getOneModule);
+router.put('/updateModule/:id', dbController.updateModule);
+router.post('/deleteModuleById', dbController.deleteModuleById);
 
 router.get('/getModules/:id/:name/:credits/:language/:applicability', dbController.getModules);
 

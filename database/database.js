@@ -70,12 +70,13 @@ let Modul /** @type {ModulModel} */ = sequelize.define('Modul', {
 });
 
 /**
- * Modul setter
+ * Modul and Sequelize setter
  * @param {Object} newModul
+ * @param {Object} newSequelize
  */
-const setModul = (newModul, newSequilize) => {
+const setModulAndSequelize = (newModul, newSequelize) => {
   Modul = newModul;
-  sequelize = newSequilize;
+  sequelize = newSequelize;
 };
 
 /**
@@ -87,7 +88,7 @@ const setModul = (newModul, newSequilize) => {
  * @param {string} moduleApplicability - The applicability of the module
  * @returns {Promise} A promise that is rejected or fulfilled depending on the success of adding the module
  */
-const addModul = (moduleID, moduleName, moduleCredits, moduleLanguage, moduleApplicability) => {
+const addModule = (moduleID, moduleName, moduleCredits, moduleLanguage, moduleApplicability) => {
   const modul = {
     moduleID,
     moduleName,
@@ -99,15 +100,16 @@ const addModul = (moduleID, moduleName, moduleCredits, moduleLanguage, moduleApp
 };
 
 /**
- * Updates a module in the database
- * @param {string} moduleID - The module ID
- * @param {string} moduleName - The module name
- * @param {number} moduleCredits - The number of credits for the module
- * @param {string} moduleLanguage - The language of the module
- * @param {string} moduleApplicability - The applicability of the module
- * @returns {Promise} A promise that is rejected or fulfilled depending on the success of updating the module
+ * Updates the module with the moduleId "searchModuleID" in the database
+ * @param {string} searchModuleID - The module ID of the module to be modified
+ * @param {string} moduleID - The new (modified) module ID
+ * @param {string} moduleName - The new (modified) module name
+ * @param {number} moduleCredits - The new (modified) number of credits for the module
+ * @param {string} moduleLanguage - The new (modified) language of the module
+ * @param {string} moduleApplicability - The new (modified) applicability of the module
+ * @returns {Promise<Array<number, number>>} A promise that is rejected or fulfilled depending on the success of updating the module
  */
-const updateModul = (searchModuleID, moduleID, moduleName, moduleCredits, moduleLanguage, moduleApplicability) => {
+const updateModule = (searchModuleID, moduleID, moduleName, moduleCredits, moduleLanguage, moduleApplicability) => {
   const modul = {
     moduleID,
     moduleName,
@@ -121,9 +123,9 @@ const updateModul = (searchModuleID, moduleID, moduleName, moduleCredits, module
 /**
  * Finds a module with given moduleID in the database
  * @param {string} moduleID - The module ID
- * @returns {Promise} A promise that is rejected or fulfilled depending on the success of finding the module
+ * @returns {Promise<Model|null>} A promise that is rejected or fulfilled depending on the success of finding the module
  */
-const getOneModul = (moduleID) => {
+const getOneModule = (moduleID) => {
   return Modul.findOne({
     where: {
       moduleID
@@ -150,7 +152,7 @@ const isModuleExists = (moduleID) => {
  * @param {string} moduleID - The module ID to delete
  * @returns {boolean} True if the module is deleted, false otherwise
  */
-const deleteModulById = async (moduleID) => {
+const deleteModuleById = async (moduleID) => {
   try {
     const affectedRows = await Modul.destroy({
       where: {
@@ -209,12 +211,12 @@ module.exports = {
   Sequelize,
   sequelize,
   Modul,
-  setModul,
-  addModul,
-  updateModul,
-  getOneModul,
+  setModulAndSequelize,
+  addModule,
+  updateModule,
+  getOneModule,
   isModuleExists,
-  deleteModulById,
+  deleteModuleById,
   getAllModules,
   getModules
 };
