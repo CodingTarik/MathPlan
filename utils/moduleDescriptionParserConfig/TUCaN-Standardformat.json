@@ -2,9 +2,9 @@
   "enableDefaultPreprocessing": true,
   "additionalPreprocessing": [
     {
-      "find": "Arbeits aufwand",
+      "find": "Leistungspun kte",
       "flags": "g",
-      "replace": "Arbeitsaufwand"
+      "replace": "Leistungspunkte"
     },
     {
       "find": "\\uf0b7",
@@ -18,7 +18,7 @@
     {
       "propertyName": "moduleID",
       "readFrom": "Modul Nr\\.",
-      "readTo": "Creditpoints",
+      "readTo": "Leistungspunkte",
       "useResultAtIndex": 0,
       "postprocessing": [
         {
@@ -31,33 +31,33 @@
     {
       "propertyName": "moduleName",
       "readFrom": "Modulname",
-      "readTo": "Modul",
+      "readTo": "Modul Nr\\.",
       "useResultAtIndex": 0,
       "postprocessing": []
     },
     {
       "propertyName": "moduleCredits",
-      "readFrom": "Modul Nr\\.",
+      "readFrom": "Leistungspunkte",
       "readTo": "Arbeitsaufwand",
-      "useResultAtIndex": 0,
-      "postprocessing": [
-        {
-        "find": "^.*Creditpoints\\s",
-        "flags": "g",
-        "replace": ""
-        }
-      ]
-    },
-    {
-      "propertyName": "moduleLanguage",
-      "readFrom": "([sS]emester|Verwendbarkeit|[Uu]nregelmäßig) Sprache",
-      "readTo": "Modulverantwortliche",
       "useResultAtIndex": 0,
       "postprocessing": []
     },
     {
+      "propertyName": "moduleLanguage",
+      "readFrom": "Modulname",
+      "readTo": "Modulverantwortliche Person",
+      "useResultAtIndex": 0,
+      "postprocessing": [
+        {
+          "find": ".*Sprache\\s*",
+          "flags": "g",
+          "replace": ""
+        }
+      ]
+    },
+    {
       "propertyName": "moduleApplicability",
-      "readFrom": "Verwendbarkeit des Moduls",
+      "readFrom": "8 Verwendbarkeit des Moduls",
       "readTo": "9 Literatur",
       "useResultAtIndex": 0,
       "postprocessing": []
