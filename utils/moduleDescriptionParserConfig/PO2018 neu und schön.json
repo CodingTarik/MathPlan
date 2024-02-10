@@ -58,7 +58,7 @@
     {
       "propertyName": "moduleApplicability",
       "readFrom": "Verwendbarkeit des Moduls",
-      "readTo": "Literatur",
+      "readTo": "9 Literatur",
       "useResultAtIndex": 0,
       "postprocessing": []
     }

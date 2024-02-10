@@ -5,9 +5,10 @@ const fs = require('fs');
  * @global
  * The current configuration for the module description parser as read from the module description config file.
  */
-let config;
+let config = {};
 
 /**
+ * Helper function:
  * Reads the module description configuration file with the given name from the CONFIG_FOLDER
  * and stores the configuration in the global variable "config".
  * @param configPath The path to the module description configuration file to be read.
@@ -98,7 +99,13 @@ async function readAndFilterData(dataBuffer, configPath) {
   // remove the first entry, as it just contains all the text before the first module description
   moduleDescriptionTexts.shift();
 
-  return moduleDescriptionTexts;
+  // parse each module description
+  const parsedModules = [];
+  for (singleModuleDescription of moduleDescriptionTexts) {
+    parsedModules.push(parseSingleModuleDescription(singleModuleDescription));
+  }
+
+  return parsedModules;
 
     /*
     // count number of modules
@@ -116,6 +123,44 @@ async function readAndFilterData(dataBuffer, configPath) {
     console.error('Error while parsing the pdf file:', error);
   }
   */
+}
+
+/**
+ * Helper function:
+ * Extracts the properties (as specified in "moduleProperties" in the config object) from the given input string.
+ * For each item of moduleProperties, the function searches for the specified readFrom ... readTo and extracts the text in between.
+ * If more than one match is found, the function uses the result at the specified index (useResultAtIndex).
+ * If specified, the function applies additional postprocessing to the extracted text.
+ * Finally, the extracted text is added as a property with the specified name (propertyName) to the module object.
+ *
+ * @param moduleDescriptionText {string} A string representing the module description.
+ * @returns {{}} An object containing the extracted properties and thus representing one module.
+ */
+function parseSingleModuleDescription(moduleDescriptionText) {
+  // initialize an empty module object
+  const module = {};
+
+  for (const propertyToExtract of config.moduleProperties) {
+
+    // find the correct match of readFrom ... readTo
+    let matches = findKeywordMatches(moduleDescriptionText, propertyToExtract.readFrom, propertyToExtract.readTo);
+    let extractedText = matches[propertyToExtract.useResultAtIndex] || '';
+
+    // if needed, do additional postprocessing as specified in config
+    if (propertyToExtract.postprocessing) {
+      for (const findAndReplaceItem of propertyToExtract.postprocessing) {
+        extractedText = extractedText.replace(
+          new RegExp(findAndReplaceItem.find, findAndReplaceItem.flags),
+          findAndReplaceItem.replace
+        );
+      }
+    }
+
+    // add the extracted text as a property to the module object
+    module[propertyToExtract.propertyName] = extractedText;
+  }
+
+  return module;
 }
 
 /**
@@ -175,6 +220,7 @@ function buildModules(parsedProperties, numberOfModules) {
 }
 
 /**
+ * Helper function:
  * Preprocesses the module descriptions
  * - harmonizes whitespaces and removes line breaks if enableDefaultPreprocessing is true in config
  * - applies additional preprocessing (find and replace) as specified in config
@@ -202,6 +248,7 @@ function moduleDescriptionsPreprocessing(moduleDescriptions) {
 }
 
 /**
+ * Helper function:
  * Filters the given originalString for all matches of readFrom ... readTo.
  *
  * @param originalString The string to be filtered.
