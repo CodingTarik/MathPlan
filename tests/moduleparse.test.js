@@ -104,8 +104,7 @@ test('Format von der Modulnummer korrekt', async () => {
 
     let errorCounter = 0;
     for (let j = 0; j < modules.length; j++) {
-      if (!modules[j].moduleID.match(/^\d\d-\d\d-\d\d\d\d(\/\w+)?$/))
-        errorCounter++;
+      if (!modules[j].moduleID.match(/^\d\d-\d\d-\d\d\d\d(\/\w+)?$/)) { errorCounter++; }
     }
     expect(errorCounter).toBeLessThan(0.1 * INPUT_DATA[i].expectedModules);
   }
@@ -129,8 +128,7 @@ test('Format von der Sprache ist korrekt', async () => {
 
     let errorCounter = 0;
     for (let j = 0; j < modules.length; j++) {
-      if (!modules[j].moduleLanguage.match(/^(Englisch.*|Deutsch.*)/i))
-        errorCounter++;
+      if (!modules[j].moduleLanguage.match(/^(Englisch.*|Deutsch.*)/i)) { errorCounter++; }
     }
     expect(errorCounter).toBeLessThan(0.1 * INPUT_DATA[i].expectedModules);
   }
