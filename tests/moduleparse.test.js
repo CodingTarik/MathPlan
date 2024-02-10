@@ -16,7 +16,7 @@ const INPUT_DATA = [
     description: 'Modulhandbuch PO 2018',
     filePath: path.join(
       __dirname,
-      'resources/ModulhandbuchPO2018_neu_und_schn_Stand_15_Dez_21.pdf'
+      'resources/Modulhandbuch PO2018.pdf'
     ),
     configPath: path.join(
       __dirname,
