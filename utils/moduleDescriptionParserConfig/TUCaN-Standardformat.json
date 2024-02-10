@@ -17,14 +17,15 @@
   "moduleProperties": [
     {
       "propertyName": "moduleID",
-      "readFrom": "Modul Nr\\.",
-      "readTo": "Leistungspunkte",
+      "readFrom": "\\d{2}-\\d{2}-",
+      "readTo": "\\d{4}(\\/\\w+)?",
+      "keepReadFromAndTo": true,
       "useResultAtIndex": 0,
       "postprocessing": [
         {
-          "find": "\\s",
+          "find": "-\\s.*(\\d{4})",
           "flags": "g",
-          "replace": ""
+          "replace": "-$1"
         }
       ]
     },
@@ -32,13 +33,15 @@
       "propertyName": "moduleName",
       "readFrom": "Modulname",
       "readTo": "Modul Nr\\.",
+      "keepReadFromAndTo": false,
       "useResultAtIndex": 0,
       "postprocessing": []
     },
     {
       "propertyName": "moduleCredits",
-      "readFrom": "Leistungspunkte",
-      "readTo": "Arbeitsaufwand",
+      "readFrom": "\\d+ CP",
+      "readTo": "",
+      "keepReadFromAndTo": true,
       "useResultAtIndex": 0,
       "postprocessing": []
     },
@@ -46,6 +49,7 @@
       "propertyName": "moduleLanguage",
       "readFrom": "Modulname",
       "readTo": "Modulverantwortliche Person",
+      "keepReadFromAndTo": false,
       "useResultAtIndex": 0,
       "postprocessing": [
         {
@@ -59,6 +63,7 @@
       "propertyName": "moduleApplicability",
       "readFrom": "8 Verwendbarkeit des Moduls",
       "readTo": "9 Literatur",
+      "keepReadFromAndTo": false,
       "useResultAtIndex": 0,
       "postprocessing": []
     }

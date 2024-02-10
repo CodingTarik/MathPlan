@@ -98,7 +98,8 @@ function parseSingleModuleDescription(moduleDescriptionText) {
     const matches = findKeywordMatches(
       moduleDescriptionText,
       propertyToExtract.readFrom,
-      propertyToExtract.readTo
+      propertyToExtract.readTo,
+      propertyToExtract.keepReadFromAndTo
     );
     let extractedText = matches[propertyToExtract.useResultAtIndex] || '';
 
@@ -149,15 +150,20 @@ function moduleDescriptionsPreprocessing(moduleDescriptions) {
 /**
  * Helper function:
  * Filters the given originalString for all matches of readFrom ... readTo.
- * Both readFrom and readTo are excluded from the matches.
  * The function returns an array of all matches found or an empty array if no matches are found.
  *
- * @param originalString The string to be filtered.
- * @param readFrom The start of the match to be filtered.
- * @param readTo The end of the match to be filtered.
+ * @param originalString {string} The string to be filtered.
+ * @param readFrom {string} The start of the match to be filtered.
+ * @param readTo {string} The end of the match to be filtered.
+ * @param keepReadFromAndTo {boolean} Iff true, the readFrom and readTo strings are kept in the result.
  * @returns {Array} An array of all matches.
  */
-function findKeywordMatches(originalString, readFrom, readTo) {
+function findKeywordMatches(
+  originalString,
+  readFrom,
+  readTo,
+  keepReadFromAndTo
+) {
   // Find all matches of readFrom ... readTo
   const regex = new RegExp(`${readFrom}.*?${readTo}`, 'gm');
   const matches = originalString.match(regex);
@@ -166,11 +172,13 @@ function findKeywordMatches(originalString, readFrom, readTo) {
     return [];
   }
 
-  // Remove readFrom and readTo from matches
-  for (let i = 0; i < matches.length; i++) {
-    matches[i] = matches[i].replace(new RegExp(`^${readFrom}`), '');
-    matches[i] = matches[i].replace(new RegExp(`${readTo}$`), '');
-    matches[i] = matches[i].trim();
+  // Remove readFrom and readTo from matches if wanted
+  if (!keepReadFromAndTo) {
+    for (let i = 0; i < matches.length; i++) {
+      matches[i] = matches[i].replace(new RegExp(`^${readFrom}`), '');
+      matches[i] = matches[i].replace(new RegExp(`${readTo}$`), '');
+      matches[i] = matches[i].trim();
+    }
   }
 
   return matches;

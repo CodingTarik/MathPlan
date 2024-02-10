@@ -19,6 +19,7 @@
       "propertyName": "moduleID",
       "readFrom": "Modul Nr\\.",
       "readTo": "Creditpoints",
+      "keepReadFromAndTo": false,
       "useResultAtIndex": 0,
       "postprocessing": [
         {
@@ -32,6 +33,7 @@
       "propertyName": "moduleName",
       "readFrom": "Modulname",
       "readTo": "Modul",
+      "keepReadFromAndTo": false,
       "useResultAtIndex": 0,
       "postprocessing": []
     },
@@ -39,6 +41,7 @@
       "propertyName": "moduleCredits",
       "readFrom": "Modul Nr\\.",
       "readTo": "Arbeitsaufwand",
+      "keepReadFromAndTo": false,
       "useResultAtIndex": 0,
       "postprocessing": [
         {
@@ -52,6 +55,7 @@
       "propertyName": "moduleLanguage",
       "readFrom": "([sS]emester|Verwendbarkeit|[Uu]nregelmäßig) Sprache",
       "readTo": "Modulverantwortliche",
+      "keepReadFromAndTo": false,
       "useResultAtIndex": 0,
       "postprocessing": []
     },
@@ -59,6 +63,7 @@
       "propertyName": "moduleApplicability",
       "readFrom": "Verwendbarkeit des Moduls",
       "readTo": "9 Literatur",
+      "keepReadFromAndTo": false,
       "useResultAtIndex": 0,
       "postprocessing": []
     }
