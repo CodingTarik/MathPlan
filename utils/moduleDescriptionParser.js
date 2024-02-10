@@ -40,9 +40,10 @@ function readConfigFile(configPath) {
  *
  * @param {Buffer} dataBuffer The data buffer of the pdf file to be parsed.
  * @param {string} configPath The path to the module description configuration file to be used for parsing.
+ * @param {boolean} rawDataOnly If true, the module descriptions are not parsed but the preprocessed raw text is returned. For debugging purposes.
  * @returns {Promise<Array>} The parsed module descriptions: An array of objects, each object representing one module.
  */
-async function readAndFilterData(dataBuffer, configPath) {
+async function readAndFilterData(dataBuffer, configPath, rawDataOnly = false) {
   // load the configuration file
   readConfigFile(configPath);
 
@@ -62,6 +63,11 @@ async function readAndFilterData(dataBuffer, configPath) {
 
   // remove the first entry, as it just contains all the text before the first module description
   moduleDescriptionTexts.shift();
+
+  // if rawDataOnly is true, return the preprocessed raw text
+  if (rawDataOnly) {
+    return moduleDescriptionTexts;
+  }
 
   // parse each module description
   const parsedModules = [];
