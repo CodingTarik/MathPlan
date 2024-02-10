@@ -35,6 +35,12 @@ if (config.dev.DEBUG) {
   app.use(morgan('dev', { stream: morganStream }));
 }
 
+// Register imprint middleware
+app.use((req, res, next) => {
+  res.locals.imprinturl = config.data.imprinturl;
+  next();
+});
+
 // Static assets
 app.use('/assets', express.static('public'));
 app.use(
@@ -69,7 +75,8 @@ try {
     // Datbase
     db.sequelize
       .sync()
-      // for changing the underlying database (delets all content, updates scheme) a line of code can be added as decribed in readme file
+      // for changing the underlying database (delets all content, updates scheme) adjust the line above as decribed in the readme file
+      /* eslint-enable */
       .then(() => {
         logger.info('Synced db.');
       })
