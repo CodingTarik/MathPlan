@@ -1,5 +1,7 @@
 /* eslint security/detect-object-injection: "off" */
 
+const { describe, expect, test } = require('@jest/globals');
+
 const path = require('path');
 const fs = require('fs');
 const readAndFilterData = require(
@@ -14,10 +16,7 @@ const readAndFilterData = require(
 const INPUT_DATA = [
   {
     description: 'Modulhandbuch PO 2018',
-    filePath: path.join(
-      __dirname,
-      'resources/Modulhandbuch PO2018.pdf'
-    ),
+    filePath: path.join(__dirname, 'resources/Modulhandbuch PO2018.pdf'),
     configPath: path.join(
       __dirname,
       '../utils/moduleDescriptionParserConfig/PO2018 neu und schön.json'
@@ -106,4 +105,67 @@ test('Format von der Sprache ist korrekt', async () => {
       expect(modules[j].moduleLanguage).toMatch(/(Englisch.*|Deutsch.*)/i);
     }
   }
+});
+
+test('Test raw data output', async () => {
+  for (let i = 0; i < INPUT_DATA.length; i++) {
+    const input = INPUT_DATA[i];
+    const dataBuffer = fs.readFileSync(input.filePath);
+    const rawData = await readAndFilterData(dataBuffer, input.configPath, true);
+    expect(Array.isArray(rawData)).toBe(true);
+    expect(rawData.length).toBe(input.expectedModules);
+
+    for (let j = 0; j < rawData.length; j++) {
+      expect(typeof rawData[j]).toBe('string');
+      expect(rawData[j]).not.toHaveLength(0);
+    }
+  }
+});
+
+describe('Test invalid user input', () => {
+  test('Invalid path to config file - should throw an error', async () => {
+    const dataBuffer = fs.readFileSync(INPUT_DATA[0].filePath);
+    const configPath = 'invalid/path/to/a/non/existent/config.json';
+    await expect(readAndFilterData(dataBuffer, configPath)).rejects.toThrow(
+      /Error while accessing the configuration file.*/
+    );
+  });
+
+  test('Syntax error in config file - should throw an error', async () => {
+    const dataBuffer = fs.readFileSync(INPUT_DATA[0].filePath);
+    const configPath = path.join(
+      __dirname,
+      'resources/invalidInputs/brokenJSON.json'
+    );
+    await expect(readAndFilterData(dataBuffer, configPath)).rejects.toThrow(
+      /Error while parsing the configuration file.*/
+    );
+  });
+
+  test('Invalid pdf file - should throw an error', async () => {
+    const dataBuffer = fs.readFileSync(
+      path.join(__dirname, 'resources/invalidInputs/notActuallyAPdf.pdf')
+    );
+    const configPath = INPUT_DATA[0].configPath;
+    await expect(readAndFilterData(dataBuffer, configPath)).rejects.toThrow(
+      /Failed to read the PDF file.*/
+    );
+  });
+
+  test('Pdf file without any module information - should return an object with no data', async () => {
+    const dataBuffer = fs.readFileSync(
+      path.join(__dirname, 'resources/invalidInputs/noModuleInformation.pdf')
+    );
+    const configPath = INPUT_DATA[0].configPath;
+    const result = await readAndFilterData(dataBuffer, configPath);
+    expect(result).toStrictEqual([
+      {
+        moduleApplicability: '',
+        moduleCredits: '',
+        moduleID: '',
+        moduleLanguage: '',
+        moduleName: ''
+      }
+    ]);
+  });
 });
