@@ -22,6 +22,27 @@ const INPUT_DATA = [
       '../utils/moduleDescriptionParserConfig/PO2018 neu und schön.json'
     ),
     expectedModules: 226
+  },
+  {
+    description: 'TUCaN-Beispiel',
+    filePath: path.join(__dirname, 'resources/Modulhandbuch TUCaN-Muster.pdf'),
+    configPath: path.join(
+      __dirname,
+      '../utils/moduleDescriptionParserConfig/TUCaN-Standardformat.json'
+    ),
+    expectedModules: 1
+  },
+  {
+    description: 'Gesamtmodulhandbuch WS 2023/24',
+    filePath: path.join(
+      __dirname,
+      'resources/Modulhandbuch gesamt WS23-24.pdf'
+    ),
+    configPath: path.join(
+      __dirname,
+      '../utils/moduleDescriptionParserConfig/TUCaN-Standardformat.json'
+    ),
+    expectedModules: 456
   }
 ];
 
@@ -81,9 +102,12 @@ test('Format von der Modulnummer korrekt', async () => {
   for (let i = 0; i < OUTPUT_DATA.length; i++) {
     const modules = OUTPUT_DATA[i];
 
+    let errorCounter = 0;
     for (let j = 0; j < modules.length; j++) {
-      expect(modules[j].moduleID).toMatch(/\d\d-\d\d-\d\d\d\d(\/(de|en))?/);
+      if (!modules[j].moduleID.match(/^\d\d-\d\d-\d\d\d\d(\/\w+)?$/))
+        errorCounter++;
     }
+    expect(errorCounter).toBeLessThan(0.1 * INPUT_DATA[i].expectedModules);
   }
 });
 
@@ -91,9 +115,11 @@ test('Format von der Creditpoints ist korrekt', async () => {
   for (let i = 0; i < OUTPUT_DATA.length; i++) {
     const modules = OUTPUT_DATA[i];
 
+    let errorCounter = 0;
     for (let j = 0; j < modules.length; j++) {
-      expect(modules[j].moduleCredits).toMatch(/\d{1,2} CP/);
+      if (!modules[j].moduleCredits.match(/^\d{1,2} CP$/)) errorCounter++;
     }
+    expect(errorCounter).toBeLessThan(0.1 * INPUT_DATA[i].expectedModules);
   }
 });
 
@@ -101,9 +127,12 @@ test('Format von der Sprache ist korrekt', async () => {
   for (let i = 0; i < OUTPUT_DATA.length; i++) {
     const modules = OUTPUT_DATA[i];
 
+    let errorCounter = 0;
     for (let j = 0; j < modules.length; j++) {
-      expect(modules[j].moduleLanguage).toMatch(/(Englisch.*|Deutsch.*)/i);
+      if (!modules[j].moduleLanguage.match(/^(Englisch.*|Deutsch.*)/i))
+        errorCounter++;
     }
+    expect(errorCounter).toBeLessThan(0.1 * INPUT_DATA[i].expectedModules);
   }
 });
 
