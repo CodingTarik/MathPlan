@@ -33,42 +33,6 @@ function readConfigFile(configPath) {
   }
 }
 
-// TODO: Diese Infos ggf. aus Konfigurationsdatei einlesen?
-
-// properties to be extracted from the module description
-// propertyName: name of the property in the resulting object
-// property can be found in the module description between readFrom and readTo (both exclusive)
-// if excess is given, the specified characters will be removed from the property value after extraction
-const moduleProperties = [
-  {
-    propertyName: 'moduleID',
-    readFrom: 'Modul Nr.',
-    readTo: 'Creditpoints',
-    excess: ['\\s']
-  },
-  {
-    propertyName: 'moduleName',
-    readFrom: 'Modulname',
-    readTo: 'Modul'
-  },
-  {
-    propertyName: 'moduleCredits',
-    readFrom: 'Modul Nr.',
-    readTo: 'Arbeitsaufwand',
-    excess: ['^.*Creditpoints\\s']
-  },
-  {
-    propertyName: 'moduleLanguage',
-    readFrom: '([sS]emester|Verwendbarkeit|[Uu]nregelmäßig) Sprache',
-    readTo: 'Modulverantwortliche'
-  },
-  {
-    propertyName: 'moduleApplicability',
-    readFrom: 'Verwendbarkeit des Moduls',
-    readTo: '9 Literatur'
-  }
-];
-
 /**
  * Parses the properties specified in "moduleProperties" from the given data buffer.
  *
@@ -106,23 +70,6 @@ async function readAndFilterData(dataBuffer, configPath) {
   }
 
   return parsedModules;
-
-    /*
-    // count number of modules
-    const numberOfModules = (pdfText.match(/Modulbeschreibung/g) || []).length;
-    if (numberOfModules === 0) {
-      throw new Error('No modules found in data buffer!');
-    }
-
-    // collect all module properties into one array per property
-    const parsedProperties = parseProperties(pdfText, numberOfModules);
-
-    // build target objects from parsed properties
-    return buildModules(parsedProperties, numberOfModules);
-  } catch (error) {
-    console.error('Error while parsing the pdf file:', error);
-  }
-  */
 }
 
 /**
@@ -164,62 +111,6 @@ function parseSingleModuleDescription(moduleDescriptionText) {
 }
 
 /**
- * Collects all module properties into one array per property.
- *
- * @param pdfText The preprocessed text of the pdf file to be parsed.
- * @param numberOfModules The number of modules expected.
- * @returns {Object} An object containing one array per module property.
- */
-function parseProperties(pdfText, numberOfModules) {
-  const parsedProperties = {};
-
-  for (const property of moduleProperties) {
-    parsedProperties[property.propertyName] = filterAndAppendNextWords(
-      pdfText,
-      property.readFrom,
-      property.readTo
-    );
-
-    if (parsedProperties[property.propertyName].length !== numberOfModules) {
-      throw new Error(
-        `Number of parsed ${property.propertyName} (${
-          parsedProperties[property.propertyName].length
-        }) does not match number of modules (${numberOfModules})!`
-      );
-    }
-  }
-  return parsedProperties;
-}
-
-/**
- * Builds the target objects from the parsed properties.
- *
- * @param parsedProperties The parsed properties, an object containing one array per module property.
- * @param numberOfModules The number of modules expected.
- * @returns {Array} An array of objects, each object representing one module.
- */
-function buildModules(parsedProperties, numberOfModules) {
-  const modules = [];
-  for (let i = 0; i < numberOfModules; i++) {
-    const module = {};
-    for (const property of moduleProperties) {
-      let parsedProperty = parsedProperties[property.propertyName][i];
-
-      // if needed, remove excess characters from property value
-      if (property.excess) {
-        for (const excess of property.excess) {
-          parsedProperty = parsedProperty.replace(new RegExp(excess), '');
-        }
-      }
-
-      module[property.propertyName] = parsedProperty;
-    }
-    modules.push(module);
-  }
-  return modules;
-}
-
-/**
  * Helper function:
  * Preprocesses the module descriptions
  * - harmonizes whitespaces and removes line breaks if enableDefaultPreprocessing is true in config
@@ -250,6 +141,8 @@ function moduleDescriptionsPreprocessing(moduleDescriptions) {
 /**
  * Helper function:
  * Filters the given originalString for all matches of readFrom ... readTo.
+ * Both readFrom and readTo are excluded from the matches.
+ * The function returns an array of all matches found or an empty array if no matches are found.
  *
  * @param originalString The string to be filtered.
  * @param readFrom The start of the match to be filtered.
@@ -277,12 +170,3 @@ function findKeywordMatches(originalString, readFrom, readTo) {
 }
 
 module.exports = readAndFilterData;
-
-//TODO remove everything below this
-function basic_test() {
-  console.log('Hello World!');
-  readConfigFile('PO2018 neu und schön.json');
-  console.dir(config, { maxArrayLength: null, depth: null });
-}
-
-//basic_test();
