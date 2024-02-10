@@ -31,7 +31,7 @@ const create = (data : object) => {
  * @returns a promise that is rejected or fulfilled depending on the success of getting the module(s), it rejects if there is a problem with the database or more than 50 modules match the request
  */
 const getModules = (id:string, name:string, credits:string, language:string, applicability:string)  => {
-  return http.get(`/getModules/${id}/${name}/${credits}/${language}/${applicability}`)
+  return http.get(`/getModules/${encodeURIComponent(id)}/${encodeURIComponent(name)}/${encodeURIComponent(credits)}/${encodeURIComponent(language)}/${encodeURIComponent(applicability)}`)
 }
 
 
