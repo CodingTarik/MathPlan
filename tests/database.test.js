@@ -22,8 +22,8 @@ beforeAll(async () => {
     username: configFile.database.DB_USER, // Your MySQL username
     password: configFile.database.DB_PASSWORD, // Your MySQL password
     host: configFile.database.DB_HOST,
-    dialect: 'sqlite', // can be set to 'mysql' or 'sqlite'
-    storage: 'database.test.sqlite' // For SQLite, define the path to the SQLite file
+    dialect: 'sqlite',
+    storage: 'database.test.sqlite'
   };
 
   // create a sequelize object
@@ -287,6 +287,7 @@ test('PUT /api/intern/updateModule/:id: It should modify an existing module and 
   expect(tmp.moduleName).toBe(modifiedModule.name);
   expect(tmp.moduleApplicability).toBe(modifiedModule.applicability);
   expect(tmp.moduleLanguage).toBe(modifiedModule.language);
+  // Check if the data of the old module do not longer exist in the database
   expect(await db.getAllModules()).not.toContainEqual(
     expect.objectContaining({
       moduleID: newModule.id,

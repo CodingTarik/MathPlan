@@ -1,3 +1,5 @@
+// Dies ist nur eine temporäre Notiz, die Julie und Isabelle beim Implementieren der Datenbank hilft :)
+
 // in ordner routes
 module.exports = app => {
    const tutorials = require("../controllers/tutorial.controller.js");
