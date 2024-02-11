@@ -67,9 +67,6 @@ function readConfigFile(configPath) {
  * @returns {Promise<Array>} The parsed module descriptions: An array of objects, each object representing one module.
  */
 async function readAndFilterData(dataBuffer, configPath, rawDataOnly = false) {
-  // load the configuration file
-  readConfigFile(configPath);
-
   // read the content from the given data buffer (pdf file)
   let data;
   try {
@@ -78,14 +75,13 @@ async function readAndFilterData(dataBuffer, configPath, rawDataOnly = false) {
     throw new Error(`Failed to read the PDF file: ${error.message}`);
   }
 
+  return parseModuleDescriptionsWithConfig(data.text, configPath).data;
+
+  // load the configuration file
+  readConfigFile(configPath);
+
   // extract text from pdf (with pdf-parse) and do preprocessing
-  const pdfText = moduleDescriptionsPreprocessing(data.text);
-
-  // split the text: each array entry contains the text of exactly one module description
-  const moduleDescriptionTexts = pdfText.split(config.moduleTitle);
-
-  // remove the first entry, as it just contains all the text before the first module description
-  moduleDescriptionTexts.shift();
+  const moduleDescriptionTexts = moduleDescriptionsPreprocessing(data.text);
 
   // if rawDataOnly is true, return the preprocessed raw text
   if (rawDataOnly) {
@@ -94,11 +90,40 @@ async function readAndFilterData(dataBuffer, configPath, rawDataOnly = false) {
 
   // parse each module description
   const parsedModules = [];
-  for (const singleModuleDescription of moduleDescriptionTexts) {
-    parsedModules.push(parseSingleModuleDescription(singleModuleDescription));
-  }
 
   return parsedModules;
+}
+
+/**
+ * Parses given pdfText with a specified configuration file and calculates the total parser score.
+ * @param {string} pdfText The text of the pdf file to be parsed.
+ * @param {string} configPath The path to the module description configuration file to be used for parsing.
+ * @returns {{totalParserScore: number, data: *[], configPath: string}} An object containing the parsed module descriptions, the total parser score and the name of the used configuration file.
+ */
+function parseModuleDescriptionsWithConfig(pdfText, configPath) {
+  // load the configuration file
+  readConfigFile(configPath);
+
+  // do preprocessing on the module descriptions
+  moduleDescriptionTexts = moduleDescriptionsPreprocessing(pdfText);
+
+  // parse each module description and calculate the total parser score
+  let totalScore = 0;
+  const parsedModules = [];
+
+  for (const singleModuleDescription of moduleDescriptionTexts) {
+    const parsedModule = parseSingleModuleDescription(singleModuleDescription);
+    totalScore += parsedModule.parserScore;
+    parsedModules.push(parsedModule);
+  }
+
+  totalScore += parsedModules.length;
+
+  return {
+    data: parsedModules,
+    totalParserScore: totalScore,
+    configPath: path.basename(configPath)
+  };
 }
 
 /**
@@ -107,7 +132,8 @@ async function readAndFilterData(dataBuffer, configPath, rawDataOnly = false) {
  * For each item of moduleProperties, the function searches for the specified readFrom ... readTo and extracts the text in between.
  * If more than one match is found, the function uses the result at the specified index (useResultAtIndex).
  * If specified, the function applies additional postprocessing to the extracted text.
- * Finally, the extracted text is added as a property with the specified name (propertyName) to the module object.
+ * The extracted text is added as a property with the specified name (propertyName) to the module object.
+ * The function also adds a property "parserScore" to the module object, which is used to filter out implausible results.
  *
  * @param moduleDescriptionText {string} A string representing the module description.
  * @returns {{}} An object containing the extracted properties and thus representing one module.
@@ -115,6 +141,7 @@ async function readAndFilterData(dataBuffer, configPath, rawDataOnly = false) {
 function parseSingleModuleDescription(moduleDescriptionText) {
   // initialize an empty module object
   const module = {};
+  let score = 0;
 
   for (const propertyToExtract of config.moduleProperties) {
     // find the correct match of readFrom ... readTo
@@ -138,9 +165,37 @@ function parseSingleModuleDescription(moduleDescriptionText) {
 
     // add the extracted text as a property to the module object
     module[propertyToExtract.propertyName] = extractedText;
+
+    // plausibility-check the extracted property
+    if (!extractedPropertyIsPlausible(propertyToExtract, extractedText)) {
+      score--;
+    }
   }
 
+  // add the score as a property to the module object
+  module['parserScore'] = score;
+
   return module;
+}
+
+/**
+ * Helper function:
+ * Checks if the extracted property is plausible.
+ * @param {object} propertyToExtract The configuration of the property to be extracted (from the config object).
+ * @param {string} extractedProperty The extracted property text.
+ * @returns {boolean}
+ */
+function extractedPropertyIsPlausible(propertyToExtract, extractedProperty) {
+  if (propertyToExtract.plausibilityCheck) {
+    // if a plausibility check is specified in the config, apply it
+    if (!extractedProperty.match(propertyToExtract.plausibilityCheck)) {
+      return false;
+    }
+  } else {
+    // if no plausibility check is specified, check if the property is not empty and not too long
+    return extractedProperty.length > 0 && extractedProperty.length < 500;
+  }
+  return true;
 }
 
 /**
@@ -149,7 +204,7 @@ function parseSingleModuleDescription(moduleDescriptionText) {
  * - harmonizes whitespaces and removes line breaks if enableDefaultPreprocessing is true in config
  * - applies additional preprocessing (find and replace) as specified in config
  * @param moduleDescriptions The un-preprocessed module descriptions text.
- * @returns {string} The preprocessed module descriptions text.
+ * @returns {[string]} An array of preprocessed module descriptions. Each array entry contains the text of exactly one module description.
  */
 function moduleDescriptionsPreprocessing(moduleDescriptions) {
   // default preprocessing if enabled in config
@@ -167,7 +222,13 @@ function moduleDescriptionsPreprocessing(moduleDescriptions) {
     );
   }
 
-  return moduleDescriptions;
+  // split the text: each array entry contains the text of exactly one module description
+  const moduleDescriptionTexts = moduleDescriptions.split(config.moduleTitle);
+
+  // remove the first entry, as it just contains all the text before the first module description
+  moduleDescriptionTexts.shift();
+
+  return moduleDescriptionTexts;
 }
 
 /**

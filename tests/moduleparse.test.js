@@ -92,6 +92,11 @@ test('ist die Modulstruktur korrekt aufgebaut', async () => {
       expect(modules[j]).toHaveProperty('moduleApplicability');
 
       for (const property in modules[j]) {
+        if (property === 'parserScore') {
+          expect(modules[j][property]).toBeLessThanOrEqual(0);
+          expect(modules[j][property]).toBeGreaterThanOrEqual(-5);
+          continue;
+        }
         expect(typeof modules[j][property]).toBe('string');
       }
     }
@@ -104,7 +109,9 @@ test('Format von der Modulnummer korrekt', async () => {
 
     let errorCounter = 0;
     for (let j = 0; j < modules.length; j++) {
-      if (!modules[j].moduleID.match(/^\d\d-\d\d-\d\d\d\d(\/\w+)?$/)) { errorCounter++; }
+      if (!modules[j].moduleID.match(/^\d\d-\d\d-\d\d\d\d(\/\w+)?$/)) {
+        errorCounter++;
+      }
     }
     expect(errorCounter).toBeLessThan(0.1 * INPUT_DATA[i].expectedModules);
   }
@@ -128,7 +135,9 @@ test('Format von der Sprache ist korrekt', async () => {
 
     let errorCounter = 0;
     for (let j = 0; j < modules.length; j++) {
-      if (!modules[j].moduleLanguage.match(/^(Englisch.*|Deutsch.*)/i)) { errorCounter++; }
+      if (!modules[j].moduleLanguage.match(/^(Englisch.*|Deutsch.*)/i)) {
+        errorCounter++;
+      }
     }
     expect(errorCounter).toBeLessThan(0.1 * INPUT_DATA[i].expectedModules);
   }
@@ -191,7 +200,8 @@ describe('Test invalid user input', () => {
         moduleCredits: '',
         moduleID: '',
         moduleLanguage: '',
-        moduleName: ''
+        moduleName: '',
+        parserScore: -5
       }
     ]);
   });
