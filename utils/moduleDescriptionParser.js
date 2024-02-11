@@ -126,9 +126,9 @@ async function readAndFilterData(
   // return the best result
   if (process.env.DEBUG === 'true') {
     console.log(
-      `[moduleDescriptionParser] Used configuration file: ${
+      `[moduleDescriptionParser] Used configuration file: "${
         results[0].configName
-      }, parsed ${results[0].numberOfModules} modules, found ${
+      }", parsed ${results[0].numberOfModules} modules, found ${
         results[0].totalParserScore * -1
       } possible problems.`
     );
