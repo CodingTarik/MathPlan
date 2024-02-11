@@ -143,6 +143,15 @@ test('Format von der Sprache ist korrekt', async () => {
   }
 });
 
+test('Module description config may be omitted', async () => {
+  for (let i = 0; i < INPUT_DATA.length; i++) {
+    const input = INPUT_DATA[i];
+    const dataBuffer = fs.readFileSync(input.filePath);
+    const result = await readAndFilterData(dataBuffer);
+    expect(result).toStrictEqual(OUTPUT_DATA[i]);
+  }
+});
+
 test('Test raw data output', async () => {
   for (let i = 0; i < INPUT_DATA.length; i++) {
     const input = INPUT_DATA[i];
@@ -204,5 +213,21 @@ describe('Test invalid user input', () => {
         parserScore: -5
       }
     ]);
+  });
+
+  test('Pdf file without any text - should throw an error', async () => {
+    const dataBuffer = fs.readFileSync(
+      path.join(__dirname, 'resources/invalidInputs/pdfWithoutText.pdf')
+    );
+    await expect(readAndFilterData(dataBuffer)).rejects.toThrow(
+      /No modules found.*/
+    );
+  });
+
+  test('No config file when raw data is requested - should throw an error', async () => {
+    const dataBuffer = fs.readFileSync(INPUT_DATA[0].filePath);
+    await expect(
+      readAndFilterData(dataBuffer, undefined, true)
+    ).rejects.toThrow(/Please specify a configuration file to use.*/);
   });
 });
