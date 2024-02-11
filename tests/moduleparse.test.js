@@ -10,6 +10,16 @@ const readAndFilterData = require(
 
 /**
  * @global
+ * The fault tolerance for implausible parsed module properties.
+ * A value of 0 means that no implausible properties are tolerated.
+ * A value of 0.5 means that 50% of the parsed properties may be implausible.
+ * A value of 1 means that all parsed properties may be implausible so in this case, implausible properties are ignored.
+ * @type {number}
+ */
+const PLAUSIBILITY_CHECK_TOLERANCE = 0;
+
+/**
+ * @global
  * The current configuration for the module description parser as read from the module description config file.
  * @type {[{expectedModules: number, filePath: string, description: string, configPath: string}]}
  */
@@ -113,7 +123,9 @@ test('Format von der Modulnummer korrekt', async () => {
         errorCounter++;
       }
     }
-    expect(errorCounter).toBeLessThan(0.1 * INPUT_DATA[i].expectedModules);
+    expect(errorCounter).toBeLessThanOrEqual(
+      PLAUSIBILITY_CHECK_TOLERANCE * INPUT_DATA[i].expectedModules
+    );
   }
 });
 
@@ -125,7 +137,9 @@ test('Format von der Creditpoints ist korrekt', async () => {
     for (let j = 0; j < modules.length; j++) {
       if (!modules[j].moduleCredits.match(/^\d{1,2} CP$/)) errorCounter++;
     }
-    expect(errorCounter).toBeLessThan(0.1 * INPUT_DATA[i].expectedModules);
+    expect(errorCounter).toBeLessThanOrEqual(
+      PLAUSIBILITY_CHECK_TOLERANCE * INPUT_DATA[i].expectedModules
+    );
   }
 });
 
@@ -139,7 +153,9 @@ test('Format von der Sprache ist korrekt', async () => {
         errorCounter++;
       }
     }
-    expect(errorCounter).toBeLessThan(0.1 * INPUT_DATA[i].expectedModules);
+    expect(errorCounter).toBeLessThanOrEqual(
+      PLAUSIBILITY_CHECK_TOLERANCE * INPUT_DATA[i].expectedModules
+    );
   }
 });
 
