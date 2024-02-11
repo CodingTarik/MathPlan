@@ -59,7 +59,8 @@ Beispiel:
       "flags": "g",
       "replace": ""
     }
-  ]
+  ],
+  "plausibilityCheck": "^([Ee]nglisch|[Dd]eutsch).*"
 }
 ```
 
@@ -72,6 +73,7 @@ Beispiel:
   - **find** (string). Regulärer Ausdruck für den zu ersetzenden Text.
   - **flags** (string). Die Flags des regulären Ausdrucks.
   - **replace** (string). Der Ersatztext.
+- **plausibilityCheck** (string). Regulärer Ausdruck, der auf das Ergebnis angewendet wird und die auf das Ergebnis zutreffen sollte. Dies hilft dem Parser, das Ergebnis zu überprüfen und ggf. zu verwerfen, wenn es nicht den Erwartungen entspricht. Diese Eigenschaft ist **optional**, wenn es keine sinnvolle Plausibilitätsprüfung gibt, kann sie weggelassen werden.
 
 ## Neue Konfigurationsdateien entwickeln und testen
 
@@ -147,7 +149,8 @@ Example:
       "flags": "g",
       "replace": ""
     }
-  ]
+  ],
+  "plausibilityCheck": "^([Ee]nglisch|[Dd]eutsch).*"
 }
 ```
 
@@ -160,6 +163,7 @@ Example:
   - **find** (string). Regular expression for the text to be replaced.
   - **flags** (string). The flags of the regular expression.
   - **replace** (string). The replacement text.
+- **plausibilityCheck** (string). Regular expression applied to the result that the result should match with. This helps the parser to check the result and discard it if it does not meet expectations. This property is **optional**; if there is no meaningful plausibility check, it can be omitted.
 
 ## Developing and testing new configuration files
 

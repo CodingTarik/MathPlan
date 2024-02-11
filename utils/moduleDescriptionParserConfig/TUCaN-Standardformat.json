@@ -27,7 +27,8 @@
           "flags": "g",
           "replace": "-$1"
         }
-      ]
+      ],
+      "plausibilityCheck": "^\\d{2}-\\d{2}-\\d{4}(\\/\\w+)?$"
     },
     {
       "propertyName": "moduleName",
@@ -43,7 +44,8 @@
       "readTo": "",
       "keepReadFromAndTo": true,
       "useResultAtIndex": 0,
-      "postprocessing": []
+      "postprocessing": [],
+      "plausibilityCheck": "^[0-9]+ CP$"
     },
     {
       "propertyName": "moduleLanguage",
@@ -57,7 +59,8 @@
           "flags": "g",
           "replace": ""
         }
-      ]
+      ],
+      "plausibilityCheck": "^([Ee]nglisch|[Dd]eutsch).*"
     },
     {
       "propertyName": "moduleApplicability",
