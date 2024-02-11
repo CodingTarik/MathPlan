@@ -17,7 +17,30 @@ const http = axios.create({
  * @returns a promise that is rejected or fulfilled depending on the success of adding the module
  */
 const create = (data : object) => {
-  return http.post("/addModul", data);
+  const x = http.post("/addModule", data);
+  console.log("--------------------------------------");
+  console.log(typeof(x));
+  console.log("--------------------------------------");
+  return x;
+};
+
+/**
+ * send put request with modified database object with ID id
+ * @param id states the id of the database object to be modified
+ * @param data contains the entries made by the user for each of the input fields (id, name, credits, language, applicability)
+ * @returns {Promise<AxiosResponse>} a promise that is rejected or fulfilled depending on the success of updating the module
+ */
+const update = (id: string, data: object) => {
+  return http.put(`/updateModule/${id}`, data);
+};
+
+/**
+ * send get request for ID id
+ * @param id states the id of the database object to be found
+ * @returns {Promise<AxiosResponse>}a promise that is rejected or fulfilled depending on the success of getting the module
+ */
+const getByID = (id : string) => {
+  return http.get(`/getOneModule/${id}`);
 };
 
 
@@ -38,6 +61,8 @@ const getModules = (id:string, name:string, credits:string, language:string, app
 
 const ModuleServices = {
   create,
+  update,
+  getByID,
   getModules
 };
 

@@ -73,7 +73,6 @@ app.use('/', pages);
 try {
   if (process.env.NODE_ENV !== 'test') {
     // Datbase
-    /* eslint-disable */
     db.sequelize
       .sync()
       // for changing the underlying database (delets all content, updates scheme) adjust the line above as decribed in the readme file

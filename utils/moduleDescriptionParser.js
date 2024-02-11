@@ -113,7 +113,7 @@ function parseProperties(pdfText, numberOfModules) {
 function buildModules(parsedProperties, numberOfModules) {
   const modules = [];
   for (let i = 0; i < numberOfModules; i++) {
-    const module = {};
+    const modul = {};
     for (const property of moduleProperties) {
       let parsedProperty = parsedProperties[property.propertyName][i];
 
@@ -124,9 +124,9 @@ function buildModules(parsedProperties, numberOfModules) {
         }
       }
 
-      module[property.propertyName] = parsedProperty;
+      modul[property.propertyName] = parsedProperty;
     }
-    modules.push(module);
+    modules.push(modul);
   }
   return modules;
 }
