@@ -224,7 +224,7 @@ function parseSingleModuleDescription(moduleDescriptionText) {
   }
 
   // add the score as a property to the module object
-  module['parserScore'] = score;
+  module.parserScore = score;
 
   return module;
 }
