@@ -2,6 +2,9 @@ const pdf = require('pdf-parse');
 const fs = require('fs');
 const path = require('node:path');
 
+const dotenv = require('dotenv');
+dotenv.config({ path: path.join(__dirname, '../.env') });
+
 /**
  * @global
  * The current configuration for the module description parser as read from the module description config file.
@@ -121,13 +124,15 @@ async function readAndFilterData(
   }
 
   // return the best result
-  console.log(
-    `[moduleDescriptionParser] Used configuration file: ${
-      results[0].configName
-    }, parsed ${results[0].numberOfModules} modules, found ${
-      results[0].totalParserScore * -1
-    } possible problems.`
-  );
+  if (process.env.DEBUG === 'true') {
+    console.log(
+      `[moduleDescriptionParser] Used configuration file: ${
+        results[0].configName
+      }, parsed ${results[0].numberOfModules} modules, found ${
+        results[0].totalParserScore * -1
+      } possible problems.`
+    );
+  }
   return results[0].data;
 }
 
