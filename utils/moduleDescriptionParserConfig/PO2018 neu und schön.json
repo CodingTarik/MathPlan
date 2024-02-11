@@ -33,7 +33,7 @@
     {
       "propertyName": "moduleName",
       "readFrom": "Modulname",
-      "readTo": "Modul",
+      "readTo": "Modul Nr\\.",
       "keepReadFromAndTo": false,
       "useResultAtIndex": 0,
       "postprocessing": []
