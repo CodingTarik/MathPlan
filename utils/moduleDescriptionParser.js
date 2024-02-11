@@ -18,7 +18,7 @@ const CONFIG_FOLDER = path.join(__dirname, 'moduleDescriptionParserConfig');
 /**
  * Helper function:
  * Returns an array of all available module description configuration file paths in the CONFIG_FOLDER.
- * @returns {Array} An array of all available module description configuration file paths.
+ * @returns {string[]} An array of all available module description configuration file paths.
  */
 function getAvailableConfigFiles() {
   const configFilePaths = [];
@@ -90,16 +90,16 @@ async function readAndFilterData(
     return rawOutputOnly(data.text, configPath);
   }
 
-  // if configPath is given, use the specified configuration file for parsing
-  if (configPath) {
-    return parseModuleDescriptionsWithConfig(data.text, configPath).data;
-  }
-
-  // if no configPath is given, use all available configuration files
-  const allConfigFiles = getAvailableConfigFiles();
   let results = [];
-  for (const configFile of allConfigFiles) {
-    results.push(parseModuleDescriptionsWithConfig(data.text, configFile));
+  if (configPath) {
+    // if configPath is given, solely use the specified configuration file for parsing
+    results.push(parseModuleDescriptionsWithConfig(data.text, configPath));
+  } else {
+    // if no configPath is given, use all available configuration files
+    const allConfigFiles = getAvailableConfigFiles();
+    for (const configFile of allConfigFiles) {
+      results.push(parseModuleDescriptionsWithConfig(data.text, configFile));
+    }
   }
 
   // filter out all results that do not contain any modules
