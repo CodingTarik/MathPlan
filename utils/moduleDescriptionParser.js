@@ -1,11 +1,34 @@
 const pdf = require('pdf-parse');
 const fs = require('fs');
+const path = require('node:path');
 
 /**
  * @global
  * The current configuration for the module description parser as read from the module description config file.
  */
 let config = {};
+
+/**
+ * @global
+ * The folder containing the module description configuration files.
+ * If no configuration file is given to the module description parser, all files in this folder are available for selection.
+ */
+const CONFIG_FOLDER = path.join(__dirname, 'moduleDescriptionParserConfig');
+
+/**
+ * Helper function:
+ * Returns an array of all available module description configuration file paths in the CONFIG_FOLDER.
+ * @returns {Array} An array of all available module description configuration file paths.
+ */
+function getAvailableConfigFiles() {
+  const configFilePaths = [];
+  for (const file of fs.readdirSync(CONFIG_FOLDER)) {
+    if (file.endsWith('.json')) {
+      configFilePaths.push(path.join(CONFIG_FOLDER, file));
+    }
+  }
+  return configFilePaths;
+}
 
 /**
  * Helper function:

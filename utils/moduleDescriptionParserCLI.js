@@ -24,7 +24,9 @@ if (process.argv.length < 4) {
 // read arguments
 const inputFilePath = process.argv[2];
 const configurationFilePath = process.argv[3];
-const rawDataOnly = process.argv[4] ? process.argv[4].toLowerCase() === '--raw' : false;
+const rawDataOnly = process.argv[4]
+  ? process.argv[4].toLowerCase() === '--raw'
+  : false;
 
 // open the pdf file
 let dataBuffer;
