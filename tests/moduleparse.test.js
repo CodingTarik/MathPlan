@@ -183,6 +183,35 @@ test('Test raw data output', async () => {
   }
 });
 
+test('Test if the debug logs can be disabled', async () => {
+  const logSpy = jest.spyOn(console, 'log');
+  const dataBuffer = fs.readFileSync(INPUT_DATA[0].filePath);
+  const configPath = INPUT_DATA[0].configPath;
+
+  process.env.DEBUG = 'true';
+  await readAndFilterData(dataBuffer, configPath);
+  const logsWithDebug = logSpy.mock.calls.length;
+
+  process.env.DEBUG = 'false';
+  logSpy.mockClear();
+  await readAndFilterData(dataBuffer, configPath);
+  const logsWithoutDebug = logSpy.mock.calls.length;
+  expect(logsWithDebug - logsWithoutDebug).toBe(1);
+});
+
+test('Test if the parser score is plausible', async () => {
+  const dataBuffer = fs.readFileSync(path.join(__dirname, 'resources/Modulhandbuch PO2018.pdf'));
+  let result;
+
+  // special config so that every plausibility test passes
+  result = await readAndFilterData(dataBuffer, path.join(__dirname, 'resources/PO2018_plausibilityPass.json'));
+  expect(result.reduce((acc, curr) => acc + curr.parserScore, 0)).toBe(0);
+
+  // special config so that every plausibility test fails
+  result = await readAndFilterData(dataBuffer, path.join(__dirname, 'resources/PO2018_plausibilityFail.json'));
+  expect(result.reduce((acc, curr) => acc + curr.parserScore, 0)).toBe(-5 * result.length);
+});
+
 describe('Test invalid user input', () => {
   test('Invalid path to config file - should throw an error', async () => {
     const dataBuffer = fs.readFileSync(INPUT_DATA[0].filePath);
