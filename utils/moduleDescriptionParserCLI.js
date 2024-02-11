@@ -5,25 +5,34 @@ const readAndFilterData = require(
 );
 
 // if not enough arguments are given, print usage information
-if (process.argv.length < 4) {
+if (process.argv.length < 3) {
   console.log(
-    'Usage: node moduleDescriptionParserCLI.js <filename> <configuration> [--raw]'
+    'Usage: node moduleDescriptionParserCLI.js <filename> [configuration] [--raw]'
   );
+  console.log();
   console.log(
-    '  filename:      The path to the pdf file containing the module descriptions.'
+    '       filename: The path to the pdf file containing the module descriptions.'
   );
+  console.log();
   console.log(
-    '  configuration: The path to the configuration file to be used for parsing the module descriptions.'
+    '  configuration: The path to the configuration file to be used for parsing the module descriptions.\n' +
+      '                 If not given, all known configurations are tried and the best result is returned.'
   );
+  console.log();
   console.log(
-    '  --raw:         If this flag is set, the module descriptions are not parsed but the preprocessed raw text is returned. For debugging purposes.'
+    '          --raw: If this flag is set, the module descriptions are not parsed but the preprocessed raw text is returned. For debugging purposes.\n' +
+      '                 If this flag is set, the configuration file must not be omitted.'
   );
   process.exit(1);
 }
 
 // read arguments
+if (process.argv[3] && process.argv[3].toLowerCase() === '--raw') {
+  process.argv.splice(3, 0, '');
+}
+
 const inputFilePath = process.argv[2];
-const configurationFilePath = process.argv[3];
+const configurationFilePath = process.argv[3] || undefined;
 const rawDataOnly = process.argv[4]
   ? process.argv[4].toLowerCase() === '--raw'
   : false;
