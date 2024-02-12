@@ -19,7 +19,7 @@ test('test the upload with an empty element', async () => {
   expect(response.statusCode).toBe(500);
 });
 
-test('test the upload with an array with one null argment', async () => {
+test('test the upload with an array with one null argument', async () => {
   const response = await request(app)
     .post('/api/intern/uploadPDFtoServer')
     .send([null]);
@@ -27,7 +27,7 @@ test('test the upload with an array with one null argment', async () => {
   expect(response.statusCode).toBe(500);
 });
 
-test('test the upload with an array with one valid argment', async () => {
+test('test the upload with an array with one valid argument', async () => {
   const dataBuffer = fs.readFileSync(path.join(__dirname, 'resources/ModulhandbuchPO2018_neu_und_schn_Stand_15_Dez_21.pdf'));
   const formData = new FormData();
   formData.append('file', dataBuffer);
@@ -36,9 +36,9 @@ test('test the upload with an array with one valid argment', async () => {
     .attach('file', dataBuffer, 'ModulhandbuchPO2018_neu_und_schn_Stand_15_Dez_21.pdf');
   expect(response.statusCode).toBe(200);
   expect(response.body[0].length).toBe(226);
-});
+},10000);
 
-test('test the upload with an array with one invvalid argment', async () => {
+test('test the upload with an array with one invvalid argument', async () => {
   const dataBuffer = fs.readFileSync(path.join(__dirname, 'resources/Pruefungsplan_BSc_PO_2018_MSc_PO_2018_2019-07-04.pdf'));
   const formData = new FormData();
   formData.append('file', dataBuffer);
@@ -47,3 +47,18 @@ test('test the upload with an array with one invvalid argment', async () => {
     .attach('file', dataBuffer, 'Pruefungsplan_BSc_PO_2018_MSc_PO_2018_2019-07-04.pdf');
   expect(response.statusCode).toBe(500);
 });
+
+test('test the upload with array of two valid arguments', async ()=> {
+  const dataBuffer = fs.readFileSync(path.join(__dirname, 'resources/ModulhandbuchPO2018_neu_und_schn_Stand_15_Dez_21.pdf'));
+  const dataBuffer2 = fs.readFileSync(path.join(__dirname, 'resources/ModulhandbuchPO2018_neu_und_schn_Stand_15_Dez_21 - Kopie.pdf'));
+  const formData = new FormData();
+  formData.append('file', dataBuffer);
+  formData.append('file',dataBuffer2);
+  const response = await request(app)
+    .post('/api/intern/uploadPDFtoServer')
+    .attach('file', dataBuffer, 'ModulhandbuchPO2018_neu_und_schn_Stand_15_Dez_21.pdf')
+    .attach('file',dataBuffer2,'resources/ModulhandbuchPO2018_neu_und_schn_Stand_15_Dez_21 - Kopie.pdf')
+  expect(response.statusCode).toBe(200);
+  expect(response.body[0].length).toBe(226);
+  expect(response.body[1].length).toBe(226);
+},10000);

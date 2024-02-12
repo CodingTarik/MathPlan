@@ -7,7 +7,7 @@ import axios from 'axios';
 /**
  * Styled component for the input element of the file upload button
  * @param props 
- * @returns the UI for the Button to Upload a 'Modulhandbuch'
+ * @returns the hidden input element for the file selection 
  */
 const VisuallyHiddenInput = styled('input')({
   clip: 'rect(0 0 0 0)',
@@ -25,7 +25,7 @@ const VisuallyHiddenInput = styled('input')({
  * Sends a POST request to the server to upload all the elected PDF files
  * @returns the UI for the Button to Upload a 'Modulhandbuch'
  */
-export default function PdfFileUpload() {
+export default function pdfFileUpload() {
   const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files){
       const files = event.target.files;
@@ -40,7 +40,7 @@ export default function PdfFileUpload() {
           },
         });
         console.log('Upload successfull: ', response.data); 
-        uploadPdftoDatabase(response.data); // functionality not yet implemented
+        uploadPdfToDatabase(response.data); // functionality not yet implemented
       }catch (error) {
           console.error("Upload fehlgeschlagen");
           alert("Upload fehlgeschlagen");  
@@ -63,7 +63,7 @@ export default function PdfFileUpload() {
 
   }
   
-  function uploadPdftoDatabase(data:Array<Array<JSON>>|null){
+  function uploadPdfToDatabase(data:Array<Array<JSON>>|null){
     // not yet implemented
     console.log('Nun sollten die Module in die Datenbank geschrieben werden: ');
     console.dir(data);
