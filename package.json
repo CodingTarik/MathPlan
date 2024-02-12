@@ -66,7 +66,7 @@
     "prepare": "husky install",
     "uninstallHusky": "git config --unset core.hooksPath",
     "format": "prettier --plugin=prettier-plugin-ejs --write \"**/*.{js,html,ejs,ts,json,css}\"",
-    "test": "jest --code-coverage",
+    "test": "jest --coverage",
     "fullDevStart": "npm install && npm run prepare && npm run clean && npm run format && npm run lint:fix && npm run start",
     "installHusky": "npm install && npm run prepare && npx husky add .husky/pre-commit \"npm run lint\" && npx husky add .husky/pre-commit \"npm run test\""
   },
