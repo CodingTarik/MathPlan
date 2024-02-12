@@ -1,5 +1,7 @@
 {
   "dependencies": {
+    "animate.css": "^4.1.1",
+    "aos": "^2.3.4",
     "axios": "^1.6.2",
     "bootstrap": "^5.3.2",
     "cheerio": "^1.0.0-rc.12",
@@ -18,10 +20,12 @@
     "pdf-parse": "^1.1.1",
     "react": "^18.2.0",
     "rimraf": "^5.0.5",
-    "winston": "^3.11.0",
-    "winston-daily-rotate-file": "^4.7.1",
     "sequelize": "^6.35.1",
-    "sqlite3": "^5.1.6"
+    "sqlite3": "^5.1.6",
+    "sweetalert2": "^11.6.13",
+    "typed.js": "^2.1.0",
+    "winston": "^3.11.0",
+    "winston-daily-rotate-file": "^4.7.1"
   },
   "devDependencies": {
     "@types/node": "^20.10.3",
