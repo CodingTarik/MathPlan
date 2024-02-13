@@ -1,9 +1,11 @@
 {
   "dependencies": {
+    "animate.css": "^4.1.1",
+    "aos": "^2.3.4",
     "axios": "^1.6.2",
     "bootstrap": "^5.3.2",
-    "chalk": "^4.1.0",
     "cheerio": "^1.0.0-rc.12",
+    "chalk": "^4.1.0",
     "dotenv": "^16.3.1",
     "ejs": "^3.1.9",
     "eslint-plugin-etc": "^2.0.3",
@@ -18,8 +20,12 @@
     "pdf-parse": "^1.1.1",
     "react": "^18.2.0",
     "rimraf": "^5.0.5",
+    "winston": "^3.11.0",
+    "winston-daily-rotate-file": "^4.7.1",
     "sequelize": "^6.35.1",
     "sqlite3": "^5.1.6",
+    "sweetalert2": "^11.6.13",
+    "typed.js": "^2.1.0",
     "winston": "^3.11.0",
     "winston-daily-rotate-file": "^4.7.1"
   },
@@ -63,7 +69,7 @@
     "prepare": "husky install",
     "uninstallHusky": "git config --unset core.hooksPath",
     "format": "prettier --plugin=prettier-plugin-ejs --write \"**/*.{js,html,ejs,ts,json,css}\"",
-    "test": "jest",
+    "test": "jest --coverage",
     "fullDevStart": "npm install && npm run prepare && npm run clean && npm run format && npm run lint:fix && npm run start",
     "installHusky": "npm install && npm run prepare && npx husky add .husky/pre-commit \"npm run lint\" && npx husky add .husky/pre-commit \"npm run test\""
   },
