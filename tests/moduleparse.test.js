@@ -1,4 +1,6 @@
+/* eslint-disable security/detect-non-literal-fs-filename */
 /* eslint security/detect-object-injection: "off" */
+// linter disabled because the input data should be easily configurable. This is done via the INPUT_DATA array.
 
 const { describe, expect, test } = require('@jest/globals');
 
@@ -119,6 +121,8 @@ test('Format von der Modulnummer korrekt', async () => {
 
     let errorCounter = 0;
     for (let j = 0; j < modules.length; j++) {
+      // linter disabled because this regex does not seem to be unsafe
+      // eslint-disable-next-line security/detect-unsafe-regex
       if (!modules[j].moduleID.match(/^\d\d-\d\d-\d\d\d\d(\/\w+)?$/)) {
         errorCounter++;
       }
@@ -217,7 +221,7 @@ describe('Test invalid user input', () => {
     const dataBuffer = fs.readFileSync(INPUT_DATA[0].filePath);
     const configPath = 'invalid/path/to/a/non/existent/config.json';
     await expect(readAndFilterData(dataBuffer, configPath)).rejects.toThrow(
-      /Error while accessing the configuration file.*/
+      /Failed to load the configuration from the file with the path.*/
     );
   });
 
@@ -228,7 +232,7 @@ describe('Test invalid user input', () => {
       'resources/invalidInputs/brokenJSON.json'
     );
     await expect(readAndFilterData(dataBuffer, configPath)).rejects.toThrow(
-      /Error while parsing the configuration file.*/
+      /Failed to load the configuration from the file with the path.*/
     );
   });
 

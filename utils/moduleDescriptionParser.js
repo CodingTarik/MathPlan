@@ -1,3 +1,6 @@
+/* eslint-disable security/detect-non-literal-regexp */
+// linter warning disabled because non-literal regex are needed in this file. The regex should be configurable in the config files.
+
 const pdf = require('pdf-parse');
 const fs = require('fs');
 const path = require('node:path');
@@ -42,21 +45,14 @@ function getAvailableConfigFiles() {
  * @throws {Error} If the configuration file cannot be accessed or parsed.
  */
 function readConfigFile(configPath) {
-  let fileContent;
-
   try {
-    fileContent = fs.readFileSync(configPath);
-  } catch (error) {
-    throw new Error(
-      `Error while accessing the configuration file ${configPath}: ${error.message}`
-    );
-  }
-
-  try {
+    // linter disabled because the path is not a user input and hard-coding all possible paths is not feasible
+    // eslint-disable-next-line security/detect-non-literal-fs-filename
+    const fileContent = fs.readFileSync(configPath);
     config = JSON.parse(fileContent);
   } catch (error) {
     throw new Error(
-      `Error while parsing the configuration file ${configPath}: ${error.message}`
+      `Failed to load the configuration from the file with the path "${configPath}": ${error.message}`
     );
   }
 }
@@ -210,13 +206,11 @@ function parseSingleModuleDescription(moduleDescriptionText) {
     let extractedText = matches[propertyToExtract.useResultAtIndex] || '';
 
     // if needed, do additional postprocessing as specified in config
-    if (propertyToExtract.postprocessing) {
-      for (const findAndReplaceItem of propertyToExtract.postprocessing) {
-        extractedText = extractedText.replace(
-          new RegExp(findAndReplaceItem.find, findAndReplaceItem.flags),
-          findAndReplaceItem.replace
-        );
-      }
+    for (const findAndReplaceItem of propertyToExtract.postprocessing) {
+      extractedText = extractedText.replace(
+        new RegExp(findAndReplaceItem.find, findAndReplaceItem.flags),
+        findAndReplaceItem.replace
+      );
     }
 
     // add the extracted text as a property to the module object
@@ -307,6 +301,7 @@ function findKeywordMatches(
   // Find all matches of readFrom ... readTo
   const regex = new RegExp(`${readFrom}.*?${readTo}`, 'gm');
   const matches = originalString.match(regex);
+  let resultMatches = [];
 
   if (matches === null) {
     return [];
@@ -314,14 +309,17 @@ function findKeywordMatches(
 
   // Remove readFrom and readTo from matches if wanted
   if (!keepReadFromAndTo) {
-    for (let i = 0; i < matches.length; i++) {
-      matches[i] = matches[i].replace(new RegExp(`^${readFrom}`), '');
-      matches[i] = matches[i].replace(new RegExp(`${readTo}$`), '');
-      matches[i] = matches[i].trim();
+    for (let match of matches) {
+      match = match.replace(new RegExp(`^${readFrom}`), '');
+      match = match.replace(new RegExp(`${readTo}$`), '');
+      match = match.trim();
+      resultMatches.push(match);
     }
+  } else {
+    resultMatches = matches;
   }
 
-  return matches;
+  return resultMatches;
 }
 
 module.exports = readAndFilterData;
