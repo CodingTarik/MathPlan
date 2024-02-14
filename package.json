@@ -26,9 +26,7 @@
     "sequelize": "^6.35.1",
     "sqlite3": "^5.1.6",
     "sweetalert2": "^11.6.13",
-    "typed.js": "^2.1.0",
-    "winston": "^3.11.0",
-    "winston-daily-rotate-file": "^4.7.1"
+    "typed.js": "^2.1.0"
   },
   "devDependencies": {
     "@jest/globals": "^29.7.0",

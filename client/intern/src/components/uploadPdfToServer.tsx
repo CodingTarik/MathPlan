@@ -22,7 +22,7 @@ const VisuallyHiddenInput = styled('input')({
 });
 
 /**
- * Sends a POST request to the server to upload all the elected PDF files
+ * Sends a POST request to the server to upload all the selected PDF files
  * @returns the UI for the Button to Upload a 'Modulhandbuch'
  */
 export default function pdfFileUpload() {
@@ -39,11 +39,14 @@ export default function pdfFileUpload() {
             'Content-Type': 'multipart/form-data',
           },
         });
-        console.log('Upload successfull: ', response.data); 
-        uploadPdfToDatabase(response.data); // functionality not yet implemented
+        console.log('Uploaded successfully ', response.data[0].length + ' file(s). \nFailed uploading ' + response.data[1].length + ' file(s).'); 
+        uploadPdfToDatabase(response.data[0]); // functionality not yet implemented
+        if(response.data[1].length > 0){
+          alert('The following files could not be uploaded: \n- '+ response.data[1].join(',\n- '));
+        }
       }catch (error) {
-          console.error("Upload fehlgeschlagen");
-          alert("Upload fehlgeschlagen");  
+          console.error("Upload fehlgeschlagen"+ error);
+          alert("Upload fehlgeschlagen:"+ error);  
           }
         }          
     };

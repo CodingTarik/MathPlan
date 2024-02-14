@@ -13,7 +13,7 @@ import PolicyIcon from '@mui/icons-material/Policy';
 import SettingsIcon from '@mui/icons-material/Settings';
 
 import AddModuleFields from './components/moduleManagement';
-import PdfFileUpload from './components/upload_pdf_to_server';
+import PdfFileUpload from './components/uploadPdfToServer';
 /**
  * JSX structure representing the entire intern application.
  *
