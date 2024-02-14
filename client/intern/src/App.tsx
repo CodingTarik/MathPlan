@@ -13,6 +13,7 @@ import PolicyIcon from '@mui/icons-material/Policy';
 import SettingsIcon from '@mui/icons-material/Settings';
 
 import AddModuleFields from './components/moduleManagement';
+import PdfFileUpload from './components/uploadPdfToServer';
 /**
  * JSX structure representing the entire intern application.
  *
@@ -149,7 +150,11 @@ function App() {
           - The content can be customized for each tab.
         */}
         <TabPanel value="0">
+          <div>
            <AddModuleFields/>
+           <hr style={{ height: '4px', borderWidth: 0, color: 'gray', backgroundColor: 'gray' }} /> {/*horizontal line*/}
+           <PdfFileUpload/>
+           </div>
         </TabPanel>
         <TabPanel value="1">
           <b>Second</b> tab panel content
