@@ -18,9 +18,6 @@ const http = axios.create({
  */
 const create = (data : object) => {
   const x = http.post("/addModule", data);
-  console.log("--------------------------------------");
-  console.log(typeof(x));
-  console.log("--------------------------------------");
   return x;
 };
 
@@ -31,7 +28,7 @@ const create = (data : object) => {
  * @returns {Promise<AxiosResponse>} a promise that is rejected or fulfilled depending on the success of updating the module
  */
 const update = (id: string, data: object) => {
-  return http.put(`/updateModule/${id}`, data);
+  return http.put(`/updateModule/${encodeURIComponent(id)}`, data);
 };
 
 /**
@@ -40,7 +37,7 @@ const update = (id: string, data: object) => {
  * @returns {Promise<AxiosResponse>}a promise that is rejected or fulfilled depending on the success of getting the module
  */
 const getByID = (id : string) => {
-  return http.get(`/getOneModule/${id}`);
+  return http.get(`/getOneModule/${encodeURIComponent(id)}`);
 };
 
 

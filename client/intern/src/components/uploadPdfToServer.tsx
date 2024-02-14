@@ -78,41 +78,56 @@ async function uploadPdfToDatabase(data:Array<Array<JSON>>|null){
    * @param module the module from the database
    * @param values the inputted module from the pdf
    */
-  const compareModules = (module: { moduleID: string; moduleName: string; moduleCredits: number; moduleLanguage: string; moduleApplicability: string; createdAt: object; id: object, updatedAt: object}, values: string[]) => {
+  const compareModules = (module: { moduleID: string; moduleName: string; moduleCredits: number; moduleLanguage: string; moduleApplicability: string; ParseScore :number ;createdAt: object; id: object, updatedAt: object}, values: string[]) => {
     if (module.moduleID === values[0] && module.moduleName === values[1] && module.moduleCredits === parseInt(values[2]) && module.moduleLanguage === values[3] && module.moduleApplicability === values[4]) {
       numUnChangedModules++;
-    } else if(parseInt(values[5]) != 0){
+      console.log('numUnchanged increased')
+    } else if(parseInt(values[5]) === 0){
+      console.log('try update');
       ModuleServices.update(values[0], {
-        moduleID: values[0],
-        moduleName: values[1],
-        moduleCredits: values[2],
-        moduleLanguage: values[3],
-        moduleApplicability: values[4]
-      }).then(()=> numChangedModules++).catch(()=> numErrorModules++);//
+        id: values[0],
+        name: values[1],
+        credits: values[2],
+        language: values[3],
+        applicability: values[4]
+      }).then(()=> {
+        numChangedModules++
+      }).catch(()=> numErrorModules++);//
+      console.log('numChanged increased')
     } else {
       numErrorModules++;
     }
   } 
-  
-  await Promise.all(data.map( async (element) => { //loop through the array of arrays
-    await Promise.all(element.map(async (tmp) => { //loop through the array of objects, each object represents a module
-      const values: string[] = Object.values(tmp); //convert the object to an array
+  /// genau das ist das Problem, dass die Promises nicht aufgelöst werden bevor das nächste Promis aufgerufen wird!!!!!!!!!!!!!!!!!!!!
+  const promises = (data.map( async (element) => { //loop through the array of arrays
+    const promisesOfPromises = (element.map(async (tmp) => { //loop through the array of objects, each object represents a module
+      let values: string[] = Object.values(tmp); //convert the object to an array
       values[2] = values[2].slice(0, -3);
       if(parseInt(values[5]) != 0){ // check if the module is fully filled
         listOfNotFullyFilledModules.push(values);  
       }
+      values = values.slice(0,5)
       console.log('try getbyID'); 
       try{
-        ModuleServices.getByID(values[0]).then((response:{ data: { moduleID: string; moduleName: string; moduleCredits: number; moduleLanguage: string; moduleApplicability: string; createdAt: object; id: object, updatedAt: object}; })=>{
+        ModuleServices.getByID(values[0]).then((response:{ data: { moduleID: string; moduleName: string; moduleCredits: number; moduleLanguage: string; moduleApplicability: string; ParseScore:number ;createdAt: object; id: object, updatedAt: object}; })=>{
           if(response.data){
             console.log('öffne compareModules');
             compareModules(response.data, values);
           }
-          else{//sollte aufgerufen werden, wenn getByID fehlschlägt
+          else{//sollte aufgerufen werden, wenn getByID fehlschlägt, also noch nicht in DB vorhanden ist
+            const tmpModule = {
+              id: values[0],
+              name: values[1],
+              credits: values[2],
+              language: values[3],
+              applicability: values[4]
+            };
             console.log('öffne create');
-            ModuleServices.create(values.slice(0,5)).then(()=> 
+            ModuleServices.create(tmpModule).then(()=> 
               {numAddedModules++
-              console.log('numAdded increased')}).catch(()=> 
+              console.log('numAdded increased')
+              //console.dir(tmpModule)
+            }).catch(()=> 
                 numErrorModules++);
           }
         });
@@ -124,8 +139,10 @@ async function uploadPdfToDatabase(data:Array<Array<JSON>>|null){
            // numErrorModules++);
       }
     }));
+    await Promise.all(promisesOfPromises);
   }));
-
+  await Promise.all(promises);
+  //console.log(listOfNotFullyFilledModules);
   alert("Anzahl hinzugefügter Module: " + numAddedModules + "\nAnzahl geänderter Module: " + numChangedModules + "\nAnzahl unveränderter Module: " + numUnChangedModules + "\nAnzahl nicht hinzugefügter Module: " + numErrorModules);
   
 }
