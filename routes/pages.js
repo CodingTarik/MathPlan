@@ -24,6 +24,16 @@ router.get('/about/:name', (req, res) => {
   res.render('index', { title: `Über uns ${req.params.name}` });
 });
 
+const studentPath = path.join(__dirname, '..', 'client', 'build', 'student');
+
+router.get('/student', (req, res, next) => {
+  res.render('layout/index', { body: '../../client/build/student/index.html' });
+});
+router.use(
+  '/student',
+  express.static(studentPath, { index: false, redirect: false })
+);
+
 // 404 not found
 router.get('*', function (req, res) {
   res.status(404).render('layout/index', {

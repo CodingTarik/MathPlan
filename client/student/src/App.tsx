@@ -1,35 +1,38 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+// Importing necessary dependencies and styles
+import './App.css';
+/* import ListItemDecorator from '@mui/joy/ListItemDecorator';
+import Tabs from '@mui/joy/Tabs';
+import TabList from '@mui/joy/TabList';
+import Tab, { tabClasses } from '@mui/joy/Tab'; 
+import React from 'react';
+import TabPanel from '@mui/lab/TabPanel';
+import { TabContext } from '@mui/lab';
+import SchoolIcon from '@mui/icons-material/School';
+import ReceiptLongIcon from '@mui/icons-material/ReceiptLong';
+import PolicyIcon from '@mui/icons-material/Policy';
+import SettingsIcon from '@mui/icons-material/Settings';
 
+import AddModuleFields from './components/module_management'; */
+/**
+ * JSX structure representing the entire intern application.
+ *
+ * @function App
+ * @returns {JSX.Element} The rendered React element.
+ */
 function App() {
-  const [count, setCount] = useState(0)
+  // State to manage the currently selected tab index
+  /* const [index, setIndex] = React.useState(0);
 
+  // Color options for different tabs
+  const colors = ['primary', 'neutral', 'success', 'warning'] as const; */
+
+  // JSX structure representing the entire application
   return (
     <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
+      Hinweis
     </>
-  )
+  );
 }
 
-export default App
+// Export the App component as the default export
+export default App;
