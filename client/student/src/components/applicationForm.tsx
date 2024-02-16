@@ -27,6 +27,8 @@ export default function ApplicationForm() {
     if (name == null) throw Error();
     //todo: retrieve examRegulation from database
     name;
+    examRegulation;
+    typeOfApplicationForm
     setExamRegulation({
       jsonSchema: JSON.stringify({
         area: {
