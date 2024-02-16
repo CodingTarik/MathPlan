@@ -1,6 +1,8 @@
 // Importing necessary dependencies and styles
 import './App.css';
-import { HashRouter, Route, Routes, Link} from 'react-router-dom';
+import { HashRouter, Route, Routes} from 'react-router-dom';
+import Overview from './components/applicationFormOverview';
+import ApplicationForm from './components/applicationForm';
 
 /**
  * JSX structure representing the entire intern application.
@@ -9,24 +11,12 @@ import { HashRouter, Route, Routes, Link} from 'react-router-dom';
  * @returns {JSX.Element} The rendered React element.
  */
 function App() {
-  const Layout = () => {
-    return (
-      <nav>
-          <Link to="/about">Home</Link>
-    </nav>
-    )
-  }
-  const Home = () => {
-    return (
-      <h1>Hallo</h1>
-    )
-  }
   // JSX structure representing the entire application
   return (
       <HashRouter>
       <div><Routes>
-        <Route path="/" element={<Layout />}/>
-        <Route path="/about" element={<Home />}/>
+        <Route path="/" element={<Overview />}/>
+        <Route path="/applicationform" element={<ApplicationForm />}/>
         </Routes>
       </div>
       </HashRouter>
