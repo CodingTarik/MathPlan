@@ -19,7 +19,7 @@ const addModule = (req, res) => {
       res.send(data);
     })
     .catch(err => {
-      console.log(err);
+      console.log(err); // log error
       console.dir(req.body);
       res.status(500).send({
         message:
@@ -42,10 +42,11 @@ const getOneModule = (req, res) => {
       res.send(data);
     })
     .catch(err => {
-      console.dir(err); // log error
-      res.status(500).send({
-        message: err.message || 'Error retrieving Tutorial with id=' + req.params.id
-      });
+      throw err;/// den hab ich hinzugefügt eben erst(Matthias)
+      // console.dir(err); // log error
+      // res.status(500).send({
+      //  message: err.message || 'Error retrieving Tutorial with id=' + req.params.id
+      // });
     });
 };
 
