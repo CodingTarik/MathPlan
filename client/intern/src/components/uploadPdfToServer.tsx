@@ -4,7 +4,6 @@ import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import React from 'react';
 import axios from 'axios';
 import ModuleServices from '../database_services/ModuleServices';
-//import ModuleServices from '../database_services/ModuleServices';
 
 /**
  * Sends a POST request to the server to upload all the selected PDF files
@@ -40,11 +39,12 @@ export default function pdfFileUpload() {
             'Content-Type': 'multipart/form-data',
           },
         });
-        console.log('Uploaded successfully ', response.data[0].length + ' file(s). \nFailed uploading ' + response.data[1].length + ' file(s).'); 
-        uploadPdfToDatabase(response.data[0]); // functionality not yet implemented
         if(response.data[1].length > 0){
           alert('The following files could not be uploaded: \n- '+ response.data[1].join(',\n- '));
         }
+        console.log('Uploaded successfully ', response.data[0].length + ' file(s). \nFailed uploading ' + response.data[1].length + ' file(s).'); 
+        const resultOfUplaod = await uploadPdfToDatabase(response.data[0]);
+        alert(resultOfUplaod);
       }catch (error) {
           console.error("Upload fehlgeschlagen"+ error);
           alert("Upload fehlgeschlagen:"+ error);  
@@ -72,62 +72,70 @@ type Module = {
   applicability: string
 };
 
-async function uploadPdfToDatabase(files : Array<Array<JSON>>){
-  const listOfAddedModules: Module[] = [];
-  const listOfUpdatedModules: Module[] = [];
+async function uploadPdfToDatabase(files : Array<Array<JSON>>): Promise<string>{
   const listOfNotUpdatedModules: Module[] = [];
+  const listOfUpdatedModules: Module[] = [];
   const listOfFailedModules: Module[] = [];
-  files.forEach(async (file) => {
-    file.forEach(async (element)=>{
-      const modulvalues= Object.values(element);
-      for (let i=0; i<modulvalues.length; i++){
+  const listOfAddedModules: Module[] = [];
+  for (const file of files){ //loop through all files
+    for(const element of file){ // loop through all chucks of modules
+      const modulvalues: string[] = Object.values(element);
+      for (let i=0; i<modulvalues.length; i++){ // check if any value of a module is null or empty
         if (modulvalues[i].length === 0|| modulvalues[i] === null){
           modulvalues[i] = '';
         }
       }
-      const module= {
+      const module= { // the module object to be inserted or updated in the database
         id: modulvalues[0],
         name: modulvalues[1],
         credits: parseInt(modulvalues[2].slice(0, -3)),
         language: modulvalues[3],
         applicability: modulvalues[4]
       }
-      try {
-        await ModuleServices.create(module).then(()=>{
-          //modul was added to the database
-          listOfAddedModules.push(module);
-        }).catch(()=>{});
-      } catch (e) {
-        //modul seems to be already in the database
-        await ModuleServices.getByID(module.id).then(async (response)=>{
-          //check if the modul is equal to the one in the database
-          if(module.id == response.data.moduleID && 
-            module.name == response.data.moduleName && 
-            module.credits == response.data.moduleCredits &&
-            module.language == response.data.moduleLanguage &&
-            module.applicability == response.data.moduleApplicability){
+      await ModuleServices.getByID(module.id)
+      .then(async (response) => {
+        if (response.data) { // ID was found (data !== null)
+          // check if the module needs modification
+          if(module.id === response.data.moduleID && 
+            module.name === response.data.moduleName && 
+            module.credits === response.data.moduleCredits &&
+            module.language === response.data.moduleLanguage &&
+            module.applicability === response.data.moduleApplicability){
             listOfNotUpdatedModules.push(module); 
           }
           else{
-            //so we need to update the modul
-            await ModuleServices.update(module.id, module).then(()=>{
-                listOfUpdatedModules.push(module);
-              }).catch(()=>{
-                //modul could not be updated
-                listOfFailedModules.push(module);
-              });
-            }
-        });
-      }
-      if(file === files[files.length-1]){
-        if(element === file[file.length-1]){
-          //await Promise.all([promise]); //naja jetzt werden halt nicht alle promises abgewartet
-          console.log('Added modules: ', listOfAddedModules.length);
-          console.log('Updated modules: ', listOfUpdatedModules.length);
-          console.log('Not updated modules: ', listOfNotUpdatedModules.length);
-          console.log('Failed modules: ', listOfFailedModules);
+            // modifiying module with the new values from the pdf
+            await ModuleServices.update(module.id, module).then(() => {
+              listOfUpdatedModules.push(module);
+            }).catch((e: Error) => { 
+              console.log(e);
+              listOfFailedModules.push(module);
+            });
+          }
+        } else { // ID was not found in the Database (data === null)
+          // inserting module
+          await ModuleServices.create(module)
+            .then(() => { 
+              listOfAddedModules.push(module);
+            })
+            .catch((e: Error) => { 
+              console.error("Error while saving module to the database: " + e);
+            });
         }
-      }
-    });
-  }); 
+      })
+      .catch((e: Error) => {
+        console.error('Error while getting module from database: ' +e);
+      });
+    }
+  } 
+  console.log('Folgende Module waren schon exakt so in der Datenbank vorhanden:');
+  console.dir(listOfNotUpdatedModules);
+  const responseAboutFailedModules= (listOfFailedModules.length === 0) ? '' : '\nEs sind ' + listOfFailedModules.length + ' Module fehlgeschlagen.'+
+  'das waren die Module: ' + listOfFailedModules.map((module) => module.id).join(',\n- ');
+  const message =
+    listOfAddedModules.length +' Module wurden in die Datenbank eingefügt.' +
+    '\n' + listOfUpdatedModules.length + ' Module wurden aktualisiert.' +
+    '\n' + listOfNotUpdatedModules.length + ' Module waren bereits so in der Datenbank vorhanden.' +
+    responseAboutFailedModules;
+  return message;
 }
