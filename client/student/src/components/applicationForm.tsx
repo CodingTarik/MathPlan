@@ -57,7 +57,7 @@ export default function ApplicationForm() {
   return (
     <>
       <h1>Antrag Detailansicht</h1>
-      <Box sx={{ p:2 , border: 1  }}>
+      <Box sx={{ p:2 , border: 1, borderRadius:2 }}>
       <FormControl sx={{ width: 300 }}>
         <FormLabel>Prüfungsordnung</FormLabel>
         <Select
