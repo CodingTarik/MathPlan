@@ -362,9 +362,7 @@ export class SelectedExtend extends window.JSONEditor.defaults.editors.select2 {
     }
   }
   addNewOption(value) {
-    const sanitized = this.typecast(value);
     let res = false;
-    let optionTag;
     if (value === undefined || value === null || value === '') return false;
     value = JSON.parse(value);
     if (

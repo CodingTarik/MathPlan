@@ -82,7 +82,7 @@ const deleteExamRegulationByName = async (name) => {
   }
   return await ExamRegulation.destroy({
     where: {
-      name: name
+      name
     }
   });
 };
