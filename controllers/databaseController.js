@@ -302,7 +302,6 @@ module.exports = {
   deleteModulById,
   getAllModulsForJSONEditor,
   getAllModulsMin,
-  addExamRegulation,
   getAllExamRegulationsMin,
   addOrUpdateExamRegulation,
   getModules
