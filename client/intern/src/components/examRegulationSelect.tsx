@@ -286,7 +286,7 @@ const ExamRegulationSelect = ({
           aria-controls="panel1a-content"
           id="panel1a-header"
         >
-          <Typography>Prüfungsordnungen</Typography>
+          <Typography>exam regulations</Typography>
         </AccordionSummary>
         <AccordionDetails>
           <TableContainer component={Paper}>
@@ -294,7 +294,7 @@ const ExamRegulationSelect = ({
               <TableHead>
                 <TableRow>
                   <TableCell>
-                    Prüfungsordnungsname
+                    exam regulation name
                     <IconButton color="primary" onClick={handleRefreshList}>
                       <Refresh />
                     </IconButton>

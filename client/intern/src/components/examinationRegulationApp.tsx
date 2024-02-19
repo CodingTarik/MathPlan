@@ -10,12 +10,14 @@ import {
   TextField
 } from '@mui/material';
 import SaveIcon from '@mui/icons-material/Save';
+import ExamRegulationDocuInfoBox from './examRegulationsDocuInfoBox';
+import ExamRegulationDocu from '.././assets/examinationregulationDocumentation';
 import { CustomSnackbarContent } from './customSnackbarContent';
 import {
   saveExamRegulation,
   initializeJsonEditor
 } from './examinationRegulationEditor';
-import ExamRegulationSelect, { ExamRegulation} from './examRegulationSelect';
+import ExamRegulationSelect, { ExamRegulation } from './examRegulationSelect';
 import { fetchExamRegulations } from '../database_services/ExamRegulationService';
 
 /**
@@ -61,13 +63,13 @@ function ExaminationRegulationApp() {
    */
   const [internalName, setInternalName] = useState('');
 
-/* eslint-disable @typescript-eslint/no-explicit-any */
-// jsoneditor is not typed
+  /* eslint-disable @typescript-eslint/no-explicit-any */
+  // jsoneditor is not typed
   /**
    * @descirption JSONEditor
    */
   const [jsoneditor, setJsoneditor] = useState<any>();
-/* eslint-enable @typescript-eslint/no-explicit-any */
+  /* eslint-enable @typescript-eslint/no-explicit-any */
   /**
    * @function handleSaveClick
    * @description Handler for when the save button is clicked. Opens the save dialog.
@@ -122,11 +124,16 @@ function ExaminationRegulationApp() {
   // Render the UI for the application.
   return (
     <>
-      <ExamRegulationSelect jsoneditor={jsoneditor} setInternalName={setInternalName} examRegulations={examRegulations} setExamRegulations={setExamRegulations}></ExamRegulationSelect>
+      <ExamRegulationSelect
+        jsoneditor={jsoneditor}
+        setInternalName={setInternalName}
+        examRegulations={examRegulations}
+        setExamRegulations={setExamRegulations}
+      ></ExamRegulationSelect>
       <div style={{ marginBottom: '16px' }}>
         <TextField
           label="Internal Name"
-          style={{ marginRight: '16px', height: '56px' }}
+          style={{ marginRight: '16px', height: '56px', minWidth: '450px' }}
           value={internalName}
           onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
             setInternalName(event.target.value)
@@ -139,12 +146,12 @@ function ExaminationRegulationApp() {
           startIcon={<SaveIcon />}
           onClick={handleSaveClick}
         >
-          Speichern
+          Save
         </Button>
       </div>
 
       <div ref={editorRef} />
-
+      <ExamRegulationDocuInfoBox {...ExamRegulationDocu} />
       <Dialog
         open={dialogOpen}
         onClose={() => setDialogOpen(false)}
@@ -186,6 +193,7 @@ function ExaminationRegulationApp() {
           />
         </div>
       </Snackbar>
+
     </>
   );
 }

@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "title": "Prüfungsordnung",
+  "title": "exam regulation",
   "definitions": {
     "area": {
       "type": "object",
@@ -212,7 +212,7 @@
           "type": "array",
           "items": { "$ref": "#/definitions/area" },
           "default": [],
-          "title": "Sub-Areas",
+          "title": "examination plan area",
           "propertyOrder": 1001
         },
         "module": {
@@ -234,8 +234,8 @@
       },
       "defaultProperties": ["name"],
       "required": ["name"],
-      "title": "Area",
-      "headerTemplate": "{{i}} - {{self.name}}"
+      "title": "examination plan area",
+      "headerTemplate": "{{self.name}}"
     },
     "module": {
       "type": "object",
