@@ -1,14 +1,14 @@
 /* eslint security/detect-object-injection: 0 */
 // disabled because of too many false positives, has to be analyzed in the security test
 const path = require('path');
-const db = require(path.join(__dirname, '../database/modulHelper.js'));
+const modulHelper = require(path.join(__dirname, '../database/modulHelper.js'));
 const examRegulationHelper = require(
   path.join(__dirname, '../database/examRegulationHelper.js')
 );
 /**
  * if a request is made the addModul function of the database is called by the controller and the added module is sent back as a response
- * @param  req
- * @param  res
+ * @param {Object} req
+ * @param {Object} res
  * @returns if the passed data is not sufficient as in does not contain a module id
  */
 const addModul = async (req, res) => {
@@ -18,13 +18,14 @@ const addModul = async (req, res) => {
     });
     return;
   }
-  db.addModul(
-    req.body.id,
-    req.body.name,
-    req.body.credits,
-    req.body.language,
-    req.body.applicability
-  )
+  modulHelper
+    .addModul(
+      req.body.id,
+      req.body.name,
+      req.body.credits,
+      req.body.language,
+      req.body.applicability
+    )
     .then((data) => {
       res.send(data);
     })
@@ -52,7 +53,8 @@ const deleteModulById = async (req, res) => {
     return;
   }
 
-  db.deleteModulById(moduleId)
+  modulHelper
+    .deleteModulById(moduleId)
     .then((deleted) => {
       if (deleted) {
         res.send({
@@ -73,13 +75,14 @@ const deleteModulById = async (req, res) => {
 
 /**
  * Handles the retrieval of all modules.
- *
+ * Converts the JSON-editor syntax with [] to a large object so every module in data array needs to be concated to json object but as an object element
  * @param {Object} req - The request object.
  * @param {Object} res - The response object.
  * @returns {void} - Sends a response with all modules or an error message.
  */
-const getAllModuls = (req, res) => {
-  db.getAllModuls()
+const getAllModulsForJSONEditor = (req, res) => {
+  modulHelper
+    .getAllModuls()
     .then((data) => {
       // for json-editor we need to convert the
       // json-editor syntax with [] to a large object
@@ -107,7 +110,8 @@ const getAllModuls = (req, res) => {
  * @returns {void} - Sends a response with minimal information for each module or an error message.
  */
 const getAllModulsMin = async (req, res) => {
-  db.getAllModuls()
+  modulHelper
+    .getAllModuls()
     .then((data) => {
       // for json-editor we need to convert the
       // json-editor syntax with [] to a large object
@@ -155,7 +159,7 @@ const getAllModulsMin = async (req, res) => {
  * @param {Object} res - The response object.
  * @returns {void} - Sends a response based on the success or failure of processing the JSON schema.
  */
-const addExamRegulation = async (req, res) => {
+const addOrUpdateExamRegulation = async (req, res) => {
   try {
     // Access the JSON schema from the request body
     const examRegulationSchemaRequest = req.body;
@@ -177,7 +181,7 @@ const addExamRegulation = async (req, res) => {
     const internalName = examRegulationSchemaRequest.internalName;
 
     // Add schema to database
-    await examRegulationHelper.addExamRegulation(
+    await examRegulationHelper.addOrUpdateExamRegulation(
       examRegulationSchema,
       internalName
     );
@@ -207,7 +211,8 @@ const addExamRegulation = async (req, res) => {
 const getAllExamRegulationsMin = async (req, res) => {
   try {
     // Retreive all exam regulation schemas
-    const examRegulationSchemas = await examRegulationHelper.getAllExamRegulations();
+    const examRegulationSchemas =
+      await examRegulationHelper.getAllExamRegulations();
 
     // we just want attribute name and jsonSchema
     const finalExamRegulationSchemas = [];
@@ -259,13 +264,46 @@ const deleteExamRegulationByName = async (req, res) => {
     });
   }
 };
+/*
+ * if a request is made the getModules function of the database is called by the controller and the matching module(s)
+ * is sent back as a response if there are less than 50 matching modules and no other error occurs
+ * @param {Object} req
+ * @param {Object} res
+ */
+const getModules = (req, res) => {
+  modulHelper
+    .getModules(
+      req.params.id,
+      req.params.name,
+      req.params.credits,
+      req.params.language,
+      req.params.applicability
+    )
+    .then((data) => {
+      if (data.count <= 50) res.send(data.rows);
+      else throw new Error('The search request yielded more than 50 requests');
+    })
+    .catch((err) => {
+      if (err.message === 'The search request yielded more than 50 requests') {
+        res
+          .status(400)
+          .send('The search request yielded more than 50 requests');
+      } else {
+        res.status(500).send({
+          message: err.message || 'Error getting module!'
+        });
+      }
+    });
+};
 
 module.exports = {
   deleteExamRegulationByName,
   addModul,
   deleteModulById,
-  getAllModuls,
+  getAllModulsForJSONEditor,
   getAllModulsMin,
   addExamRegulation,
-  getAllExamRegulationsMin
+  getAllExamRegulationsMin,
+  addOrUpdateExamRegulation,
+  getModules
 };

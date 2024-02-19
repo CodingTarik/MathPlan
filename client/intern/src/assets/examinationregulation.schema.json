@@ -257,7 +257,7 @@
           "title": "Modul ID",
           "options": {
             "inputAttributes": {
-              "placeholder": "Enter Credit Points"
+              "placeholder": "Enter Module ID"
             }
           }
         },

@@ -1,5 +1,5 @@
 const { DataTypes } = require('sequelize');
-
+// Dummy file has to be eduted with SSO and session management
 module.exports = (sequelize) => {
   return sequelize.define('User', {
     id: {

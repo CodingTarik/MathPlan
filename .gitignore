@@ -12,6 +12,8 @@
 /client/build
 
 # logs
+# ignore log folder
+/log
 /logs
 
 # Ignore logs and other runtime data

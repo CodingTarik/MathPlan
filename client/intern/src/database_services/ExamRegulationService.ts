@@ -22,6 +22,7 @@ export async function saveExamRegulationFunction(examRegulationAsJSON: unknown, 
             return true;
         } else {
             // If the request is not successful, we return false
+            console.log(response.data);
             return false;
         }
     } catch (error) {

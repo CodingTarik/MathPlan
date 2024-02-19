@@ -1,5 +1,12 @@
 const { DataTypes } = require('sequelize');
 
+/**
+ * Define the modul model.
+ *
+ * @param {import('sequelize').Sequelize} sequelize - The Sequelize instance.
+ * @param {import('sequelize').DataTypes} DataTypes - The Sequelize data types.
+ * @returns {import('sequelize').Model} the modul model.
+ */
 module.exports = (sequelize) => {
   // the table with the courses and its attributes is defined
   // here and below as well we write 'modul' instead of 'module' to clarify that we mean university modules not NodeJS modules

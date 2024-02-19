@@ -1,4 +1,5 @@
 const path = require('path');
+const logger = require(path.join(__dirname, '../logger'));
 
 // Config
 const configFile = require(path.join(__dirname, '../config.js'));
@@ -7,7 +8,9 @@ const Sequelize = require('sequelize');
 // Models
 const Modul = require(path.join(__dirname, './models/modul.js'));
 const User = require(path.join(__dirname, './models/user.js'));
-const ExaminationRegulation = require(path.join(__dirname, './models/examinationregulation.js'));
+const ExaminationRegulation = require(
+  path.join(__dirname, './models/examinationregulation.js')
+);
 
 /**
  * Database connection configuration
@@ -26,6 +29,7 @@ const config /** @type {DatabaseConfig} */ = {
   username: configFile.database.DB_USER, // Your MySQL username
   password: configFile.database.DB_PASSWORD, // Your MySQL password
   host: configFile.database.DB_HOST,
+  logging: configFile.dev.DEBUG ? (msg) => logger.database(msg) : false,
   dialect: configFile.database.DB_DIALECT, // can be set to 'mysql' or 'sqlite'
   storage: './database.sqlite' // For SQLite, define the path to the SQLite file
 };

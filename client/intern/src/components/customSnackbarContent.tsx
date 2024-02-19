@@ -26,8 +26,8 @@ interface CustomSnackbarContentProps {
  */
 export function CustomSnackbarContent({ message, variant, onClose }: CustomSnackbarContentProps) {
   // Determine the icon and background color based on the variant.
-  const icon = variant === 'success' ? <CheckCircleIcon /> : <ErrorIcon />;
-  const backgroundColor = variant === 'success' ? 'green' : 'red';
+  const icon = (variant === 'success' ? <CheckCircleIcon /> : <ErrorIcon />);
+  const backgroundColor = (variant === 'success' ? 'green' : 'red');
 
   return (
     <SnackbarContent
