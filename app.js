@@ -96,7 +96,7 @@ try {
   if (process.env.NODE_ENV !== 'test') {
     // Datbase
     db.sequelize
-     .sync()
+      .sync()
       // for changing the underlying database (delets all content, updates scheme) adjust the line above as decribed in the readme file
       /* eslint-enable */
       .then(() => {
