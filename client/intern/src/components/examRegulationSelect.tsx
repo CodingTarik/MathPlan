@@ -124,7 +124,7 @@ const ExamRegulationSelect = ({
     } catch (error) {
       console.error(error);
     }
-  });
+  }, []);
 
   /**
    * Loads the selected exam regulation into the JSON editor.
