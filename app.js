@@ -8,7 +8,7 @@ const fs = require('fs');
 const logger = require('./logger');
 const chalk = require('chalk');
 const helmet = require('helmet');
-
+const sso = require('./auth/login.js');
 // Config
 const config = require(path.join(__dirname, 'config.js'));
 
@@ -69,7 +69,10 @@ app.use(
   '/assets/typed',
   express.static(path.join(__dirname, 'node_modules/typed.js/dist'))
 );
-app.use('/assets/sweetalert2', express.static(path.join(__dirname, 'node_modules/sweetalert2/dist')));
+app.use(
+  '/assets/sweetalert2',
+  express.static(path.join(__dirname, 'node_modules/sweetalert2/dist'))
+);
 // parse requests of content-type - application/json
 app.use(express.json());
 
@@ -88,9 +91,15 @@ app.use(
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 
-// Routing
-app.use('/api', api);
-app.use('/', pages);
+// Register login
+sso.setupSessionAndOpenID(app).then(() => {
+  // has to happen after the session is registered
+  // because session is async and then route registration for / could happen before the session is registered
+  // so /login would redirect to 404
+  // Routing
+  app.use('/api', api);
+  app.use('/', pages);
+});
 
 try {
   if (process.env.NODE_ENV !== 'test') {
