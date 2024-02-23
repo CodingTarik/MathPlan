@@ -1,3 +1,5 @@
+/* eslint security/detect-object-injection: "off" */
+
 const request = require('supertest');
 const app = require('../app').app;
 const db = require('../database/database');
