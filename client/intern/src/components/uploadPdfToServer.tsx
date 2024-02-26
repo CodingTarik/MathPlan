@@ -28,7 +28,7 @@ export default function pdfFileUpload() {
   });
   /**
    * Handles the change event of the file input element: it sends a POST request to the server to upload the selected files
-   * and then sends the respone data to the database and make popups to inform the user about the result of the upload
+   * and then sends the respone data to the database and informs the user about the result of the upload
    * @param event the change event of the file input element
    */
   const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
