@@ -136,24 +136,6 @@
             }
           }
         },
-        "minSeminarsCP": {
-          "type": "integer",
-          "title": "Minimum Seminars Credit Points",
-          "options": {
-            "inputAttributes": {
-              "placeholder": "Enter Minimum Seminars Credit Points"
-            }
-          }
-        },
-        "maxSeminarsCP": {
-          "type": "integer",
-          "title": "Maximum Seminars Credit Points",
-          "options": {
-            "inputAttributes": {
-              "placeholder": "Enter Maximum Seminars Credit Points"
-            }
-          }
-        },
         "maxSeminarsCount": {
           "type": "integer",
           "title": "Maximum Seminars Count",
