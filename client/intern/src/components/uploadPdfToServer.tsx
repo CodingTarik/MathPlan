@@ -26,6 +26,11 @@ export default function pdfFileUpload() {
     whiteSpace: 'nowrap',
     width: 1,
   });
+  /**
+   * Handles the change event of the file input element: it sends a POST request to the server to upload the selected files
+   * and then sends the respone data to the database and make popups to inform the user about the result of the upload
+   * @param event the change event of the file input element
+   */
   const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files){
       const files = event.target.files;
@@ -40,11 +45,14 @@ export default function pdfFileUpload() {
           },
         });
         if(response.data[1].length > 0){
+          console.log('Failed uploading ' + response.data[1].length + ' file(s). \n');
           alert('The following files could not be uploaded: \n- '+ response.data[1].join(',\n- '));
         }
-        console.log('Uploaded successfully ', response.data[0].length + ' file(s). \nFailed uploading ' + response.data[1].length + ' file(s).'); 
-        const resultOfUplaod = await uploadPdfToDatabase(response.data[0]);
-        alert(resultOfUplaod);
+        if(response.data[0].length > 0){
+          console.log('Uploaded successfully ', response.data[0].length + ' file(s).'); 
+          const resultOfUplaod = await uploadPdfToDatabase(response.data[0]);
+          alert(resultOfUplaod);
+        }
       }catch (error) {
           console.error("Upload fehlgeschlagen"+ error);
           alert("Upload fehlgeschlagen:"+ error);  
@@ -64,67 +72,76 @@ export default function pdfFileUpload() {
     </div>
   );
 }
-type Module = {
+type Modul = {
   id: string,
   name: string,
   credits: number,
   language: string,
   applicability: string
 };
-
+/**
+ * Uploads the parsed data from the pdf to the database, it adds new modules & updates existing modules:
+ * - if a module is already in the database and has the same values as in the pdf, it will not be updated
+ * - if a module is already in the database but has different values than in the pdf, it will be updated
+ * - if a module is not in the database, it will be added 
+ * @param files the parsed data from the pdf
+ * @returns a message about the result of the upload
+ */
 async function uploadPdfToDatabase(files : Array<Array<JSON>>): Promise<string>{
-  const listOfNotUpdatedModules: Module[] = [];
-  const listOfUpdatedModules: Module[] = [];
-  const listOfFailedModules: Module[] = [];
-  const listOfAddedModules: Module[] = [];
-  for (const file of files){ //loop through all files
-    for(const element of file){ // loop through all chucks of modules
-      const modulvalues: string[] = Object.values(element);
-      for (let i=0; i<modulvalues.length; i++){ // check if any value of a module is null or empty
-        if (modulvalues[i].length === 0|| modulvalues[i] === null){
-          modulvalues[i] = '';
+  const listOfNotUpdatedModules: Modul[] = [];
+  const listOfUpdatedModules: Modul[] = [];
+  const listOfFailedModules: Modul[] = [];
+  const listOfAddedModules: Modul[] = [];
+  for (const file of files){ // loop through all files
+    for(const element of file){ // loop through all modules
+      const moduleValues: string[] = Object.values(element);
+      for (let i=0; i<moduleValues.length; i++){ // check if any value of a module is null or empty
+        if ( !moduleValues[i] ){
+          moduleValues[i] = '';
         }
       }
-      const module= { // the module object to be inserted or updated in the database
-        id: modulvalues[0],
-        name: modulvalues[1],
-        credits: parseInt(modulvalues[2].slice(0, -3)),
-        language: modulvalues[3],
-        applicability: modulvalues[4]
+      const modul : Modul = { // the modul object to be inserted or updated in the database
+        id: moduleValues[0],
+        name: moduleValues[1],
+        credits: parseInt(moduleValues[2].slice(0, -3)),
+        language: moduleValues[3],
+        applicability: moduleValues[4]
       }
-      await ModuleServices.getByID(module.id)
+      await ModuleServices.getByID(modul.id)
       .then(async (response) => {
         if (response.data) { // ID was found (data !== null)
-          // check if the module needs modification
-          if(module.id === response.data.moduleID && 
-            module.name === response.data.moduleName && 
-            module.credits === response.data.moduleCredits &&
-            module.language === response.data.moduleLanguage &&
-            module.applicability === response.data.moduleApplicability){
-            listOfNotUpdatedModules.push(module); 
+          // check if the modul needs modification
+          if(modul.id === response.data.moduleID && 
+            modul.name === response.data.moduleName && 
+            modul.credits === response.data.moduleCredits &&
+            modul.language === response.data.moduleLanguage &&
+            modul.applicability === response.data.moduleApplicability){
+            listOfNotUpdatedModules.push(modul); 
           }
           else{
-            // modifiying module with the new values from the pdf
-            await ModuleServices.update(module.id, module).then(() => {
-              listOfUpdatedModules.push(module);
+            // modifiying modul with the new values from the pdf
+            await ModuleServices.update(modul.id, modul).then(() => {
+              listOfUpdatedModules.push(modul);
             }).catch((e: Error) => { 
               console.log(e);
-              listOfFailedModules.push(module);
+              listOfFailedModules.push(modul);
             });
           }
         } else { // ID was not found in the Database (data === null)
           // inserting module
-          await ModuleServices.create(module)
+          await ModuleServices.create(modul)
             .then(() => { 
-              listOfAddedModules.push(module);
+              listOfAddedModules.push(modul);
             })
             .catch((e: Error) => { 
               console.error("Error while saving module to the database: " + e);
+              listOfFailedModules.push(modul);
             });
         }
       })
       .catch((e: Error) => {
         console.error('Error while getting module from database: ' +e);
+        listOfFailedModules.push(modul);
       });
     }
   } 
