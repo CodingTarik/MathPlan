@@ -55,6 +55,18 @@ const INPUT_DATA = [
       '../utils/moduleDescriptionParserConfig/TUCaN-Standardformat.json'
     ),
     expectedModules: 456
+  },
+  {
+    description: 'Gesamtmodulhandbuch WS 2023/24 englisch',
+    filePath: path.join(
+      __dirname,
+      'resources/Modulhandbuch englisch gesamt WS23-24.pdf'
+    ),
+    configPath: path.join(
+      __dirname,
+      '../utils/moduleDescriptionParserConfig/TUCaN-Standardformat englisch.json'
+    ),
+    expectedModules: 456
   }
 ];
 
@@ -153,7 +165,11 @@ test('Format von der Sprache ist korrekt', async () => {
 
     let errorCounter = 0;
     for (let j = 0; j < modules.length; j++) {
-      if (!modules[j].moduleLanguage.match(/^(Englisch.*|Deutsch.*)/i)) {
+      if (
+        !modules[j].moduleLanguage.match(
+          /^(Englisch.*|Deutsch.*|English.*|German.*)/i
+        )
+      ) {
         errorCounter++;
       }
     }
@@ -204,16 +220,26 @@ test('Test if the debug logs can be disabled', async () => {
 });
 
 test('Test if the parser score is plausible', async () => {
-  const dataBuffer = fs.readFileSync(path.join(__dirname, 'resources/Modulhandbuch PO2018.pdf'));
+  const dataBuffer = fs.readFileSync(
+    path.join(__dirname, 'resources/Modulhandbuch PO2018.pdf')
+  );
   let result;
 
   // special config so that every plausibility test passes
-  result = await readAndFilterData(dataBuffer, path.join(__dirname, 'resources/PO2018_plausibilityPass.json'));
+  result = await readAndFilterData(
+    dataBuffer,
+    path.join(__dirname, 'resources/PO2018_plausibilityPass.json')
+  );
   expect(result.reduce((acc, curr) => acc + curr.parserScore, 0)).toBe(0);
 
   // special config so that every plausibility test fails
-  result = await readAndFilterData(dataBuffer, path.join(__dirname, 'resources/PO2018_plausibilityFail.json'));
-  expect(result.reduce((acc, curr) => acc + curr.parserScore, 0)).toBe(-5 * result.length);
+  result = await readAndFilterData(
+    dataBuffer,
+    path.join(__dirname, 'resources/PO2018_plausibilityFail.json')
+  );
+  expect(result.reduce((acc, curr) => acc + curr.parserScore, 0)).toBe(
+    -5 * result.length
+  );
 });
 
 describe('Test invalid user input', () => {

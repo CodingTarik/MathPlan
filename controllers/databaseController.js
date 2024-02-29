@@ -40,6 +40,7 @@ const getOneModule = (req, res) => {
       res.send(data);
     })
     .catch(err => {
+      // for the upload modules to the database functionality
       res.status(500).send({
         message: err.message || 'Error retrieving Tutorial with id=' + req.params.id
       });
