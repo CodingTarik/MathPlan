@@ -35,6 +35,7 @@ const config /** @type {DatabaseConfig} */ = {
 };
 
 // create a sequelize object
+// variable because override should be possible e.g. for testing, overriding sequelize with a mock or custom config
 const sequelize = new Sequelize(config);
 
 // Initialize models

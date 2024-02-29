@@ -3,12 +3,14 @@
 const request = require('supertest');
 const app = require('../app').app;
 const db = require('../database/database');
+const Sequelize = require('sequelize');
 const modulehelper = require('../database/modulHelper');
 
 describe('Modules API Tests', () => {
   beforeAll(async () => {
     db.config.dialect = 'sqlite';
     db.config.storage = 'database.test.sqlite';
+    db.sequelize = new Sequelize(db.config);
     db.sequelize.sync();
     // wait 3 sec
     await new Promise((resolve) => setTimeout(resolve, 3000));
