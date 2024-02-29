@@ -108,7 +108,8 @@ try {
     // HTTP-Server
     if (config.server.ALLOW_HTTP) {
       let httpServer = null;
-      if (config.HTTP_REDIRECT) {
+      if (config.server.HTTP_REDIRECT) {
+        logger.info('HTTP REDIRECT ACTIVE');
         httpServer = http.createServer((req, res) => {
           res.writeHead(301, {
             Location:
