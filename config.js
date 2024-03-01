@@ -1,5 +1,6 @@
 // load the environment variables from the .env file in the root of the project
 require('dotenv').config();
+require('dotenv').config({ path: '.secret' });
 
 // Initialize an empty config object
 const config = {};
@@ -68,6 +69,13 @@ config.web.SOCIAL_MEDIA_ACTIVE = testBool(process.env.SOCIAL_MEDIA_ACTIVE);
 config.web.FACEBOOK_URL = process.env.FACEBOOK_URL || 'https://www.facebook.com/';
 config.web.TWITTER_URL = process.env.TWITTER_URL || 'https://twitter.com/';
 config.web.INSTAGRAM_URL = process.env.INSTAGRAM_URL || 'https://www.instagram.com/';
+
+config.auth = {};
+// sso client id and secret
+config.auth.SSO_CLIENT_ID = process.env.SSO_CLIENT_ID || '800196825301-7fp6s2pnu743bh5kk73ivb23r02u00on.apps.googleusercontent.com';
+config.auth.SSO_CLIENT_SECRET = process.env.SSO_CLIENT_SECRET || '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';
+config.auth.SSO_REDIRECT_URI = process.env.SSO_REDIRECT_URI || 'http://localhost:80/callback';
+config.auth.IDP = process.env.idp || 'https://accounts.google.com';
 // Initialize an empty dev configuration object
 config.dev = {};
 config.dev.DEBUG = testBool(process.env.DEBUG) || false;

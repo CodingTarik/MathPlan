@@ -56,3 +56,6 @@ coverage
 
 # Ignore configuration files that may contain sensitive information
 #config.js
+
+# .gitignore file
+.secret 

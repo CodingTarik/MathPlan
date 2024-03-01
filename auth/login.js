@@ -1,17 +1,50 @@
 const session = require('express-session');
-const { Issuer, Strategy, custom } = require('openid-client');
+const { Issuer, custom } = require('openid-client');
 const logger = require('../logger');
+const crypto = require('crypto');
+const config = require('../config');
+const Sequelize = require('sequelize');
+const SequelizeStore = require('connect-session-sequelize')(session.Store);
+const sequelize = new Sequelize(config.database.DB_DATABASE, config.database.DB_USER, config.database.DB_PASSWORD, {
+  dialect: config.database.DB_DIALECT,
+  logging: console.log,
+  storage: './../database.sqlite'
+});
+/* const Session = sequelize.define('Session', {
+  sid: {
+    type: Sequelize.DataTypes.STRING,
+    primaryKey: true
+  },
+  expires: Sequelize.DataTypes.DATE,
+  data: Sequelize.DataTypes.STRING,
+  createdAt: Sequelize.DataTypes.DATE,
+  updatedAt: Sequelize.DataTypes.DATE
+});
+*/
+sequelize.sync()
+  .then(() => console.log('Datenbank & Tabellen erstellt!'))
+  .catch(error => console.log('Fehler beim Erstellen der Datenbank & Tabellen:', error));
+
+function generateSecretKey() {
+  return crypto.randomBytes(64).toString('hex');
+}
 
 const setupSessionAndOpenID = async (app) => {
-  await registerSession(app);
-  await setupOpenID(app);
-  logger.info('Session and OpenID setup complete');
+  await registerSession(app).then(() => {
+    logger.info('Session setup complete');
+  });
+  await setupOpenID(app).then(() => {
+    logger.info('Session and OpenID setup complete');
+  });
 };
 
 // Register session
 const registerSession = async (app) => {
   const sessionConfig = {
-    secret: 'secret key', // TODO random generate key secure
+    secret: generateSecretKey(), // random generated key
+    store: new SequelizeStore({
+      db: sequelize
+    }),
     resave: false,
     saveUninitialized: false,
     cookie: {
@@ -19,6 +52,22 @@ const registerSession = async (app) => {
     }
   };
   app.use(session(sessionConfig));
+
+  app.use((req, res, next) => {
+    if (!req.session.data) {
+      req.session.data = {}; // Initialisiere die Session
+    }
+    next();
+  });
+};
+// get Issuer
+const getIssuer = async (req, res) => {
+  try {
+    const identidyProviderIssuer = await Issuer.discover(config.auth.IDP);
+    return identidyProviderIssuer;
+  } catch (e) {
+    res.redirect('/loginnotworking');
+  }
 };
 
 // Register OpenID
@@ -28,16 +77,14 @@ const setupOpenID = async (app) => {
     timeout: 15000
   });
   // TODO try catch if issuer is not reachable or timeout (use logger.error)
-  const identidyProviderIssuer = await Issuer.discover(
-    'https://accounts.google.com' // TODO make this configurable
-  );
-  const client = new identidyProviderIssuer.Client({
-    client_id:
-      'id from hrz', // TODO important do not hardcode and commit! use environment variables
-    client_secret: 'secret from hrz', // TODO important do not hardcode and commit! use environment variables
-    redirect_uris: ['http://localhost:80/callback'] // TODO change based on domain in config, add https and only http if activated
-  });
+  // try {
+  const identidyProviderIssuer = await getIssuer(); // Issuer.discover(config.auth.IDP);
 
+  const client = new identidyProviderIssuer.Client({
+    client_id: config.auth.SSO_CLIENT_ID,
+    client_secret: config.auth.SSO_CLIENT_SECRET,
+    redirect_uris: [config.auth.SSO_REDIRECT_URI]
+  });
   const params = {
     scope: 'openid email profile' // specify attributes to be returned (scope)
   };
@@ -52,11 +99,27 @@ const setupOpenID = async (app) => {
     // TODO try catch if issuer is not reachable or timeout (use logger.error)
     const params = client.callbackParams(req);
     const tokenSet = await client.callback(
-      'http://localhost:80/callback', // TODO change based on domain in config, add https and only http if activated
+      config.auth.SSO_REDIRECT_URI,
       params
     );
-
     req.session.tokenSet = tokenSet;
+    client.userinfo(req.session.tokenSet.access_token).then((userinfo) => {
+      req.session.userinfo = userinfo;
+      req.session.isTeach = false;
+      req.session.isIntern = true;
+      req.session.username = userinfo.name;
+      console.log('req.session: ' + req.session +
+        '\nreq.session.isIntern: ' + req.session.isIntern +
+        '\nreq.session.isTeach: ' + req.session.isTeach +
+        '\nreq.session.username: ' + req.session.username
+      );
+    });
+
+    session.Store(req.session, (err) => {
+      if (err) {
+        logger.error('Error storing session: ', err);
+      }
+    });
     res.redirect('/');
   });
 
@@ -69,7 +132,8 @@ const setupOpenID = async (app) => {
   app.get('/testlogin', async (req, res) => {
     if (req.session.tokenSet) {
       const userinfo = await client.userinfo(req.session.tokenSet.access_token);
-      res.send(`Welcome, ${userinfo.name} (${userinfo.email})`);
+      console.log(userinfo);
+      res.send(`Welcome, ${userinfo.name} (${userinfo.email}) `);
     } else {
       res.send('You are not logged in. <a href="/login">Login</a>');
     }

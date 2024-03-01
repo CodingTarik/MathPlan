@@ -36,7 +36,7 @@ if (config.dev.DEBUG) {
 }
 
 // Register middleware for static variable and configurable data for rendering
-app.use((req, res, next) => {
+app.use(async (req, res, next) => {
   res.locals.imprinturl = config.web.IMPRINT_URL;
   res.locals.faqurl = config.web.FAQ_URL;
   res.locals.faqurlactivemenu = config.web.FAQ_URL_ACTIVE;
@@ -48,6 +48,15 @@ app.use((req, res, next) => {
   res.locals.pagename = config.web.PAGE_NAME;
   res.locals.privacypolicyurl = config.web.PRIVACY_POLICY_URL;
   res.locals.supportemail = config.web.SUPPORT_EMAIL;
+
+  const session = req.session;
+  console.log('session: ' + session);
+  res.locals.isloggedin = !!session;
+  res.locals.isIntern = session?.isIntern ? session?.isIntern : false;
+  res.locals.isTeach = session?.isTeach ? session?.isTeach : false;
+  res.locals.session = session || false;
+  res.locals.username = session?.username ? session?.username : 'no User';
+
   next();
 });
 
@@ -92,14 +101,14 @@ app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 
 // Register login
-sso.setupSessionAndOpenID(app).then(() => {
-  // has to happen after the session is registered
-  // because session is async and then route registration for / could happen before the session is registered
-  // so /login would redirect to 404
-  // Routing
-  app.use('/api', api);
-  app.use('/', pages);
-});
+sso.setupSessionAndOpenID(app);// .then(() => {
+// has to happen after the session is registered
+// because session is async and then route registration for / could happen before the session is registered
+// so /login would redirect to 404
+// Routing
+app.use('/api', api);
+app.use('/', pages);
+// });
 
 try {
   if (process.env.NODE_ENV !== 'test') {
