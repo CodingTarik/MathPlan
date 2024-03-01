@@ -36,7 +36,8 @@ const config /** @type {DatabaseConfig} */ = {
 
 // create a sequelize object
 // variable because override should be possible e.g. for testing, overriding sequelize with a mock or custom config
-const sequelize = new Sequelize(config);
+// eslint-disable-next-line prefer-const
+let sequelize = new Sequelize(config);
 
 // Initialize models
 const modelFunction = (sequelize) => {
@@ -47,7 +48,9 @@ const modelFunction = (sequelize) => {
   };
 };
 // Initialize models
-const models = modelFunction(sequelize);
+// used for changing the models in test with second sequelize
+// eslint-disable-next-line prefer-const
+let models = modelFunction(sequelize);
 
 module.exports = {
   config,
