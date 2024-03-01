@@ -1,6 +1,7 @@
 /* eslint security/detect-object-injection: 0 */
 // disabled because of too many false positives, has to be analyzed in the security test
 const path = require('path');
+const logger = require('../logger');
 const modulHelper = require(path.join(__dirname, '../database/modulHelper.js'));
 const examRegulationHelper = require(
   path.join(__dirname, '../database/examRegulationHelper.js')
@@ -30,6 +31,7 @@ const addModul = async (req, res) => {
       res.send(data);
     })
     .catch((err) => {
+      logger.error(err.message);
       res.status(500).send({
         message: err.message || 'Error adding module!'
       });
@@ -193,7 +195,7 @@ const addOrUpdateExamRegulation = async (req, res) => {
     });
   } catch (error) {
     // Handle any errors that occurred during processing
-    console.error('Error processing exam regulation schema:', error);
+    logger.error('Error processing exam regulation schema: ' + error.message);
 
     // Send an error response
     res.status(500).json({
