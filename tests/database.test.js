@@ -12,7 +12,7 @@ describe('Modules API Tests', () => {
     db.config.storage = 'database.test.sqlite';
     db.sequelize = new Sequelize(db.config);
     db.models = db.modelFunction(db.sequelize);
-    db.sequelize.sync({ force: true });
+    await db.sequelize.sync({ force: true });
     // wait 15 sec
     await new Promise((resolve) => setTimeout(resolve, 15000));
   });
