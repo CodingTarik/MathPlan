@@ -13,7 +13,7 @@ describe('Modules API Tests', () => {
     db.sequelize = new Sequelize(db.config);
     db.sequelize.sync();
     // wait 9 sec
-    await new Promise((resolve) => setTimeout(resolve, 9000));
+    await new Promise((resolve) => setTimeout(resolve, 20000));
   });
   test('It should add a new module and respond with status code 200', async () => {
     // module with random id
