@@ -39,14 +39,19 @@ const config /** @type {DatabaseConfig} */ = {
 const sequelize = new Sequelize(config);
 
 // Initialize models
-const models = {
-  Modul: Modul(sequelize),
-  User: User(sequelize),
-  ExaminationRegulation: ExaminationRegulation(sequelize)
+const modelFunction = (sequelize) => {
+  return {
+    Modul: Modul(sequelize),
+    User: User(sequelize),
+    ExaminationRegulation: ExaminationRegulation(sequelize)
+  };
 };
+// Initialize models
+const models = modelFunction(sequelize);
 
 module.exports = {
   config,
   sequelize,
+  modelFunction,
   models
 };

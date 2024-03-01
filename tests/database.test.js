@@ -11,9 +11,10 @@ describe('Modules API Tests', () => {
     db.config.dialect = 'sqlite';
     db.config.storage = 'database.test.sqlite';
     db.sequelize = new Sequelize(db.config);
+    db.models = db.modelFunction(db.sequelize);
     db.sequelize.sync();
-    // wait 9 sec
-    await new Promise((resolve) => setTimeout(resolve, 20000));
+    // wait 3 sec
+    await new Promise((resolve) => setTimeout(resolve, 3000));
   });
   test('It should add a new module and respond with status code 200', async () => {
     // module with random id
