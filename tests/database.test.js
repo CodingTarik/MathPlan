@@ -13,10 +13,12 @@ describe('Modules API Tests', () => {
     db.sequelize = new Sequelize(db.config);
     db.models = db.modelFunction(db.sequelize);
     await db.sequelize.sync({ force: true });
-    // wait 15 sec
+    // wait 15 sec for database stuff to be ready (sync, etc.)
     await new Promise((resolve) => setTimeout(resolve, 15000));
+    console.log('Database ready');
   });
   test('It should add a new module and respond with status code 200', async () => {
+    console.log('test executed');
     // module with random id
     const newModule = {
       id: Math.floor(Math.random() * 10000000).toString(),
