@@ -1,0 +1,74 @@
+{
+  "enableDefaultPreprocessing": true,
+  "additionalPreprocessing": [
+    {
+      "find": "Arbeits aufwand",
+      "flags": "g",
+      "replace": "Arbeitsaufwand"
+    },
+    {
+      "find": "\\uf0b7",
+      "flags": "g",
+      "replace": "•"
+    }
+  ],
+  "moduleTitle": "Modulbeschreibung",
+
+  "moduleProperties": [
+    {
+      "propertyName": "moduleID",
+      "readFrom": "Modul Nr\\.",
+      "readTo": "Creditpoints",
+      "keepReadFromAndTo": false,
+      "useResultAtIndex": 0,
+      "postprocessing": [
+        {
+          "find": "\\s",
+          "flags": "g",
+          "replace": ""
+        }
+      ],
+      "plausibilityCheck": "^\\d{2}-\\d{2}-\\d{4}(\\/\\w+)?$"
+    },
+    {
+      "propertyName": "moduleName",
+      "readFrom": "Modulname",
+      "readTo": "Modul Nr\\.",
+      "keepReadFromAndTo": false,
+      "useResultAtIndex": 0,
+      "postprocessing": []
+    },
+    {
+      "propertyName": "moduleCredits",
+      "readFrom": "Modul Nr\\.",
+      "readTo": "Arbeitsaufwand",
+      "keepReadFromAndTo": false,
+      "useResultAtIndex": 0,
+      "postprocessing": [
+        {
+        "find": "^.*Creditpoints\\s",
+        "flags": "g",
+        "replace": ""
+        }
+      ],
+      "plausibilityCheck": "^[0-9]+ CP$"
+    },
+    {
+      "propertyName": "moduleLanguage",
+      "readFrom": "([sS]emester|Verwendbarkeit|[Uu]nregelmäßig) Sprache",
+      "readTo": "Modulverantwortliche",
+      "keepReadFromAndTo": false,
+      "useResultAtIndex": 0,
+      "postprocessing": [],
+      "plausibilityCheck": "^([Ee]nglisch|[Dd]eutsch).*"
+    },
+    {
+      "propertyName": "moduleApplicability",
+      "readFrom": "Verwendbarkeit des Moduls",
+      "readTo": "9 Literatur",
+      "keepReadFromAndTo": false,
+      "useResultAtIndex": 0,
+      "postprocessing": []
+    }
+  ]
+}

@@ -1,10 +1,10 @@
-# Materno - Math Course Management System
+# MathPlan - Math Course Management System
 
-Materno is a Node.js web application developed to streamline the management of mathematics courses at TU Darmstadt. It facilitates the submission of examination schedules by students and allows instructors to select courses and specify room preferences.
+MathPlan is a Node.js web application developed to streamline the management of mathematics courses at TU Darmstadt. It facilitates the submission of examination schedules by students and allows instructors to select courses and specify room preferences.
 
 ## Table of Contents
 
-- [Materno - Math Course Management System](#materno---math-course-management-system)
+- [MathPlan - Math Course Management System](#mathplan---math-course-management-system)
   - [Table of Contents](#table-of-contents)
   - [Installation](#installation)
   - [Development Scripts](#development-scripts)
@@ -86,7 +86,7 @@ Materno is a Node.js web application developed to streamline the management of m
   ```bash
   npm run prepare
   ```
-  Install Husky, which runs ESLint before each commit.
+  Install Husky, which runs ESLint and Jest before each commit.
 
 - **Install Husky with Jest and ESLint:**
   ```bash
@@ -133,7 +133,7 @@ Please ensure that your code follows the project's coding standards and includes
 
 ## License
 
-Materno is open-source software licensed under the [GPL v3](LICENSE). # TODO Change this
+MathPlan is open-source software licensed under the [GPL v3](LICENSE).
 
 
  
