@@ -24,7 +24,8 @@ const ExaminationRegulation = require(
  */
 
 // Define database connection parameters
-const config /** @type {DatabaseConfig} */ = {
+// eslint-disable-next-line prefer-const
+let config /** @type {DatabaseConfig} */ = {
   database: configFile.database.DB_DATABASE,
   username: configFile.database.DB_USER, // Your MySQL username
   password: configFile.database.DB_PASSWORD, // Your MySQL password
