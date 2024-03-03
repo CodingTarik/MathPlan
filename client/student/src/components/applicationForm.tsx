@@ -12,7 +12,7 @@ import Typography from '@mui/joy/Typography';
 import Accordion from '@mui/joy/Accordion';
 import AccordionDetails from '@mui/joy/AccordionDetails';
 import AccordionSummary from '@mui/joy/AccordionSummary';
-import { Chip } from '@mui/joy';
+import { Chip, TypographySystem } from '@mui/joy';
 import {produce} from "immer";
 import objectPath from 'object-path';
 
@@ -82,8 +82,9 @@ export default function ExamPlanForm() {
  * @param param0 
  * @returns ui for the exam plsn
  */
-function Item( {entry, nestedKeys}:{entry: Array<string | unknown>, nestedKeys: string} ) {
+function Item( {entry, nestedKeys, level}:{entry: Array<string | unknown>, nestedKeys: string, level:number} ) {
   const [index, setIndex] = React.useState<number | null>(0);
+  const levels = ["h1", "h2", "h3", "h4", "title-lg"] 
   const key =  entry[0] as string
   const value = entry[1]
   if (nestedKeys){
@@ -92,20 +93,23 @@ function Item( {entry, nestedKeys}:{entry: Array<string | unknown>, nestedKeys: 
   if (key === "area") {
     return <Box sx={{ p: 2, border: 1, borderRadius: 2 , mt:2 }}> 
      {Object.entries(value as object).map((newEntry) => (
-     <Item entry = {newEntry} nestedKeys={nestedKeys+key}/>))}
+     <Item entry = {newEntry} nestedKeys={nestedKeys+key} level = {level+1}/>))}
      </Box>
   }
   else if (key === "subarea"){
-    return <Box sx={{ p: 2, border: 1, borderRadius: 2 , mt:2 }}>
-     {(value as Array<object>).map((e:object, index:number) => {return <div>{Object.entries(e).map((newEntry) => (
-     <Item entry = {newEntry} nestedKeys={nestedKeys+key+"."+index}/>))}</div>}) }
+    return <Box sx={{ border: 0, borderRadius: 2 , ml:8 }}>
+     {(value as Array<object>).map((e:object, index:number) => {let containsModules = false; let moduleEntry = new Array<string | unknown>(); return <div>{Object.entries(e).map((newEntry) => {
+      if (newEntry[0] === "module") {containsModules = true; moduleEntry = newEntry; return;}
+      else {return <Item entry = {newEntry} nestedKeys={nestedKeys+key+"."+index} level = {level+1}/>}})}
+     {containsModules && <Item entry = {moduleEntry} nestedKeys={nestedKeys+key+"."+index} level = {level+1}/>}</div>}) }
      </Box>
   }
   else if (Object.keys(descriptions).includes(key)){
     return <Typography textAlign="left" level="body-md">{descriptions[key as DescriptionsKey]}{value as string}</Typography>
   }
   else if (key === "name") {
-    return <Typography textAlign="left" level = "h3" sx= {{mb:2}}>{value as string}</Typography>
+    const levelTitle = level<5? levels[level]:levels[4]
+    return <Typography textAlign="left" level = {levelTitle as keyof TypographySystem} sx= {{mb:1, mt:4}}>{value as string}</Typography>
   }
   else if (key === "module") {
     nestedKeys = nestedKeys+"module"
@@ -144,7 +148,6 @@ function Item( {entry, nestedKeys}:{entry: Array<string | unknown>, nestedKeys: 
                 _event: React.SyntheticEvent | null,
                 newValue: string[][]
               )  => {
-                console.log(nestedKeys)
                 setExamPlan(produce(examPlan, (draft) => {if (draft) {objectPath.set(draft, nestedKeys, newValue)}}))
               }}
             >
@@ -160,457 +163,411 @@ function Item( {entry, nestedKeys}:{entry: Array<string | unknown>, nestedKeys: 
   const onRegulationChange = (name: string | null) => {
     if (name == null) throw Error();
     //todo: retrieve examRegulation from database
-    setExamRegulation({
-      jsonSchema: JSON.stringify({
-        area: {
-          name: 'B.Sc. Mathematik/Mathematik 2018',
-          minCreditPointsOverall: 180,
-          subarea: [
-            { name: 'Pflichtbereich Mathematik', minCreditPointsOverall: 83 },
-            { name: 'Seminar/Projekt', minCreditPointsSeminar: 5 },
-            {
-              name: 'Fachlicher Bereich',
-              minCreditPointsOverall: 60,
-              maxCreditPointsOverall: 63,
-              subarea: [
-                {
-                  name: 'Wahlpflichtbereich Mathematik ',
-                  description:
-                    'Typ § 30 Abs. 6 mit uneingeschränktem Modulwechsel',
-                  subarea: [
-                    {
-                      name: 'Kernmodule',
-                      description: 'Drei Module müssen belegt werden.',
-                      subarea: [
-                        {
-                          name: 'Kernmodule Algebra, Analysis, Geometrie und Logik',
-                          description:
-                            'Ein Modul muss belegt werden. Weitere Module nach Genehmigung.',
-                          minCreditPointsOverall: 9,
-                          module: [
-                            {
-                              name: {
-                                moduleID: '04-00-0029',
-                                moduleName: 'Algebra',
-                                moduleCredits: 9,
-                                moduleLanguage: 'Deutsch',
-                                moduleApplicability:
-                                  'Für B.Sc.Math, B.Sc.Math (bilingual), B.Sc.MCS, B.Sc.WiMa, B.Sc.ME: Wahlpflichtbereich. Für M.Sc.Math: Vertiefungsbereich. Für M.Sc.WiMa: Ergänzungsbereich.'
-                              },
-                              moduleID: '04-00-0029',
-                              creditPoints: 9,
-                              pflicht: false,
-                              nichtwählbarmitmodul: []
-                            },
-                            {
-                              name: {
-                                moduleID: '04-00-0036',
-                                moduleName: 'Funktionalanalysis',
-                                moduleCredits: 9,
-                                moduleLanguage: 'Deutsch',
-                                moduleApplicability:
-                                  'Für B.Sc.Math, B.Sc.MCS, B.Sc.WiMa, B.Sc.ME: math. Wahlbereich Für M.Sc.Math, M.Sc.WiMa: Ergänzungsbereich wird in einigen Vertiefungen partielle Differentialgleichungen und in Algebra/ Geometrie/Funktionalanalysis vorausgesetzt.'
-                              },
-                              moduleID: '04-00-0036',
-                              creditPoints: 9,
-                              pflicht: false,
-                              nichtwählbarmitmodul: []
-                            },
-                            {
-                              name: {
-                                moduleID: '04-10-0035/de',
-                                moduleName: 'Differentialgeometrie',
-                                moduleCredits: 5,
-                                moduleLanguage: 'Deutsch',
-                                moduleApplicability:
-                                  'Für B.Sc.Math math. Wahlbereich; Für Master: Ergänzungsbereich'
-                              },
-                              moduleID: '04-10-0035/de',
-                              creditPoints: 5,
-                              pflicht: false,
-                              nichtwählbarmitmodul: []
-                            },
-                            {
-                              name: {
-                                moduleID: '04-00-0028',
-                                moduleName:
-                                  'Introduction to Mathematical Logic',
-                                moduleCredits: 9,
-                                moduleLanguage: 'Englisch',
-                                moduleApplicability:
-                                  'Für B.Sc.Math, B.Sc.Math (bilingual), B.Sc.MCS: A* Für B.Sc.WiMa, B.Sc.ME: math Wahlpflichtbereich Für M.Sc.Math, M.Sc.WiMa: Ergänzungsbereich'
-                              },
-                              moduleID: '04-00-0028',
-                              creditPoints: 9,
-                              pflicht: false,
-                              nichtwählbarmitmodul: []
-                            }
-                          ],
-                          maxCreditPointsOverall: 28
-                        },
-                        {
-                          name: 'Kernmodule Numerik, Optimierung und Stochastik',
-                          description:
-                            'Ein Modul muss belegt werden. Weitere Module nach Genehmigung.',
-                          minCreditPointsOverall: 9,
-                          maxCreditPointsOverall: 28,
-                          module: [
-                            {
-                              name: {
-                                moduleID: '04-10-0393/de',
-                                moduleName:
-                                  'Numerik Gewöhnlicher Differentialgleichungen',
-                                moduleCredits: 9,
-                                moduleLanguage: 'Deutsch',
-                                moduleApplicability:
-                                  'B.Sc. Mathematik, M.Sc Mathematik, M.Sc. Mathematics (nicht zusammen mit 04-10- 0042/de belegbar)'
-                              },
-                              moduleID: '04-10-0393/de',
-                              creditPoints: 9,
-                              pflicht: false,
-                              nichtwählbarmitmodul: []
-                            },
-                            {
-                              name: {
-                                moduleID: '04-00-0040',
-                                moduleName: 'Einführung in die Optimierung',
-                                moduleCredits: 9,
-                                moduleLanguage: 'Deutsch',
-                                moduleApplicability:
-                                  'Für B.Sc.WiMa, B.Sc.Mamp;E: Pflicht Für B.Sc.Math, B.Sc.MCS: Wahlpflichtbereich Mathematik (C*) Für M.Sc.Math: Ergänzungsbereich Für B.Sc.CE: als mathematisches Wahlmodul wird in der Mastervertiefung Optimierung vorausgesetzt'
-                              },
-                              moduleID: '04-00-0040',
-                              creditPoints: 9,
-                              pflicht: false,
-                              nichtwählbarmitmodul: []
-                            },
-                            {
-                              name: {
-                                moduleID: '04-00-0046',
-                                moduleName: 'Probability Theory',
-                                moduleCredits: 9,
-                                moduleLanguage: 'Englisch',
-                                moduleApplicability:
-                                  'Für B.Sc.WiMa, B.Sc.ME: Pflicht Für B.Sc.Math, B.Sc.MCS: Wahlpflichtbereich Mathematik (D*) Für M.Sc.Math: Ergänzungsbereich Für B.Sc.CE: im mathematischen Wahlpflichtbereich A Für M.Sc.CE: Bereich 1B wird in der Mastervertiefung Stochastik vorausgesetzt.'
-                              },
-                              moduleID: '04-00-0046',
-                              creditPoints: 9,
-                              pflicht: false,
-                              nichtwählbarmitmodul: []
-                            }
-                          ]
-                        },
-                        {
-                          name: 'Weitere Module',
-                          description:
-                            'Weitere Module nach Modulhandbuch (Wahlpflichtbereich Mathematik) oder nach Genehmigung.',
-                          minCreditPointsOverall: 0,
-                          maxCreditPointsOverall: 10,
-                          module: [
-                            {
-                              name: {
-                                moduleID: '04-11-0031/de',
-                                moduleName: 'Topologie',
-                                moduleCredits: 5,
-                                moduleLanguage: 'Deutsch',
-                                moduleApplicability:
-                                  'B.Sc. Mathematik, M.Sc Mathematik, M.Sc. Mathematics'
-                              },
-                              moduleID: '04-11-0031/de',
-                              creditPoints: 5,
-                              pflicht: false,
-                              nichtwählbarmitmodul: []
-                            },
-                            {
-                              name: {
-                                moduleID: '04-10-0565/en',
-                                moduleName: 'Real and complex manifolds',
-                                moduleCredits: 9,
-                                moduleLanguage: 'Englisch',
-                                moduleApplicability:
-                                  'B.Sc. Mathematik, M.Sc Mathematik, M.Sc. Mathematics'
-                              },
-                              moduleID: '04-10-0565/en',
-                              creditPoints: 9,
-                              pflicht: false,
-                              nichtwählbarmitmodul: []
-                            },
-                            {
-                              name: {
-                                moduleID: '04-10-0120/de',
-                                moduleName:
-                                  'Automaten, formale Sprachen und Entscheidbarkeit',
-                                moduleCredits: 5,
-                                moduleLanguage: 'Deutsch',
-                                moduleApplicability:
-                                  'Pflichtveranstaltung in Informatik-Studiengängen; Bestandteil des Moduls "Formale Grundlagen der Imformatik" im BSc Mathematik'
-                              },
-                              moduleID: '04-10-0120/de',
-                              creditPoints: 5,
-                              pflicht: false,
-                              nichtwählbarmitmodul: []
-                            },
-                            {
-                              name: {
-                                moduleID: '04-10-0043/de',
-                                moduleName: 'Numerische Lineare Algebra',
-                                moduleCredits: 5,
-                                moduleLanguage: 'Deutsch',
-                                moduleApplicability:
-                                  'B.Sc. Mathematik, M.Sc Mathematik, M.Sc. Mathematics M.Sc. ETIT'
-                              },
-                              moduleID: '04-10-0043/de',
-                              creditPoints: 5,
-                              pflicht: false,
-                              nichtwählbarmitmodul: []
-                            },
-                            {
-                              name: {
-                                moduleID: '04-00-0034',
-                                moduleName: 'Diskrete Mathematik',
-                                moduleCredits: 9,
-                                moduleLanguage: 'Deutsch',
-                                moduleApplicability: ''
-                              },
-                              moduleID: '04-00-0034',
-                              creditPoints: 9,
-                              pflicht: false,
-                              nichtwählbarmitmodul: []
-                            },
-                            {
-                              name: {
-                                moduleID: '04-00-0281',
-                                moduleName: 'Spieltheorie',
-                                moduleCredits: 6,
-                                moduleLanguage: 'Deutsch',
-                                moduleApplicability:
-                                  'B.Sc.Math:Wahlpflichtbereich, Ergänzungsbereich'
-                              },
-                              moduleID: '04-00-0312',
-                              creditPoints: 6,
-                              pflicht: false,
-                              nichtwählbarmitmodul: []
-                            },
-                            {
-                              name: {
-                                moduleID: '04-10-0047/de',
-                                moduleName:
-                                  'Einführung in die Finanzmathematik',
-                                moduleCredits: 5,
-                                moduleLanguage: 'Deutsch',
-                                moduleApplicability:
-                                  'B.Sc. Mathematik, M.Sc Mathematik, M.Sc. Mathematics'
-                              },
-                              moduleID: '04-10-0047/de',
-                              creditPoints: 5,
-                              pflicht: false,
-                              nichtwählbarmitmodul: []
-                            }
-                          ]
-                        }
-                      ],
-                      minCreditPointsOverall: 27,
-                      maxCreditPointsOverall: 37
-                    }
-                  ],
-                  minCreditPointsOverall: 32,
-                  maxCreditPointsOverall: 37
-                }
-              ]
-            },
-            {
-              name: 'Nebenfach',
-              description:
-                'Typ § 30 Abs. 4 mit einmaligen Nebenfachwechsel aus wichtigem Grund.\nEs ist ein Nebenfach zu wählen. Nebenfächer und Informationen unter www.mathematik.tu-darmstadt.de/nebenfach.',
-              minCreditPointsOverall: 26,
-              maxCreditPointsOverall: 31
-            },
-            {
-              name: 'Überfachlicher Bereich',
-              subarea: [
-                {
-                  name: 'Überfachlicher Pflichtbereich',
-                  minCreditPointsOverall: 9
-                },
-                {
-                  name: 'Überfachlicher Wahlbereich',
-                  minCreditPointsOverall: 5,
-                  maxCreditPointsOverall: 8,
-                  subarea: [
-                    {
-                      name: 'Mathematische Allgemeinbildung',
-                      description: 'Weitere Module nach Genehmigung.',
-                      minCreditPointsOverall: 5,
-                      maxCreditPointsOverall: 8,
-                      module: [
-                        {
-                          name: {
-                            moduleID: '04-10-0044/de',
-                            moduleName:
-                              'Einführung in die Mathematische Modellierung',
-                            moduleCredits: 5,
-                            moduleLanguage: 'Deutsch',
-                            moduleApplicability:
-                              'B.Sc. Mathematik, LaG Mathematik'
-                          },
-                          moduleID: '04-10-0044/de',
-                          creditPoints: 5,
-                          pflicht: false,
-                          nichtwählbarmitmodul: []
-                        },
-                        {
-                          name: {
-                            moduleID: '04-10-0021/de',
-                            moduleName: 'Logik und Grundlagen',
-                            moduleCredits: 3,
-                            moduleLanguage: 'Deutsch',
-                            moduleApplicability:
-                              'B.Sc. Mathematik, Wahlpflichtbereich Ü'
-                          },
-                          moduleID: '04-10-0021/de',
-                          creditPoints: 3,
-                          pflicht: false,
-                          nichtwählbarmitmodul: []
-                        },
-                        {
-                          name: {
-                            moduleID: '04-10-0023/de',
-                            moduleName: 'Mathematik im Kontext',
-                            moduleCredits: 3,
-                            moduleLanguage: 'Deutsch',
-                            moduleApplicability:
-                              'B.Sc. Mathematik, Wahlpflichtbereich Ü'
-                          },
-                          moduleID: '04-10-0023/de',
-                          creditPoints: 3,
-                          pflicht: false,
-                          nichtwählbarmitmodul: []
-                        },
-                        {
-                          name: {
-                            moduleID: '04-10-0086/de',
-                            moduleName: 'Lehren und Lernen von Mathematik',
-                            moduleCredits: 6,
-                            moduleLanguage: 'Deutsch',
-                            moduleApplicability: 'B.Sc. Mathematik'
-                          },
-                          moduleID: '04-10-0086/de',
-                          creditPoints: 6,
-                          pflicht: false,
-                          nichtwählbarmitmodul: []
-                        }
-                      ]
-                    },
-                    {
-                      name: 'Mathematisches Handwerkszeug',
-                      description: 'Weitere Module nach Genehmigung.',
-                      minCreditPointsOverall: 0,
-                      maxCreditPointsOverall: 3,
-                      module: [
-                        {
-                          name: {
-                            moduleID: '41-21-0922',
-                            moduleName:
-                              'English Paternoster for Mathematicians',
-                            moduleCredits: 3,
-                            moduleLanguage: 'english',
-                            moduleApplicability:
-                              'B.Sc. Mathematik, M.Sc. Mathematik'
-                          },
-                          moduleID: '41-21-0922',
-                          creditPoints: 3,
-                          pflicht: false,
-                          nichtwählbarmitmodul: []
-                        },
-                        {
-                          name: {
-                            moduleID: '41-21-0382',
-                            moduleName: 'English for Mathematicians',
-                            moduleCredits: 3,
-                            moduleLanguage: 'english',
-                            moduleApplicability: 'B.Sc. Mathematik'
-                          },
-                          moduleID: '41-21-0382',
-                          creditPoints: 3,
-                          pflicht: false,
-                          nichtwählbarmitmodul: []
-                        },
-                        {
-                          name: {
-                            moduleID: '04-10-0398/de',
-                            moduleName: 'Interdisziplinäres Projekt',
-                            moduleCredits: 2,
-                            moduleLanguage: 'Deutsch',
-                            moduleApplicability: 'B.Sc. Mathematik'
-                          },
-                          moduleID: '04-10-0398/de',
-                          creditPoints: 2,
-                          pflicht: false,
-                          nichtwählbarmitmodul: []
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  name: 'Studium Generale',
-                  description:
-                    'Gesamtkatalog aller Module der TU Darmstadt. Ausgenommen sind Veranstaltungen des Fachbereichs Mathematik und des Nebenfachs, sofern sie nicht ausschließlich als Studium Generale wählbar sind. Module mathematischen Inhalts, welcher in vergleichbarer Form auch in Modulen des Fachbereichs Mathematik abgedeckt wird, sind ebenfalls ausgeschlossen.',
-                  minCreditPointsOverall: 3,
-                  maxCreditPointsOverall: 6
-                }
-              ]
-            },
-            {
-              name: 'Abschlussarbeit',
-              minCreditPointsOverall: 12,
-              maxCreditPointsOverall: 12
-            }
-          ]
-        }
-      }),
-      name: 'B.Sc. Mathematik/Mathematik (2018)'
-    });
     const x = {
       area: {
         name: 'B.Sc. Mathematik/Mathematik 2018',
         minCreditPointsOverall: 180,
         subarea: [
+          { name: 'Pflichtbereich Mathematik', minCreditPointsOverall: 83 },
+          { name: 'Seminar/Projekt', minCreditPointsSeminar: 5 },
           {
-            name: 'Kernmodule Algebra, Analysis, Geometrie und Logik',
-            description:
-              'Ein Modul muss belegt werden. Weitere Module nach Genehmigung.',
-            minCreditPointsOverall: 9,
-            module: [
+            name: 'Fachlicher Bereich',
+            minCreditPointsOverall: 60,
+            maxCreditPointsOverall: 63,
+            subarea: [
               {
-                name: {
-                  moduleID: '04-00-0029',
-                  moduleName: 'Algebra',
-                  moduleCredits: 9,
-                  moduleLanguage: 'Deutsch',
-                  moduleApplicability:
-                    'Für B.Sc.Math, B.Sc.Math (bilingual), B.Sc.MCS, B.Sc.WiMa, B.Sc.ME: Wahlpflichtbereich. Für M.Sc.Math: Vertiefungsbereich. Für M.Sc.WiMa: Ergänzungsbereich.'
-                },
-                moduleID: '04-00-0029',
-                creditPoints: 9,
-                pflicht: false,
-                nichtwählbarmitmodul: []
+                name: 'Wahlpflichtbereich Mathematik ',
+                description:
+                  'Typ § 30 Abs. 6 mit uneingeschränktem Modulwechsel',
+                subarea: [
+                  {
+                    name: 'Kernmodule',
+                    description: 'Drei Module müssen belegt werden.',
+                    subarea: [
+                      {
+                        name: 'Kernmodule Algebra, Analysis, Geometrie und Logik',
+                        description:
+                          'Ein Modul muss belegt werden. Weitere Module nach Genehmigung.',
+                        minCreditPointsOverall: 9,
+                        module: [
+                          {
+                            name: {
+                              moduleID: '04-00-0029',
+                              moduleName: 'Algebra',
+                              moduleCredits: 9,
+                              moduleLanguage: 'Deutsch',
+                              moduleApplicability:
+                                'Für B.Sc.Math, B.Sc.Math (bilingual), B.Sc.MCS, B.Sc.WiMa, B.Sc.ME: Wahlpflichtbereich. Für M.Sc.Math: Vertiefungsbereich. Für M.Sc.WiMa: Ergänzungsbereich.'
+                            },
+                            moduleID: '04-00-0029',
+                            creditPoints: 9,
+                            pflicht: false,
+                            nichtwählbarmitmodul: []
+                          },
+                          {
+                            name: {
+                              moduleID: '04-00-0036',
+                              moduleName: 'Funktionalanalysis',
+                              moduleCredits: 9,
+                              moduleLanguage: 'Deutsch',
+                              moduleApplicability:
+                                'Für B.Sc.Math, B.Sc.MCS, B.Sc.WiMa, B.Sc.ME: math. Wahlbereich Für M.Sc.Math, M.Sc.WiMa: Ergänzungsbereich wird in einigen Vertiefungen partielle Differentialgleichungen und in Algebra/ Geometrie/Funktionalanalysis vorausgesetzt.'
+                            },
+                            moduleID: '04-00-0036',
+                            creditPoints: 9,
+                            pflicht: false,
+                            nichtwählbarmitmodul: []
+                          },
+                          {
+                            name: {
+                              moduleID: '04-10-0035/de',
+                              moduleName: 'Differentialgeometrie',
+                              moduleCredits: 5,
+                              moduleLanguage: 'Deutsch',
+                              moduleApplicability:
+                                'Für B.Sc.Math math. Wahlbereich; Für Master: Ergänzungsbereich'
+                            },
+                            moduleID: '04-10-0035/de',
+                            creditPoints: 5,
+                            pflicht: false,
+                            nichtwählbarmitmodul: []
+                          },
+                          {
+                            name: {
+                              moduleID: '04-00-0028',
+                              moduleName:
+                                'Introduction to Mathematical Logic',
+                              moduleCredits: 9,
+                              moduleLanguage: 'Englisch',
+                              moduleApplicability:
+                                'Für B.Sc.Math, B.Sc.Math (bilingual), B.Sc.MCS: A* Für B.Sc.WiMa, B.Sc.ME: math Wahlpflichtbereich Für M.Sc.Math, M.Sc.WiMa: Ergänzungsbereich'
+                            },
+                            moduleID: '04-00-0028',
+                            creditPoints: 9,
+                            pflicht: false,
+                            nichtwählbarmitmodul: []
+                          }
+                        ],
+                        maxCreditPointsOverall: 28
+                      },
+                      {
+                        name: 'Kernmodule Numerik, Optimierung und Stochastik',
+                        description:
+                          'Ein Modul muss belegt werden. Weitere Module nach Genehmigung.',
+                        minCreditPointsOverall: 9,
+                        maxCreditPointsOverall: 28,
+                        module: [
+                          {
+                            name: {
+                              moduleID: '04-10-0393/de',
+                              moduleName:
+                                'Numerik Gewöhnlicher Differentialgleichungen',
+                              moduleCredits: 9,
+                              moduleLanguage: 'Deutsch',
+                              moduleApplicability:
+                                'B.Sc. Mathematik, M.Sc Mathematik, M.Sc. Mathematics (nicht zusammen mit 04-10- 0042/de belegbar)'
+                            },
+                            moduleID: '04-10-0393/de',
+                            creditPoints: 9,
+                            pflicht: false,
+                            nichtwählbarmitmodul: []
+                          },
+                          {
+                            name: {
+                              moduleID: '04-00-0040',
+                              moduleName: 'Einführung in die Optimierung',
+                              moduleCredits: 9,
+                              moduleLanguage: 'Deutsch',
+                              moduleApplicability:
+                                'Für B.Sc.WiMa, B.Sc.Mamp;E: Pflicht Für B.Sc.Math, B.Sc.MCS: Wahlpflichtbereich Mathematik (C*) Für M.Sc.Math: Ergänzungsbereich Für B.Sc.CE: als mathematisches Wahlmodul wird in der Mastervertiefung Optimierung vorausgesetzt'
+                            },
+                            moduleID: '04-00-0040',
+                            creditPoints: 9,
+                            pflicht: false,
+                            nichtwählbarmitmodul: []
+                          },
+                          {
+                            name: {
+                              moduleID: '04-00-0046',
+                              moduleName: 'Probability Theory',
+                              moduleCredits: 9,
+                              moduleLanguage: 'Englisch',
+                              moduleApplicability:
+                                'Für B.Sc.WiMa, B.Sc.ME: Pflicht Für B.Sc.Math, B.Sc.MCS: Wahlpflichtbereich Mathematik (D*) Für M.Sc.Math: Ergänzungsbereich Für B.Sc.CE: im mathematischen Wahlpflichtbereich A Für M.Sc.CE: Bereich 1B wird in der Mastervertiefung Stochastik vorausgesetzt.'
+                            },
+                            moduleID: '04-00-0046',
+                            creditPoints: 9,
+                            pflicht: false,
+                            nichtwählbarmitmodul: []
+                          }
+                        ]
+                      },
+                      {
+                        name: 'Weitere Module',
+                        description:
+                          'Weitere Module nach Modulhandbuch (Wahlpflichtbereich Mathematik) oder nach Genehmigung.',
+                        minCreditPointsOverall: 0,
+                        maxCreditPointsOverall: 10,
+                        module: [
+                          {
+                            name: {
+                              moduleID: '04-11-0031/de',
+                              moduleName: 'Topologie',
+                              moduleCredits: 5,
+                              moduleLanguage: 'Deutsch',
+                              moduleApplicability:
+                                'B.Sc. Mathematik, M.Sc Mathematik, M.Sc. Mathematics'
+                            },
+                            moduleID: '04-11-0031/de',
+                            creditPoints: 5,
+                            pflicht: false,
+                            nichtwählbarmitmodul: []
+                          },
+                          {
+                            name: {
+                              moduleID: '04-10-0565/en',
+                              moduleName: 'Real and complex manifolds',
+                              moduleCredits: 9,
+                              moduleLanguage: 'Englisch',
+                              moduleApplicability:
+                                'B.Sc. Mathematik, M.Sc Mathematik, M.Sc. Mathematics'
+                            },
+                            moduleID: '04-10-0565/en',
+                            creditPoints: 9,
+                            pflicht: false,
+                            nichtwählbarmitmodul: []
+                          },
+                          {
+                            name: {
+                              moduleID: '04-10-0120/de',
+                              moduleName:
+                                'Automaten, formale Sprachen und Entscheidbarkeit',
+                              moduleCredits: 5,
+                              moduleLanguage: 'Deutsch',
+                              moduleApplicability:
+                                'Pflichtveranstaltung in Informatik-Studiengängen; Bestandteil des Moduls "Formale Grundlagen der Imformatik" im BSc Mathematik'
+                            },
+                            moduleID: '04-10-0120/de',
+                            creditPoints: 5,
+                            pflicht: false,
+                            nichtwählbarmitmodul: []
+                          },
+                          {
+                            name: {
+                              moduleID: '04-10-0043/de',
+                              moduleName: 'Numerische Lineare Algebra',
+                              moduleCredits: 5,
+                              moduleLanguage: 'Deutsch',
+                              moduleApplicability:
+                                'B.Sc. Mathematik, M.Sc Mathematik, M.Sc. Mathematics M.Sc. ETIT'
+                            },
+                            moduleID: '04-10-0043/de',
+                            creditPoints: 5,
+                            pflicht: false,
+                            nichtwählbarmitmodul: []
+                          },
+                          {
+                            name: {
+                              moduleID: '04-00-0034',
+                              moduleName: 'Diskrete Mathematik',
+                              moduleCredits: 9,
+                              moduleLanguage: 'Deutsch',
+                              moduleApplicability: ''
+                            },
+                            moduleID: '04-00-0034',
+                            creditPoints: 9,
+                            pflicht: false,
+                            nichtwählbarmitmodul: []
+                          },
+                          {
+                            name: {
+                              moduleID: '04-00-0281',
+                              moduleName: 'Spieltheorie',
+                              moduleCredits: 6,
+                              moduleLanguage: 'Deutsch',
+                              moduleApplicability:
+                                'B.Sc.Math:Wahlpflichtbereich, Ergänzungsbereich'
+                            },
+                            moduleID: '04-00-0312',
+                            creditPoints: 6,
+                            pflicht: false,
+                            nichtwählbarmitmodul: []
+                          },
+                          {
+                            name: {
+                              moduleID: '04-10-0047/de',
+                              moduleName:
+                                'Einführung in die Finanzmathematik',
+                              moduleCredits: 5,
+                              moduleLanguage: 'Deutsch',
+                              moduleApplicability:
+                                'B.Sc. Mathematik, M.Sc Mathematik, M.Sc. Mathematics'
+                            },
+                            moduleID: '04-10-0047/de',
+                            creditPoints: 5,
+                            pflicht: false,
+                            nichtwählbarmitmodul: []
+                          }
+                        ]
+                      }
+                    ],
+                    minCreditPointsOverall: 27,
+                    maxCreditPointsOverall: 37
+                  }
+                ],
+                minCreditPointsOverall: 32,
+                maxCreditPointsOverall: 37
+              }
+            ]
+          },
+          {
+            name: 'Nebenfach',
+            description:
+              'Typ § 30 Abs. 4 mit einmaligen Nebenfachwechsel aus wichtigem Grund.\nEs ist ein Nebenfach zu wählen. Nebenfächer und Informationen unter www.mathematik.tu-darmstadt.de/nebenfach.',
+            minCreditPointsOverall: 26,
+            maxCreditPointsOverall: 31
+          },
+          {
+            name: 'Überfachlicher Bereich',
+            subarea: [
+              {
+                name: 'Überfachlicher Pflichtbereich',
+                minCreditPointsOverall: 9
               },
               {
-                name: {
-                  moduleID: '04-00-0036',
-                  moduleName: 'Funktionalanalysis',
-                  moduleCredits: 9,
-                  moduleLanguage: 'Deutsch',
-                  moduleApplicability:
-                    'Für B.Sc.Math, B.Sc.MCS, B.Sc.WiMa, B.Sc.ME: math. Wahlbereich Für M.Sc.Math, M.Sc.WiMa: Ergänzungsbereich wird in einigen Vertiefungen partielle Differentialgleichungen und in Algebra/ Geometrie/Funktionalanalysis vorausgesetzt.'
-                },
-                moduleID: '04-00-0036',
-                creditPoints: 9,
-                pflicht: false,
-                nichtwählbarmitmodul: []
-              }]
-            }
+                name: 'Überfachlicher Wahlbereich',
+                minCreditPointsOverall: 5,
+                maxCreditPointsOverall: 8,
+                subarea: [
+                  {
+                    name: 'Mathematische Allgemeinbildung',
+                    description: 'Weitere Module nach Genehmigung.',
+                    minCreditPointsOverall: 5,
+                    maxCreditPointsOverall: 8,
+                    module: [
+                      {
+                        name: {
+                          moduleID: '04-10-0044/de',
+                          moduleName:
+                            'Einführung in die Mathematische Modellierung',
+                          moduleCredits: 5,
+                          moduleLanguage: 'Deutsch',
+                          moduleApplicability:
+                            'B.Sc. Mathematik, LaG Mathematik'
+                        },
+                        moduleID: '04-10-0044/de',
+                        creditPoints: 5,
+                        pflicht: false,
+                        nichtwählbarmitmodul: []
+                      },
+                      {
+                        name: {
+                          moduleID: '04-10-0021/de',
+                          moduleName: 'Logik und Grundlagen',
+                          moduleCredits: 3,
+                          moduleLanguage: 'Deutsch',
+                          moduleApplicability:
+                            'B.Sc. Mathematik, Wahlpflichtbereich Ü'
+                        },
+                        moduleID: '04-10-0021/de',
+                        creditPoints: 3,
+                        pflicht: false,
+                        nichtwählbarmitmodul: []
+                      },
+                      {
+                        name: {
+                          moduleID: '04-10-0023/de',
+                          moduleName: 'Mathematik im Kontext',
+                          moduleCredits: 3,
+                          moduleLanguage: 'Deutsch',
+                          moduleApplicability:
+                            'B.Sc. Mathematik, Wahlpflichtbereich Ü'
+                        },
+                        moduleID: '04-10-0023/de',
+                        creditPoints: 3,
+                        pflicht: false,
+                        nichtwählbarmitmodul: []
+                      },
+                      {
+                        name: {
+                          moduleID: '04-10-0086/de',
+                          moduleName: 'Lehren und Lernen von Mathematik',
+                          moduleCredits: 6,
+                          moduleLanguage: 'Deutsch',
+                          moduleApplicability: 'B.Sc. Mathematik'
+                        },
+                        moduleID: '04-10-0086/de',
+                        creditPoints: 6,
+                        pflicht: false,
+                        nichtwählbarmitmodul: []
+                      }
+                    ]
+                  },
+                  {
+                    name: 'Mathematisches Handwerkszeug',
+                    description: 'Weitere Module nach Genehmigung.',
+                    minCreditPointsOverall: 0,
+                    maxCreditPointsOverall: 3,
+                    module: [
+                      {
+                        name: {
+                          moduleID: '41-21-0922',
+                          moduleName:
+                            'English Paternoster for Mathematicians',
+                          moduleCredits: 3,
+                          moduleLanguage: 'english',
+                          moduleApplicability:
+                            'B.Sc. Mathematik, M.Sc. Mathematik'
+                        },
+                        moduleID: '41-21-0922',
+                        creditPoints: 3,
+                        pflicht: false,
+                        nichtwählbarmitmodul: []
+                      },
+                      {
+                        name: {
+                          moduleID: '41-21-0382',
+                          moduleName: 'English for Mathematicians',
+                          moduleCredits: 3,
+                          moduleLanguage: 'english',
+                          moduleApplicability: 'B.Sc. Mathematik'
+                        },
+                        moduleID: '41-21-0382',
+                        creditPoints: 3,
+                        pflicht: false,
+                        nichtwählbarmitmodul: []
+                      },
+                      {
+                        name: {
+                          moduleID: '04-10-0398/de',
+                          moduleName: 'Interdisziplinäres Projekt',
+                          moduleCredits: 2,
+                          moduleLanguage: 'Deutsch',
+                          moduleApplicability: 'B.Sc. Mathematik'
+                        },
+                        moduleID: '04-10-0398/de',
+                        creditPoints: 2,
+                        pflicht: false,
+                        nichtwählbarmitmodul: []
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                name: 'Studium Generale',
+                description:
+                  'Gesamtkatalog aller Module der TU Darmstadt. Ausgenommen sind Veranstaltungen des Fachbereichs Mathematik und des Nebenfachs, sofern sie nicht ausschließlich als Studium Generale wählbar sind. Module mathematischen Inhalts, welcher in vergleichbarer Form auch in Modulen des Fachbereichs Mathematik abgedeckt wird, sind ebenfalls ausgeschlossen.',
+                minCreditPointsOverall: 3,
+                maxCreditPointsOverall: 6
+              }
+            ]
+          },
+          {
+            name: 'Abschlussarbeit',
+            minCreditPointsOverall: 12,
+            maxCreditPointsOverall: 12
+          }
         ]
       }
     }
@@ -702,7 +659,7 @@ function Item( {entry, nestedKeys}:{entry: Array<string | unknown>, nestedKeys: 
       </Box>
       <div>
         {displayExamPlan && Object.entries(JSON.parse(examRegulation?.jsonSchema)).map((entry) => (
-          <Item entry = {entry}  nestedKeys={""} />
+          <Item entry = {entry}  nestedKeys={""} level={0} />
         ))}
         {JSON.stringify(examPlan)}
       </div>
