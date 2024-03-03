@@ -18,6 +18,8 @@ describe('Modules API Tests', () => {
     console.log('Database ready');
   });
   test('It should add a new module and respond with status code 200', async () => {
+    const tables = await sequelize.getQueryInterface().showAllTables();
+    console.log('Tables:', tables);
     console.log('test executed');
     // module with random id
     const newModule = {
