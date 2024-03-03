@@ -8,7 +8,8 @@ const modulehelper = require('../database/modulHelper');
 
 describe('Modules API Tests', () => {
   beforeAll(async () => {
-    await new Promise((resolve) => setTimeout(resolve, 3000));
+    await db.sequelize.sync({ force: true });
+    await new Promise((resolve) => setTimeout(resolve, 10000));
     console.log('Database ready');
   });
   test('It should add a new module and respond with status code 200', async () => {
