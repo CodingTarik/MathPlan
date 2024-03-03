@@ -8,24 +8,10 @@ const modulehelper = require('../database/modulHelper');
 
 describe('Modules API Tests', () => {
   beforeAll(async () => {
-    db.config.dialect = 'sqlite';
-    db.config.storage = 'database.test.sqlite';
-    db.sequelize = new Sequelize(db.config);
-    db.models = db.modelFunction(db.sequelize);
-    await db.sequelize.sync({ force: true });
-    // wait 15 sec for database stuff to be ready (sync, etc.)
-    await new Promise((resolve) => setTimeout(resolve, 30000));
+    await new Promise((resolve) => setTimeout(resolve, 3000));
     console.log('Database ready');
-    const now = new Date();
-    console.log(now);
   });
   test('It should add a new module and respond with status code 200', async () => {
-    db.models = db.modelFunction(db.sequelize);
-    const tables = await db.sequelize.getQueryInterface().showAllTables();
-    console.log('Tables:', tables);
-    console.log('test executed');
-    const now = new Date();
-    console.log(now);
     // module with random id
     const newModule = {
       id: Math.floor(Math.random() * 10000000).toString(),
