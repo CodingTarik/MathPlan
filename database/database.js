@@ -25,37 +25,37 @@ const ExaminationRegulation = require(
 
 // Define database connection parameters
 // eslint-disable-next-line prefer-const
-let config /** @type {DatabaseConfig} */ = {
-  database: configFile.database.DB_DATABASE,
-  username: configFile.database.DB_USER, // Your MySQL username
-  password: configFile.database.DB_PASSWORD, // Your MySQL password
-  host: configFile.database.DB_HOST,
-  logging: configFile.dev.DEBUG ? (msg) => logger.database(msg) : false,
-  dialect: configFile.database.DB_DIALECT, // can be set to 'mysql' or 'sqlite'
-  storage: './database.sqlite' // For SQLite, define the path to the SQLite file
-};
+let config;
+if (process.env.NODE_ENV !== 'test') {
+  config /** @type {DatabaseConfig} */ = {
+    database: configFile.database.DB_DATABASE,
+    username: configFile.database.DB_USER, // Your MySQL username
+    password: configFile.database.DB_PASSWORD, // Your MySQL password
+    host: configFile.database.DB_HOST,
+    logging: configFile.dev.DEBUG ? (msg) => logger.database(msg) : false,
+    dialect: configFile.database.DB_DIALECT, // can be set to 'mysql' or 'sqlite'
+    storage: './database.sqlite' // For SQLite, define the path to the SQLite file
+  };
+} else { // use test database instead of actual one
+  config /** @type {DatabaseConfig} */ = {
+    logging: configFile.dev.DEBUG ? (msg) => logger.database(msg) : false,
+    dialect: 'sqlite',
+    storage: 'database.test.sqlite'
+  };
+}
 
 // create a sequelize object
-// variable because override should be possible e.g. for testing, overriding sequelize with a mock or custom config
-// eslint-disable-next-line prefer-const
-let sequelize = new Sequelize(config);
+const sequelize = new Sequelize(config);
 
 // Initialize models
-const modelFunction = (sequelize) => {
-  return {
-    Modul: Modul(sequelize),
-    User: User(sequelize),
-    ExaminationRegulation: ExaminationRegulation(sequelize)
-  };
+const models = {
+  Modul: Modul(sequelize),
+  User: User(sequelize),
+  ExaminationRegulation: ExaminationRegulation(sequelize)
 };
-// Initialize models
-// used for changing the models in test with second sequelize
-// eslint-disable-next-line prefer-const
-let models = modelFunction(sequelize);
 
 module.exports = {
   config,
   sequelize,
-  modelFunction,
   models
 };
