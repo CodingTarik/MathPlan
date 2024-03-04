@@ -11,6 +11,7 @@
 # Ignore build folder
 /client/build
 
+# logs
 # ignore log folder
 /log
 /logs

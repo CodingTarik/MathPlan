@@ -83,6 +83,10 @@ app.use(
   '/assets/fontawesome',
   express.static(path.join(__dirname, '/node_modules/font-awesome'))
 );
+app.use(
+  '/assets/select2',
+  express.static(path.join(__dirname, 'node_modules/select2/dist'))
+);
 
 // Set view engine
 app.set('view engine', 'ejs');
@@ -126,9 +130,9 @@ try {
 
       httpServer.listen(config.server.PORT_HTTP, () => {
         logger.info(
-          `Die Anwendung ist auf ${chalk.cyanBright(
+          `The application is available on ${chalk.cyanBright(
             `http://${config.server.HOST}:${config.server.PORT_HTTP}`
-          )} verfügbar.`
+          )}.`
         );
       });
     }
@@ -145,9 +149,9 @@ try {
       https.createServer(options, app).listen(config.server.PORT_HTTPS, () => {
         logger.info(
           chalk.green(
-            `Die Anwendung ist auf ${chalk.cyanBright(
+            `The application is available on ${chalk.cyanBright(
               `https://${config.server.HOST}:${config.server.PORT_HTTPS}`
-            )} verfügbar.`
+            )}.`
           )
         );
       });
