@@ -112,10 +112,49 @@ const getModules = (
     order: [['moduleID', 'ASC']]
   });
 };
+
+/**
+ * Finds a module with given moduleID in the database
+ * @param {string} moduleID - The module ID
+ * @returns {Promise<Model|null>} A promise that is rejected or fulfilled depending on the success of finding the module
+ */
+const getOneModule = (moduleID) => {
+  return Modul.findOne({
+    where: {
+      moduleID
+    }
+  });
+};
+
+/**
+ * Updates the module with the moduleId "searchModuleID" in the database
+ * @param {string} searchModuleID - The module ID of the module to be modified
+ * @param {string} moduleID - The new (modified) module ID
+ * @param {string} moduleName - The new (modified) module name
+ * @param {number} moduleCredits - The new (modified) number of credits for the module
+ * @param {string} moduleLanguage - The new (modified) language of the module
+ * @param {string} moduleApplicability - The new (modified) applicability of the module
+ * @returns {Promise<Array<number, number>>} A promise that is rejected or fulfilled depending on the success of updating the module
+ */
+const updateModule = (searchModuleID, moduleID, moduleName, moduleCredits, moduleLanguage, moduleApplicability) => {
+  const modul = {
+    moduleID,
+    moduleName,
+    moduleCredits,
+    moduleLanguage,
+    moduleApplicability
+  };
+  return Modul.update(modul, { where: { moduleID: searchModuleID } });
+};
 module.exports = {
+  updateModule,
+  getOneModule,
   addModul,
+  addModule: addModul,
   isModuleExists,
   deleteModulById,
+  deleteModuleById: deleteModulById,
   getAllModuls,
+  getAllModules: getAllModuls,
   getModules
 };

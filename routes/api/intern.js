@@ -10,6 +10,7 @@ router.get('/getAllModuls', dbController.getAllModulsForJSONEditor);
 router.get('/getAllModulsMin', dbController.getAllModulsMin);
 router.post('/addExamRegulation', dbController.addOrUpdateExamRegulation);
 router.post('/addModul', dbController.addModul);
+router.post('/addModule', dbController.addModul);
 router.post('/deleteModulById', dbController.deleteModulById);
 const pdfUploadController = require(
   path.join(__dirname, '../../controllers/pdfUploadController.js')

@@ -47,7 +47,7 @@ const addModul = async (req, res) => {
  * @returns {void} - Sends a response based on the success or failure of the search with status 200 in case of success and with status 500, iff an error occured while searching for a module with requested id
  */
 const getOneModule = (req, res) => {
-  db.getOneModule(req.params.id)
+  modulHelper.getOneModule(req.params.id)
     .then(data => {
       res.send(data);
     })
@@ -74,7 +74,7 @@ const updateModule = (req, res) => {
     return;
   }
 
-  db.updateModule(req.params.id, req.body.id, req.body.name, req.body.credits, req.body.language, req.body.applicability)
+  modulHelper.updateModule(req.params.id, req.body.id, req.body.name, req.body.credits, req.body.language, req.body.applicability)
     .then(data => {
       res.send(data);
     })
@@ -288,6 +288,7 @@ const getModules = (req, res) => {
 module.exports = {
   addModul,
   deleteModulById,
+  deleteModuleById: deleteModulById,
   getAllModulsForJSONEditor,
   getAllModulsMin,
   addOrUpdateExamRegulation,

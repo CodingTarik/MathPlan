@@ -3,7 +3,6 @@
 const request = require('supertest');
 const app = require('../app').app;
 const db = require('../database/database');
-const Sequelize = require('sequelize');
 const modulehelper = require('../database/modulHelper');
 
 describe('Modules API Tests', () => {
@@ -143,11 +142,11 @@ describe('Modules API Tests', () => {
     expect(response.statusCode).toBe(200);
     // Check if the module was added to the database, wait 2 sec (just to be sure on slow computers)
     await new Promise((resolve) => setTimeout(resolve, 2000));
-    expect(await moduleHelper.isModuleExists(newModule.id)).toBe(true);
-    expect(await moduleHelper.isModuleExists('ISJDSJGDJGSDIJOGSIKGD')).toBe(
+    expect(await modulehelper.isModuleExists(newModule.id)).toBe(true);
+    expect(await modulehelper.isModuleExists('ISJDSJGDJGSDIJOGSIKGD')).toBe(
       false
     );
-    expect(await moduleHelper.getAllModules()).toContainEqual(
+    expect(await modulehelper.getAllModules()).toContainEqual(
       expect.objectContaining({
         moduleID: newModule.id,
         moduleName: newModule.name,
@@ -156,7 +155,7 @@ describe('Modules API Tests', () => {
         moduleApplicability: newModule.applicability
       })
     );
-    moduleHelper.deleteModuleById(newModule.id);
+    modulehelper.deleteModuleById(newModule.id);
   });
 
   // Test 6
@@ -311,14 +310,14 @@ describe('Modules API Tests', () => {
       applicability: 'Computer Science'
     };
 
-    await moduleHelper.addModule(
+    await modulehelper.addModule(
       newModule.id,
       newModule.name,
       newModule.credits,
       newModule.language,
       newModule.applicability
     );
-    expect(await moduleHelper.isModuleExists(newModule.id)).toBe(true);
+    expect(await modulehelper.isModuleExists(newModule.id)).toBe(true);
 
     const response = await request(app).get(`/api/intern/getOneModule/${id}`);
     const returnedModule = JSON.parse(response.text);
@@ -342,14 +341,14 @@ describe('Modules API Tests', () => {
       applicability: 'Computer Science'
     };
 
-    await moduleHelper.addModule(
+    await modulehelper.addModule(
       newModule.id,
       newModule.name,
       newModule.credits,
       newModule.language,
       newModule.applicability
     );
-    expect(await moduleHelper.getAllModules()).toContainEqual(
+    expect(await modulehelper.getAllModules()).toContainEqual(
       expect.objectContaining({
         moduleID: newModule.id,
         moduleName: newModule.name,
@@ -375,15 +374,15 @@ describe('Modules API Tests', () => {
     expect(response.statusCode).toBe(200);
     // Check if the module was modified in the database, wait 2 sec (just to be sure on slow computers)
     await new Promise((resolve) => setTimeout(resolve, 2000));
-    expect(await moduleHelperisModuleExists(newModule.id)).toBe(true);
-    const tmp = await moduleHelper.getOneModule(id);
+    expect(await modulehelper.isModuleExists(newModule.id)).toBe(true);
+    const tmp = await modulehelper.getOneModule(id);
     expect(tmp.moduleID).toBe(modifiedModule.id);
     expect(tmp.moduleCredits).toBe(modifiedModule.credits);
     expect(tmp.moduleName).toBe(modifiedModule.name);
     expect(tmp.moduleApplicability).toBe(modifiedModule.applicability);
     expect(tmp.moduleLanguage).toBe(modifiedModule.language);
     // Check if the data of the old module do not longer exist in the database
-    expect(await moduleHelper.getAllModules()).not.toContainEqual(
+    expect(await modulehelper.getAllModules()).not.toContainEqual(
       expect.objectContaining({
         moduleID: newModule.id,
         moduleName: newModule.name,
