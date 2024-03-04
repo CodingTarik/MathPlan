@@ -1,19 +1,18 @@
 {
-    "plugins": [],
-    "recurseDepth": 10,
-    "source": {
-        "include": ["."],
-        "excludePattern": "(node_modules|docs|dist|build)"
-    },
-    "templates": {
-        "cleverLinks": false,
-        "monospaceLinks": false
-    },
-    "opts": {
-      "destination": "./docs/",
-        "encoding": "utf8",
-        "private": true,
-        "recurse": true
-
-    }
+  "plugins": [],
+  "recurseDepth": 10,
+  "source": {
+    "include": ["."],
+    "excludePattern": "(node_modules|docs|dist|build)"
+  },
+  "templates": {
+    "cleverLinks": false,
+    "monospaceLinks": false
+  },
+  "opts": {
+    "destination": "./docs/",
+    "encoding": "utf8",
+    "private": true,
+    "recurse": true
+  }
 }

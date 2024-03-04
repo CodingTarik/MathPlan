@@ -2,10 +2,17 @@
 
 const path = require('path');
 const fs = require('fs');
-const readAndFilterData = require(path.join(__dirname, '../utils/moduleDescriptionParser.js'));
+const readAndFilterData = require(
+  path.join(__dirname, '../utils/moduleDescriptionParser.js')
+);
 
 async function prepareData() {
-  const dataBuffer = fs.readFileSync(path.join(__dirname, 'resources/ModulhandbuchPO2018_neu_und_schn_Stand_15_Dez_21.pdf'));
+  const dataBuffer = fs.readFileSync(
+    path.join(
+      __dirname,
+      'resources/ModulhandbuchPO2018_neu_und_schn_Stand_15_Dez_21.pdf'
+    )
+  );
   return await readAndFilterData(dataBuffer, 'Modulbeschreibung');
 }
 
@@ -26,7 +33,9 @@ test('ist die Modulstruktur korrekt aufgebaut', async () => {
     expect(modules[i]).toHaveProperty('moduleLanguage');
     expect(modules[i]).toHaveProperty('moduleApplicability');
 
-    for (const property in modules[i]) { expect(typeof modules[i][property]).toBe('string'); }
+    for (const property in modules[i]) {
+      expect(typeof modules[i][property]).toBe('string');
+    }
   }
 });
 

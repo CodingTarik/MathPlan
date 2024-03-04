@@ -66,7 +66,7 @@ test('POST /api/intern/addModul: It should add a new module and respond with sta
 
   expect(response.statusCode).toBe(200);
   // Check if the module was added to the database, wait 3 sec
-  await new Promise(resolve => setTimeout(resolve, 2000));
+  await new Promise((resolve) => setTimeout(resolve, 2000));
   expect(await db.isModuleExists(newModule.id)).toBe(true);
   expect(await db.isModuleExists('ISJDSJGDJGSDIJOGSIKGD')).toBe(false);
   expect(await db.getAllModules()).toContainEqual(
@@ -94,14 +94,22 @@ test('GET /api/intern/getModules/:id/:name/:credits/:language/:applicability: It
     moduleLanguage: 'English',
     moduleApplicability: 'B.Sc. Mathematik'
   };
-  await db.addModul(newModule.moduleID, newModule.moduleName, newModule.moduleCredits, newModule.moduleLanguage, newModule.moduleApplicability);
-  let response = await request(app)
-    .get(`/api/intern/getModules/${newModule.moduleID}/${newModule.moduleName}/${newModule.moduleCredits}/${newModule.moduleLanguage}/${newModule.moduleApplicability}`);
+  await db.addModul(
+    newModule.moduleID,
+    newModule.moduleName,
+    newModule.moduleCredits,
+    newModule.moduleLanguage,
+    newModule.moduleApplicability
+  );
+  let response = await request(app).get(
+    `/api/intern/getModules/${newModule.moduleID}/${newModule.moduleName}/${newModule.moduleCredits}/${newModule.moduleLanguage}/${newModule.moduleApplicability}`
+  );
   expect(response.statusCode).toBe(200);
   expect(response.body.length).toBe(1);
   expect(response.body).toContainEqual(expect.objectContaining(newModule));
-  response = await request(app)
-    .get(`/api/intern/getModules/${newModule.moduleID}/${'undefined'}/${'undefined'}/${'undefined'}/${'undefined'}`);
+  response = await request(app).get(
+    `/api/intern/getModules/${newModule.moduleID}/${'undefined'}/${'undefined'}/${'undefined'}/${'undefined'}`
+  );
   expect(response.statusCode).toBe(200);
   expect(response.body.length).toBe(1);
   expect(response.body).toContainEqual(expect.objectContaining(newModule));
@@ -119,12 +127,21 @@ test('GET /api/intern/getModules/:id/:name/:credits/:language/:applicability: It
       moduleApplicability: 'B.Sc. Mathematik'
     };
     newModules[parseInt(i)] = newModule;
-    await db.addModul(newModule.moduleID, newModule.moduleName, newModule.moduleCredits, newModule.moduleLanguage, newModule.moduleApplicability);
+    await db.addModul(
+      newModule.moduleID,
+      newModule.moduleName,
+      newModule.moduleCredits,
+      newModule.moduleLanguage,
+      newModule.moduleApplicability
+    );
   }
-  const response = await request(app)
-    .get(`/api/intern/getModules/${'undefined'}/${newModules[0].moduleName}/${newModules[0].moduleCredits}/${newModules[0].moduleLanguage}/${newModules[0].moduleApplicability}`);
+  const response = await request(app).get(
+    `/api/intern/getModules/${'undefined'}/${newModules[0].moduleName}/${newModules[0].moduleCredits}/${newModules[0].moduleLanguage}/${newModules[0].moduleApplicability}`
+  );
   expect(response.statusCode).toBe(400);
-  expect(response.text).toBe('The search request yielded more than 50 requests');
+  expect(response.text).toBe(
+    'The search request yielded more than 50 requests'
+  );
   for (let i = 0; i < 51; i++) {
     db.deleteModulById(newModules[parseInt(i)].moduleID);
   }
@@ -138,8 +155,9 @@ test('GET /api/intern/getModules/:id/:name/:credits/:language/:applicability: It
     moduleLanguage: 'English',
     moduleApplicability: 'B.Sc. Mathematik'
   };
-  const response = await request(app)
-    .get(`/api/intern/getModules/${newModule.moduleID}/${newModule.moduleName}/${newModule.moduleCredits}/${newModule.moduleLanguage}/${newModule.moduleApplicability}`);
+  const response = await request(app).get(
+    `/api/intern/getModules/${newModule.moduleID}/${newModule.moduleName}/${newModule.moduleCredits}/${newModule.moduleLanguage}/${newModule.moduleApplicability}`
+  );
   expect(response.statusCode).toBe(200);
   expect(response.body.length).toBe(0);
 });
@@ -166,11 +184,30 @@ test('GET /api/intern/getModules/:id/:name/:credits/:language/:applicability: It
     moduleLanguage: 'English, Deutsch',
     moduleApplicability: 'B.Sc. Mathematik'
   };
-  await db.addModul(newModule1.moduleID, newModule1.moduleName, newModule1.moduleCredits, newModule1.moduleLanguage, newModule1.moduleApplicability);
-  await db.addModul(newModule2.moduleID, newModule2.moduleName, newModule2.moduleCredits, newModule2.moduleLanguage, newModule2.moduleApplicability);
-  await db.addModul(newModule3.moduleID, newModule3.moduleName, newModule3.moduleCredits, newModule3.moduleLanguage, newModule3.moduleApplicability);
-  const response = await request(app)
-    .get(`/api/intern/getModules/${newModule1.moduleID}/${newModule1.moduleName}/${newModule1.moduleCredits}/${newModule1.moduleLanguage}/${newModule1.moduleApplicability}`);
+  await db.addModul(
+    newModule1.moduleID,
+    newModule1.moduleName,
+    newModule1.moduleCredits,
+    newModule1.moduleLanguage,
+    newModule1.moduleApplicability
+  );
+  await db.addModul(
+    newModule2.moduleID,
+    newModule2.moduleName,
+    newModule2.moduleCredits,
+    newModule2.moduleLanguage,
+    newModule2.moduleApplicability
+  );
+  await db.addModul(
+    newModule3.moduleID,
+    newModule3.moduleName,
+    newModule3.moduleCredits,
+    newModule3.moduleLanguage,
+    newModule3.moduleApplicability
+  );
+  const response = await request(app).get(
+    `/api/intern/getModules/${newModule1.moduleID}/${newModule1.moduleName}/${newModule1.moduleCredits}/${newModule1.moduleLanguage}/${newModule1.moduleApplicability}`
+  );
   expect(response.statusCode).toBe(200);
   // should not be 3 since moduleLanguage has to match exactly
   expect(response.body.length).toBe(2);

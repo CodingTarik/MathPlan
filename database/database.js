@@ -2,6 +2,7 @@ const path = require('path');
 // Config
 const configFile = require(path.join(__dirname, '../config.js'));
 const Sequelize = require('sequelize');
+const { Op } = require('sequelize');
 
 /**
  * Database connection configuration
@@ -86,7 +87,13 @@ const setModul = (newModul) => {
  * @param {string} moduleApplicability - The applicability of the module
  * @returns {Promise} A promise that is rejected or fulfilled depending on the success of adding the module
  */
-const addModul = (moduleID, moduleName, moduleCredits, moduleLanguage, moduleApplicability) => {
+const addModul = (
+  moduleID,
+  moduleName,
+  moduleCredits,
+  moduleLanguage,
+  moduleApplicability
+) => {
   const modul = {
     moduleID,
     moduleName,
@@ -155,13 +162,19 @@ const getAllModules = () => {
  * @returns {Promise<{count: number; rows: Object[];}>} A promise that is rejected or fulfilled depending on the success of getting the module(s). If
  * it is fulfilled it returns the number of matching modules and the modules themselves.
  */
-const getModules = (moduleID, moduleName, moduleCredits, moduleLanguage, moduleApplicability) => {
+const getModules = (
+  moduleID,
+  moduleName,
+  moduleCredits,
+  moduleLanguage,
+  moduleApplicability
+) => {
   const parameters = {};
-  if (!(moduleID === 'undefined')) parameters.moduleID = { [Sequelize.Op.like]: `%${moduleID}%` };
-  if (!(moduleName === 'undefined')) parameters.moduleName = { [Sequelize.Op.like]: `%${moduleName}%` };
-  if (!(moduleCredits === 'undefined')) parameters.moduleCredits = moduleCredits;
-  if (!(moduleLanguage === 'undefined')) parameters.moduleLanguage = moduleLanguage;
-  if (!(moduleApplicability === 'undefined')) parameters.moduleApplicability = moduleApplicability;
+  if (!(moduleID === 'undefined')) { parameters.moduleID = { [Sequelize.Op.like]: `%${moduleID}%` }; }
+  if (!(moduleName === 'undefined')) { parameters.moduleName = { [Sequelize.Op.like]: `%${moduleName}%` }; }
+  if (!(moduleCredits === 'undefined')) { parameters.moduleCredits = moduleCredits; }
+  if (!(moduleLanguage === 'undefined')) { parameters.moduleLanguage = moduleLanguage; }
+  if (!(moduleApplicability === 'undefined')) { parameters.moduleApplicability = moduleApplicability; }
   console.log(parameters);
   return Modul.findAndCountAll({
     where: parameters,
@@ -171,35 +184,29 @@ const getModules = (moduleID, moduleName, moduleCredits, moduleLanguage, moduleA
 };
 
 const getIncompleteModules = () => {
-  console.log("testing getting incomplete modules...")
-  //TODO comments
-  const parameters = {/*
-    $or: [
+  console.log('testing getting incomplete modules...');
+  // TODO comments
+  const parameters = {
+    [Op.or]: [
       {
         moduleName: null
-      }, 
+      },
       {
         moduleCredits: null
-      }, 
+      },
       {
         moduleLanguage: null
-      }, 
+      },
       {
         moduleApplicability: null
-      }, 
-    ]*/
+      }
+    ]
   };
   return Modul.findAll({
-    where: //parameters,
-    {
-      moduleName: null,
-      //moduleCredits: null,
-      //moduleLanguage: null,
-      //moduleApplicability: null
-    }
-    //order: [['moduleID', 'ASC']]
-  })
-}
+    where: parameters,
+    order: [['moduleID', 'ASC']]
+  });
+};
 
 module.exports = {
   config,

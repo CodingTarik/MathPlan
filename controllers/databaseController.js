@@ -14,14 +14,19 @@ const addModul = (req, res) => {
     });
     return;
   }
-  db.addModul(req.body.id, req.body.name, req.body.credits, req.body.language, req.body.applicability)
-    .then(data => {
+  db.addModul(
+    req.body.id,
+    req.body.name,
+    req.body.credits,
+    req.body.language,
+    req.body.applicability
+  )
+    .then((data) => {
       res.send(data);
     })
-    .catch(err => {
+    .catch((err) => {
       res.status(500).send({
-        message:
-            err.message || 'Error adding module!'
+        message: err.message || 'Error adding module!'
       });
     });
 };
@@ -44,7 +49,7 @@ const deleteModulById = (req, res) => {
   }
 
   db.deleteModulById(moduleId)
-    .then(deleted => {
+    .then((deleted) => {
       if (deleted) {
         res.send({
           message: 'Module was deleted successfully.'
@@ -55,7 +60,7 @@ const deleteModulById = (req, res) => {
         });
       }
     })
-    .catch(err => {
+    .catch((err) => {
       res.status(500).send({
         message: err.message || 'Error deleting module!'
       });
@@ -69,20 +74,25 @@ const deleteModulById = (req, res) => {
  * @param {Object} res
  */
 const getModules = (req, res) => {
-  db.getModules(req.params.id, req.params.name, req.params.credits, req.params.language, req.params.applicability)
-    .then(data => {
+  db.getModules(
+    req.params.id,
+    req.params.name,
+    req.params.credits,
+    req.params.language,
+    req.params.applicability
+  )
+    .then((data) => {
       if (data.count <= 50) res.send(data.rows);
       else throw new Error('The search request yielded more than 50 requests');
     })
-    .catch(err => {
+    .catch((err) => {
       if (err.message === 'The search request yielded more than 50 requests') {
-        res.status(400).send(
-          'The search request yielded more than 50 requests'
-        );
+        res
+          .status(400)
+          .send('The search request yielded more than 50 requests');
       } else {
         res.status(500).send({
-          message:
-            err.message || 'Error getting module!'
+          message: err.message || 'Error getting module!'
         });
       }
     });
@@ -95,17 +105,16 @@ const getModules = (req, res) => {
  * @param {Object} res
  */
 const getIncompleteModules = (req, res) => {
-  //TODO comments
+  // TODO comments
   db.getIncompleteModules()
-    .then(data => {
-      res.send(data.rows);
+    .then((data) => {
+      res.send(data);
     })
-    .catch(err => {
-        res.status(500).send({
-          message:
-            err.message || 'Error getting module!'
+    .catch((err) => {
+      res.status(500).send({
+        message: err.message || 'Error getting module!'
+      });
     });
-  });
 };
 
 module.exports = {

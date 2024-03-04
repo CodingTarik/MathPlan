@@ -45,7 +45,7 @@ function isAddButtonDisabled(values: string[]) {
  * 
  * @returns the UI for manually inserting modules into the database and searching for certain modules
  */
-export default function AddModuleFields() {
+export default function ModuleManagementPage() {
   const [addModuleParameters, setAddModuleParameters] = React.useState(Array(5).fill(""));
   const  [rowsFound, setRowsFound] = React.useState(Array(0).fill({moduleID: "", moduleName: "", moduleCredits: NaN, moduleLanguage: "", moduleApplicability: ""}));
 
@@ -55,7 +55,7 @@ export default function AddModuleFields() {
     setAddModuleParameters(nextModule);
    };
 
-  // if the search button is clicked the empty fields are set to undefinded and then getModules is called
+  // if the search button is clicked, the empty fields are set to undefinded and then getModules is called
   const handleSearchClick = (values: string[]) => {
     const values_copy = Array(5).fill("")
     for (let i = 0; i < 5; i++) {
@@ -80,6 +80,7 @@ export default function AddModuleFields() {
       });
   }
 
+  // if the incomplete module search button is clicked, the database is searched for modules with incomplete information
   const handleIncompleteSearchClick = () => {
     ModuleServices.getIncompleteModules()
     .then((response: { data: { moduleID: string; moduleName: string; moduleCredits: number; moduleLanguage: string; moduleApplicability: string; createdAt: object; id: object, updatedAt: object}[]; }) => { 
@@ -87,15 +88,9 @@ export default function AddModuleFields() {
       console.log(response.data);
       setRowsFound(response.data);
     })
-    .catch((e: AxiosError) => { 
-      /*if (e.response?.data == 'The search request yielded more than 50 requests') {
-        console.log('The search request yielded more than 50 requests')
-        setRowsFound(Array(0).fill({moduleID: "", moduleName: "", moduleCredits: NaN, moduleLanguage: "", moduleApplicability: ""}))
-      }
-      else {*/
+    .catch((e: AxiosError) => {
         console.log("Error while getting module");
         console.log(e);
-      //}
     });
   }
 
@@ -173,7 +168,9 @@ export default function AddModuleFields() {
             {/* If the search button is clicked and rowsFound is not empty the rows are displayed and the fields where one can add a module set if a module is clicked on */}
             {rowsFound.map((row) => (
               <tr key={row.moduleID} onClick = {() => {
-                setAddModuleParameters([row.moduleID, row.moduleName, row.moduleCredits, row.moduleLanguage, row.moduleApplicability]);}} >
+                setAddModuleParameters([row.moduleID, row.moduleName, row.moduleCredits, row.moduleLanguage, row.moduleApplicability]
+                .map((s) => s === null? "" : s)) // if module is incomplete, some values are null
+                }} >
                 <td>{row.moduleID}</td>
                 <td>{row.moduleName}</td>
                 <td>{row.moduleCredits}</td>
