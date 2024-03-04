@@ -17,7 +17,7 @@ const http = axios.create({
  * @returns a promise that is rejected or fulfilled depending on the success of adding the module
  */
 const create = (data : object) => {
-  const x = http.post("/addModule", data);
+  const x = http.post("/addModul", data);
   return x;
 };
 

@@ -150,11 +150,8 @@ module.exports = {
   updateModule,
   getOneModule,
   addModul,
-  addModule: addModul,
   isModuleExists,
   deleteModulById,
-  deleteModuleById: deleteModulById,
   getAllModuls,
-  getAllModules: getAllModuls,
   getModules
 };

@@ -2,23 +2,27 @@ const express = require('express');
 const router = express.Router();
 const path = require('path');
 
+// for modules and exam regulations
 const dbController = require(
   path.join(__dirname, '../../controllers/databaseController.js')
 );
 
-router.get('/getAllModuls', dbController.getAllModulsForJSONEditor);
-router.get('/getAllModulsMin', dbController.getAllModulsMin);
-router.post('/addExamRegulation', dbController.addOrUpdateExamRegulation);
-router.post('/addModul', dbController.addModul);
-router.post('/addModule', dbController.addModul);
-router.post('/deleteModulById', dbController.deleteModulById);
+// for pdf parser
 const pdfUploadController = require(
   path.join(__dirname, '../../controllers/pdfUploadController.js')
 );
+
+// for exam regulations
+router.get('/getAllModuls', dbController.getAllModulsForJSONEditor);
+router.get('/getAllModulsMin', dbController.getAllModulsMin);
+router.post('/addExamRegulation', dbController.addOrUpdateExamRegulation);
+// for modules
+router.post('/addModul', dbController.addModul);
+router.post('/deleteModulById', dbController.deleteModulById);
+router.get('/getModules/:id/:name/:credits/:language/:applicability', dbController.getModules);
 router.get('/getOneModule/:id', dbController.getOneModule);
 router.put('/updateModule/:id', dbController.updateModule);
-router.post('/deleteModuleById', dbController.deleteModuleById);
+// for pdf parser
 router.post('/uploadPDFtoServer', pdfUploadController.uploadPDF);
-router.get('/getModules/:id/:name/:credits/:language/:applicability', dbController.getModules);
 
 module.exports = router;

@@ -4,6 +4,7 @@ const db = require('../database/database');
 const dbhelper = require('../database/examRegulationHelper');
 
 describe('ExamRegulation API Tests', () => {
+  // Setup
   beforeAll(async () => {
     await db.sequelize.sync();
     // wait 3 sec

@@ -288,7 +288,6 @@ const getModules = (req, res) => {
 module.exports = {
   addModul,
   deleteModulById,
-  deleteModuleById: deleteModulById,
   getAllModulsForJSONEditor,
   getAllModulsMin,
   addOrUpdateExamRegulation,

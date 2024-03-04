@@ -14,51 +14,7 @@ describe('Modules API Tests', () => {
     console.log('Database ready');
   });
 
-  // Teardown
-  afterAll(() => {
-    db.sequelize.close();
-  });
-
   // Test 1
-  test('It should add a new module and respond with status code 200', async () => {
-    // module with random id
-    const newModule = {
-      id: Math.floor(Math.random() * 10000000).toString(),
-      name: 'Test Module',
-      credits: 3,
-      language: 'English',
-      applicability: 'Computer Science'
-    };
-
-    const response = await request(app)
-      .post('/api/intern/addModul')
-      .send(newModule);
-
-    expect(response.statusCode).toBe(200);
-    // Check if the module was added to the database, wait 3 sec
-    await new Promise((resolve) => setTimeout(resolve, 2000));
-    expect(await modulehelper.isModuleExists(newModule.id)).toBe(true);
-    expect(await modulehelper.isModuleExists('ISJDSJGDJGSDIJOGSIKGD')).toBe(
-      false
-    );
-    expect(await modulehelper.getAllModuls()).toContainEqual(
-      expect.objectContaining({
-        moduleID: newModule.id,
-        moduleName: newModule.name,
-        moduleCredits: newModule.credits,
-        moduleLanguage: newModule.language,
-        moduleApplicability: newModule.applicability
-      })
-    );
-  });
-
-  // Test 2
-  test('It should respond with a 400 status if data is not provided', async () => {
-    const response = await request(app).post('/api/intern/addModul');
-    expect(response.statusCode).toBe(400);
-  });
-
-  // Test 3
   test('POST /api/intern/addModul: It should add a new module and respond with status code 200', async () => {
     // module with random id
     const newModule = {
@@ -92,11 +48,13 @@ describe('Modules API Tests', () => {
     modulehelper.deleteModulById(newModule.id);
   });
 
+  // Test 2
   test('POST /api/intern/addModul: It should respond with a 400 status if data is not provided', async () => {
     const response = await request(app).post('/api/intern/addModul');
     expect(response.statusCode).toBe(400);
   });
 
+  // Test 3
   test('GET /api/intern/getAllModulsMin: It should return all modules with minimal information parsed for json editor', async () => {
     const newModule = {
       moduleID: Math.floor(Math.random() * 10000000).toString(),
@@ -129,7 +87,7 @@ describe('Modules API Tests', () => {
     modulehelper.deleteModulById(newModule.moduleID);
   });
 
-  // Test 6
+  // Test 4
   test('GET /api/intern/getModules/:id/:name/:credits/:language/:applicability: It should return the one matching module', async () => {
     const newModule = {
       moduleID: Math.floor(Math.random() * 10000000).toString(),
@@ -160,7 +118,7 @@ describe('Modules API Tests', () => {
     modulehelper.deleteModulById(newModule.moduleID);
   });
 
-  // Test 7
+  // Test 5
   test('GET /api/intern/getModules/:id/:name/:credits/:language/:applicability: It should respond with a 400 status if more than 50 modules match the request', async () => {
     const newModules = new Array(51);
     for (let i = 0; i < 51; i++) {
@@ -192,7 +150,7 @@ describe('Modules API Tests', () => {
     }
   });
 
-  // Test 8
+  // Test 6
   test('GET /api/intern/getModules/:id/:name/:credits/:language/:applicability: It should respond with an empty array if no module matches the get request', async () => {
     const newModule = {
       moduleID: Math.floor(Math.random() * 10000000).toString(),
@@ -208,7 +166,7 @@ describe('Modules API Tests', () => {
     expect(response.body.length).toBe(0);
   });
 
-  // Test 9
+  // Test 7
   test('GET /api/intern/getModules/:id/:name/:credits/:language/:applicability: It should return all modules that contain the moduleID and moduleName (does not have to match exactly)', async () => {
     const newModule1 = {
       moduleID: Math.floor(Math.random() * 10000000).toString(),
@@ -261,7 +219,6 @@ describe('Modules API Tests', () => {
     // should be ordered by moduleID
     expect(response.body[0].moduleID).toBe(newModule1.moduleID);
     expect(response.body[1].moduleID).toBe(newModule2.moduleID);
-    console.log(response.body);
     expect(response.body).toContainEqual(expect.objectContaining(newModule1));
     expect(response.body).toContainEqual(expect.objectContaining(newModule2));
     modulehelper.deleteModulById(newModule1.moduleID);
@@ -269,7 +226,7 @@ describe('Modules API Tests', () => {
     modulehelper.deleteModulById(newModule3.moduleID);
   });
 
-  // Test 10
+  // Test 8
   test('GET /api/intern/getOneModule/:id: It should return an existing module and respond with status code 200', async () => {
     // add module with random id
     const id = Math.floor(Math.random() * 10000000).toString();
@@ -281,7 +238,7 @@ describe('Modules API Tests', () => {
       applicability: 'Computer Science'
     };
 
-    await modulehelper.addModule(
+    await modulehelper.addModul(
       newModule.id,
       newModule.name,
       newModule.credits,
@@ -298,9 +255,10 @@ describe('Modules API Tests', () => {
     expect(returnedModule.moduleName).toBe(newModule.name);
     expect(returnedModule.moduleApplicability).toBe(newModule.applicability);
     expect(returnedModule.moduleLanguage).toBe(newModule.language);
+    modulehelper.deleteModulById(newModule.id);
   });
 
-  // Test 11
+  // Test 9
   test('PUT /api/intern/updateModule/:id: It should modify an existing module and respond with status code 200', async () => {
     // add module with random id
     const id = Math.floor(Math.random() * 10000000).toString();
@@ -312,14 +270,14 @@ describe('Modules API Tests', () => {
       applicability: 'Computer Science'
     };
 
-    await modulehelper.addModule(
+    await modulehelper.addModul(
       newModule.id,
       newModule.name,
       newModule.credits,
       newModule.language,
       newModule.applicability
     );
-    expect(await modulehelper.getAllModules()).toContainEqual(
+    expect(await modulehelper.getAllModuls()).toContainEqual(
       expect.objectContaining({
         moduleID: newModule.id,
         moduleName: newModule.name,
@@ -353,7 +311,7 @@ describe('Modules API Tests', () => {
     expect(tmp.moduleApplicability).toBe(modifiedModule.applicability);
     expect(tmp.moduleLanguage).toBe(modifiedModule.language);
     // Check if the data of the old module do not longer exist in the database
-    expect(await modulehelper.getAllModules()).not.toContainEqual(
+    expect(await modulehelper.getAllModuls()).not.toContainEqual(
       expect.objectContaining({
         moduleID: newModule.id,
         moduleName: newModule.name,
@@ -362,9 +320,10 @@ describe('Modules API Tests', () => {
         moduleApplicability: newModule.applicability
       })
     );
+    modulehelper.deleteModulById(modifiedModule.id);
   });
 
-  // Test 12
+  // Test 10
   test('PUT /api/intern/updateModule/:id: It should respond with a 400 status if data is not provided', async () => {
     const id = Math.floor(Math.random() * 10000000).toString();
     const response = await request(app).put(`/api/intern/updateModule/${id}`);
