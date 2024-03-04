@@ -53,7 +53,18 @@ const modelFunction = (sequelize) => {
 // eslint-disable-next-line prefer-const
 let models = modelFunction(sequelize);
 
+/**
+ * Modul and Sequelize setter
+ * @param {Object} newModul
+ * @param {Object} newSequelize
+ */
+const setModulAndSequelize = (newModul, newSequelize) => {
+  Modul = newModul;
+  sequelize = newSequelize;
+};
+
 module.exports = {
+  setModulAndSequelize,
   config,
   sequelize,
   modelFunction,

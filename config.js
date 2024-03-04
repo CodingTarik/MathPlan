@@ -72,13 +72,29 @@ config.web = {};
 // Set the default language for the web, defaulting to 'de' if not provided
 config.web.DEFAULT_LANGUAGE = process.env.DEFAULT_LANGUAGE || 'de';
 
+// the faq url the website will redirect if faq_url_activate is active
+config.web.FAQ_URL = process.env.FAQ_URL || 'www.example.org';
+// page name
+config.web.PAGE_NAME = process.env.PAGE_NAME || 'Materno';
+// support email for footer
+config.web.SUPPORT_EMAIL = process.env.SUPPORT_EMAIL || 'example@example.com';
+// defined if faq item in menu banner is activate redirects to faq_url
+config.web.FAQ_URL_ACTIVE = testBool(process.env.FAQ_URL_ACTIVE);
+// Defines if faq on startpage is active
+config.web.FAQ_STARTPAGE_ACTIVE = testBool(process.env.FAQ_STARTPAGE_ACTIVE);
+// imprint url for redirect
+config.web.IMPRINT_URL = process.env.IMPRINT_URL || 'https://example.com';
+// privacy policy url for redirect
+config.web.PRIVACY_POLICY_URL = process.env.PRIVACY_POLICY_URL || 'https://example.com';
+// social media links for footer
+config.web.SOCIAL_MEDIA_ACTIVE = testBool(process.env.SOCIAL_MEDIA_ACTIVE);
+// social media links
+config.web.FACEBOOK_URL = process.env.FACEBOOK_URL || 'https://www.facebook.com/';
+config.web.TWITTER_URL = process.env.TWITTER_URL || 'https://twitter.com/';
+config.web.INSTAGRAM_URL = process.env.INSTAGRAM_URL || 'https://www.instagram.com/';
 // Initialize an empty dev configuration object
 config.dev = {};
 config.dev.DEBUG = testBool(process.env.DEBUG) || false;
-
-// Initalize data configuration object
-config.data = {};
-config.data.imprinturl = process.env.IMPRINT_URL || 'https://example.com';
 
 /**
  * For more information on the security headers, see:
@@ -115,7 +131,7 @@ const securityHeaderConfig = {
       // Added inlinescript hash for Cross-Site-Policy
       'script-src': [
         "'self'",
-        "'sha256-GC6sqCnhg9h2PIYTnsmfFvS16ZCgwoa54eMaC8jr/Zw='"
+        "'sha256-IDUqR6tWhL1G3sb2OcqoFkgpOOaNXEb5Ey7yfuaH8xU='"
       ],
       'default-src': ["'self'"],
       'form-action': ["'self'"],
