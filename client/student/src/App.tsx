@@ -1,8 +1,8 @@
 // Importing necessary dependencies and styles
 import './App.css';
 import { HashRouter, Route, Routes} from 'react-router-dom';
-import Overview from './components/applicationFormOverview';
-import ApplicationForm from './components/applicationForm';
+import Overview from './components/examPlanOverview';
+import ApplicationForm from './components/examPlanForm';
 
 /**
  * JSX structure representing the entire intern application.

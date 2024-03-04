@@ -1,165 +1,396 @@
-import Select from '@mui/joy/Select';
-import Option from '@mui/joy/Option';
-import FormControl from '@mui/joy/FormControl';
-import FormLabel from '@mui/joy/FormLabel';
-import React from 'react';
-import Radio from '@mui/joy/Radio';
-import RadioGroup from '@mui/joy/RadioGroup';
-import Box from '@mui/material/Box';
-import Sheet from '@mui/joy/Sheet';
+import * as React from 'react';
 import InfoOutlined from '@mui/icons-material/InfoOutlined';
-import Typography from '@mui/joy/Typography';
-import Accordion from '@mui/joy/Accordion';
-import AccordionDetails from '@mui/joy/AccordionDetails';
-import AccordionSummary from '@mui/joy/AccordionSummary';
-import { Chip, TypographySystem } from '@mui/joy';
-import {produce} from "immer";
+import { TypographySystem, Select, Option, FormControl, FormLabel, Radio, RadioGroup, Sheet, Typography, Accordion, AccordionDetails, AccordionSummary, Table, Checkbox } from '@mui/joy';
 import objectPath from 'object-path';
+import { Button, Box } from '@mui/material';
+import {descriptions} from './descriptions.ts'
 
-/**
- * strings to be displayed for each property of an exam regulation
- */
-const descriptions = {
-  description: "",
-  minCreditPointsOverall: "Diese Anzahl an CP muss minimal erbracht werden in diesem Bereich: ",
-  maxCreditPointsOverall: "Diese Anzahl an CP muss maximal erbracht werden in diesem Bereich: ",
-  minCreditPointsPraktikum: "Die minimale Anzahl an CP, die für Praktika in diesem Bereich erbracht werden kann: ",
-  maxCreditPointsPraktikum: "Die maximale Anzahl an CP, die für Praktika in diesem Bereich erbracht werden kann: ",
-  minCreditPointsSeminar: "Diese Anzahl an CP wird minimal für Seminare in diesem Bereich benötigt: ",
-  maxCreditPointsSeminar: "Die maximale Anzahl an CP, die für Seminare in diesem Bereich erlaubt ist: ",
-  minCreditPointsVorlesung: "Diese Anzahl an CP wird minimal für Vorlesungen in diesem Bereich benötigt: ",
-  maxCreditPointsVorlesung: "Die maximale Anzahl an CP, die für Vorlesungen in diesem Bereich erlaubt ist: ",
-  minSubAreaCheck: "Die minimale Anzahl an Unterbereichen, dessen Anforderungen in diesem Bereich erfüllt werden müssen: ",
-  maxSubAreaCheck: "Die maximale Anzahl an Unterbereichen, dessen Anforderungen in diesem Bereich erfüllt werden müssen: ",
-  minSeminarsCount: "Diese Anzahl an Seminaren kann minimal in diesem Bereich erbracht werden: ",
-  minSeminarsCP: "Die minimale Anzahl an CP, die für Seminare in diesem Bereich erbracht werden kann: ",
-  maxSeminarsCP: "Die maximale Anzahl an CP, die für Seminare in diesem Bereich erbracht werden kann: ",
-  maxSeminarsCount: "Diese Anzahl an Seminaren kann maximal in diesem Bereich erbracht werden: ",
-  minPraktikumCount: "Diese Anzahl an Praktika kann minimal in diesem Bereich erbracht werden: ",
-  maxPraktikumCount: "Diese Anzahl an Praktika kann maximal in diesem Bereich erbracht werden: ",
-  minVorlesungCount: "Diese Anzahl an Vorlesungen kann minimal in diesem Bereich erbracht werden: ",
-  maxVorlesungCount: "Diese Anzahl an Vorlesungen kann maximal in diesem Bereich erbracht werden: ",
-  minModuleCount: "Diese Anzahl an Modulen müssen in diesem Bereich erbracht werden: "
-}
 type DescriptionsKey = keyof typeof descriptions;
-type Modul =  {
-  moduleID: string,
-  moduleName: string,
-  moduleCredits: string,
-  moduleLanguage: string,
-  moduleApplicability: string
-}
+type Modul = {
+  moduleID: string;
+  moduleName: string;
+  moduleCredits: string;
+  moduleLanguage: string;
+  moduleApplicability: string;
+};
 type ModulWrapper = {
-  name: Modul,
-  moduleID: string,
-  creditPoints: number,
-  pflicht: boolean,
-  nichtwählbarmitmodul: Array<object>
+  name: Modul;
+  moduleID: string;
+  creditPoints: number;
+  pflicht: boolean;
+  nichtwählbarmitmodul: Array<object>;
+};
+
+function descendingComparator(a: ModulWrapper, b: ModulWrapper) {
+  if (b['name']['moduleName'] < a['name']['moduleName']) {
+    return -1;
+  }
+  if (b['name']['moduleName'] > a['name']['moduleName']) {
+    return 1;
+  }
+  return 0;
 }
- 
+
+function stableSort(
+  array: readonly ModulWrapper[],
+  comparator: (a: ModulWrapper, b: ModulWrapper) => number
+) {
+  const stabilizedThis = array.map(
+    (el, index) => [el, index] as [ModulWrapper, number]
+  );
+  stabilizedThis.sort((a, b) => {
+    const order = comparator(a[0], b[0]);
+    if (order !== 0) {
+      return order;
+    }
+    return a[1] - b[1];
+  });
+  return stabilizedThis.map((el) => el[0]);
+}
+
+const headCells: readonly string[] = ['Name', 'Nummer', 'CP', 'Sprache'];
+
+function TableHead() {
+  return (
+    <thead>
+      <tr>
+        <th></th>
+        {headCells.map((headCell) => {
+          return <th>{headCell}</th>;
+        })}
+      </tr>
+    </thead>
+  );
+}
+
+function TableToolbar({
+  numSelected,
+  selected
+}: {
+  numSelected: number;
+  selected: readonly ModulWrapper[];
+}) {
+  return (
+    <Box
+      sx={{
+        display: 'flex',
+        alignItems: 'flex-start',
+        py: 1,
+        pl: { sm: 2 },
+        pr: { xs: 1, sm: 1 },
+        ...(numSelected > 0 && {
+          bgcolor: 'background.level1'
+        })
+      }}
+    >
+      {numSelected > 0 ? (
+        <Typography sx={{ flex: '1 1 100%' }} component="div">
+          {numSelected} Modul(e) ausgewählt:{' '}
+          {selected
+            .map((x) => x['name']['moduleName'])
+            .toString()
+            .split(',')
+            .join(', ')}
+        </Typography>
+      ) : (
+        <Typography
+          level="body-lg"
+          sx={{ flex: '1 1 100%' }}
+          component="div"
+        ></Typography>
+      )}
+    </Box>
+  );
+}
+
+
+let examPlan = new Object();
 
 export default function ExamPlanForm() {
   const [examRegulation, setExamRegulation] = React.useState<{
     jsonSchema: string;
     name: string;
   }>({
-    jsonSchema: "",
-    name: ""
+    jsonSchema: '',
+    name: ''
   });
-  const [typeOfExamPlan, setTypeOfExamPlan] = React.useState<
-    string | null
-  >(null);
-  const [displayExamPlan, setDisplayExamPlan] = React.useState(false); 
-  const [examPlan, setExamPlan] = React.useState<object>({});
+  const [typeOfExamPlan, setTypeOfExamPlan] = React.useState<string | null>(
+    null
+  );
+  const [displayExamPlan, setDisplayExamPlan] = React.useState(false);
+
   const examRegulationNames = [
     'B.Sc. Mathematik 2018',
-    'M.Sc. Mathematik 2015',
+    'M.Sc. Mathematik 2015'
   ];
 
-
-/**
- * 
- * @param param0 
- * @returns ui for the exam plsn
- */
-function Item( {entry, nestedKeys, level}:{entry: Array<string | unknown>, nestedKeys: string, level:number} ) {
-  const [index, setIndex] = React.useState<number | null>(0);
-  const levels = ["h1", "h2", "h3", "h4", "title-lg"] 
-  const key =  entry[0] as string
-  const value = entry[1]
-  if (nestedKeys){
-    nestedKeys = nestedKeys + "."
-  }
-  if (key === "area") {
-    return <Box sx={{ p: 2, border: 1, borderRadius: 2 , mt:2 }}> 
-     {Object.entries(value as object).map((newEntry) => (
-     <Item entry = {newEntry} nestedKeys={nestedKeys+key} level = {level+1}/>))}
-     </Box>
-  }
-  else if (key === "subarea"){
-    return <Box sx={{ border: 0, borderRadius: 2 , ml:8 }}>
-     {(value as Array<object>).map((e:object, index:number) => {let containsModules = false; let moduleEntry = new Array<string | unknown>(); return <div>{Object.entries(e).map((newEntry) => {
-      if (newEntry[0] === "module") {containsModules = true; moduleEntry = newEntry; return;}
-      else {return <Item entry = {newEntry} nestedKeys={nestedKeys+key+"."+index} level = {level+1}/>}})}
-     {containsModules && <Item entry = {moduleEntry} nestedKeys={nestedKeys+key+"."+index} level = {level+1}/>}</div>}) }
-     </Box>
-  }
-  else if (Object.keys(descriptions).includes(key)){
-    return <Typography textAlign="left" level="body-md">{descriptions[key as DescriptionsKey]}{value as string}</Typography>
-  }
-  else if (key === "name") {
-    const levelTitle = level<5? levels[level]:levels[4]
-    return <Typography textAlign="left" level = {levelTitle as keyof TypographySystem} sx= {{mb:1, mt:4}}>{value as string}</Typography>
-  }
-  else if (key === "module") {
-    nestedKeys = nestedKeys+"module"
-    return (
-         <Accordion
-           expanded={index === 0}
-           onChange={(_event, expanded) => {
-             setIndex(expanded ? 0 : null);
-           }}
-         >
-           <AccordionSummary></AccordionSummary>
-           <AccordionDetails>
-            <Select
-              multiple
-              defaultValue={[]}
-              renderValue={(selected) => (
-                <Box sx={{ display: 'flex', gap: '0.25rem' }}>
-                  {selected.map((selectedOption) => (
-                    <Chip variant="soft" color="primary">
-                      {selectedOption.label}
-                    </Chip>
-                  ))}
-                </Box>
+  /**
+   *
+   * @param param0
+   * @returns ui for the exam plsn
+   */
+  function Item({
+    entry,
+    nestedKeys,
+    level
+  }: {
+    entry: Array<string | unknown>;
+    nestedKeys: string;
+    level: number;
+  }) {
+    const levels = ['h1', 'h2', 'h3', 'h4', 'title-lg'];
+    const key = entry[0] as string;
+    const value = entry[1];
+    if (nestedKeys) {
+      nestedKeys = nestedKeys + '.';
+    }
+    if (key === 'area') {
+      return (
+        <Box sx={{ p: 4, border: 1, borderRadius: 2, mt: 2 }}>
+          <Accordion defaultExpanded={true}>
+            <AccordionSummary>
+              {Object.entries(value as object).map(
+                (newEntry) =>
+                  newEntry[0] === 'name' && (
+                    <Item
+                      entry={newEntry}
+                      nestedKeys={nestedKeys + key}
+                      level={level + 1}
+                    />
+                  )
               )}
-              sx={{
-                minWidth: '15rem',
-              }}
-              slotProps={{
-                listbox: {
-                  sx: {
-                    width: '100%',
-                  },
-                },
-              }}
-              onChange={(
-                _event: React.SyntheticEvent | null,
-                newValue: string[][]
-              )  => {
-                setExamPlan(produce(examPlan, (draft) => {if (draft) {objectPath.set(draft, nestedKeys, newValue)}}))
-              }}
-            >
-              {(value as Array<ModulWrapper>).map((e:ModulWrapper) => {return <Option value = {e.name}>{e.name.moduleID}</Option>})}
-            </Select>
-           </AccordionDetails>
-         </Accordion>
-     );
-   }
-   else  {return <div>Error loading component</div>}
- }
- 
+            </AccordionSummary>
+            <AccordionDetails>
+              {Object.entries(value as object).map(
+                (newEntry) =>
+                  newEntry[0] !== 'name' && (
+                    <Item
+                      entry={newEntry}
+                      nestedKeys={nestedKeys + key}
+                      level={level + 1}
+                    />
+                  )
+              )}
+            </AccordionDetails>
+          </Accordion>
+        </Box>
+      );
+    } else if (key === 'subarea') {
+      return (
+        <Box sx={{ border: 0.5, borderRadius: 2, ml: 8, p: 3, mt: 2, mb: 2 }}>
+          {(value as Array<object>).map((e: object, index: number) => {
+            let containsModules = false;
+            let moduleEntry = new Array<string | unknown>();
+            let containsSubarea = false;
+            let subareaEntry = new Array<string | unknown>();
+            return (
+              <div>
+                <Accordion defaultExpanded={true}>
+                  <AccordionSummary>
+                    {Object.entries(e).map(
+                      (newEntry) =>
+                        newEntry[0] === 'name' && (
+                          <Item
+                            entry={newEntry}
+                            nestedKeys={nestedKeys + key + '.' + index}
+                            level={level + 1}
+                          />
+                        )
+                    )}
+                  </AccordionSummary>
+                  <AccordionDetails>
+                    {Object.entries(e).map((newEntry) => {
+                      if (newEntry[0] === 'name') {
+                        return;
+                      } else if (newEntry[0] === 'module') {
+                        containsModules = true;
+                        moduleEntry = newEntry;
+                        return;
+                      } else if (newEntry[0] === 'subarea') {
+                        containsSubarea = true;
+                        subareaEntry = newEntry;
+                        return;
+                      } else {
+                        return (
+                          <Item
+                            entry={newEntry}
+                            nestedKeys={nestedKeys + key + '.' + index}
+                            level={level + 1}
+                          />
+                        );
+                      }
+                    })}
+                    {containsModules && (
+                      <Item
+                        entry={moduleEntry}
+                        nestedKeys={nestedKeys + key + '.' + index}
+                        level={level + 1}
+                      />
+                    )}
+                    {containsSubarea && (
+                      <Item
+                        entry={subareaEntry}
+                        nestedKeys={nestedKeys + key + '.' + index}
+                        level={level + 1}
+                      />
+                    )}
+                  </AccordionDetails>
+                </Accordion>
+              </div>
+            );
+          })}
+        </Box>
+      );
+    } else if (Object.keys(descriptions).includes(key)) {
+      return (
+        <Typography textAlign="left" level="body-md">
+          {descriptions[key as DescriptionsKey]}
+          {value as string}
+        </Typography>
+      );
+    } else if (key === 'name') {
+      const levelTitle = level < 5 ? levels[level] : levels[4];
+      return (
+        <Typography
+          textAlign="left"
+          level={levelTitle as keyof TypographySystem}
+          sx={{ mb: 1, mt: 2 }}
+        >
+          {value as string}
+        </Typography>
+      );
+    } else if (key === 'module') {
+      nestedKeys = nestedKeys + 'module';
+      const rows = value as ModulWrapper[];
+      const [selected, setSelected] = React.useState<readonly ModulWrapper[]>(
+        []
+      );
+
+      const handleClick = (
+        _event: React.MouseEvent<unknown>,
+        wrapper: ModulWrapper
+      ) => {
+        const selectedIndex = selected.indexOf(wrapper);
+        let newSelected: readonly ModulWrapper[] = [];
+
+        if (selectedIndex === -1) {
+          newSelected = newSelected.concat(selected, wrapper);
+        } else if (selectedIndex === 0) {
+          newSelected = newSelected.concat(selected.slice(1));
+        } else if (selectedIndex === selected.length - 1) {
+          newSelected = newSelected.concat(selected.slice(0, -1));
+        } else if (selectedIndex > 0) {
+          newSelected = newSelected.concat(
+            selected.slice(0, selectedIndex),
+            selected.slice(selectedIndex + 1)
+          );
+        }
+        setSelected(newSelected);
+        console.log(examPlan);
+
+        if (newSelected !== null)
+          objectPath.set(examPlan, nestedKeys, newSelected);
+      };
+
+      const isSelected = (wrapper: ModulWrapper) =>
+        selected.indexOf(wrapper) !== -1;
+
+      return (
+        <Sheet
+          variant="outlined"
+          sx={{
+            width: '100%',
+            boxShadow: 'sm',
+            borderRadius: 'sm',
+            height: '300px',
+            overflow: 'auto',
+            mt: 2,
+            mb: 2
+          }}
+        >
+          <TableToolbar numSelected={selected.length} selected={selected} />
+          <Table
+            hoverRow
+            sx={{
+              '--TableCell-headBackground': 'transparent',
+              '--TableCell-selectedBackground': (theme) =>
+                theme.vars.palette.primary.softBg,
+              '& thead th:nth-child(1)': {
+                width: '40px'
+              },
+              '& thead th:nth-child(2)': {
+                width: '40%'
+              },
+              '& thead th:nth-child(3)': {
+                width: '20%'
+              },
+              '& thead th:nth-child(4)': {
+                width: '13%'
+              },
+              '& tr > *:nth-child(n+3)': { textAlign: 'right' }
+            }}
+          >
+            <TableHead />
+            <tbody>
+              {stableSort(rows, (a, b) => -descendingComparator(a, b)).map(
+                (row) => {
+                  const isItemSelected = isSelected(row);
+                  return (
+                    <tr
+                      onClick={(event) => handleClick(event, row)}
+                      style={
+                        isItemSelected
+                          ? ({
+                              '--TableCell-dataBackground':
+                                'var(--TableCell-selectedBackground)',
+                              '--TableCell-headBackground':
+                                'var(--TableCell-selectedBackground)'
+                            } as React.CSSProperties)
+                          : {}
+                      }
+                    >
+                      <th scope="row">
+                        <Checkbox
+                          checked={isItemSelected}
+                          sx={{ verticalAlign: 'top' }}
+                        />
+                      </th>
+                      <td scope="row">
+                        {' '}
+                        <Typography level="title-sm">
+                          {row.name.moduleName}
+                        </Typography>
+                      </td>
+                      <td>{row.name.moduleID}</td>
+                      <td>{row.name.moduleCredits}</td>
+                      <td>{row.name.moduleLanguage}</td>
+                    </tr>
+                  );
+                }
+              )}
+            </tbody>
+            <tfoot>
+              <tr>
+                <td colSpan={5}>
+                  <Box
+                    sx={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: 2,
+                      justifyContent: 'flex-end'
+                    }}
+                  ></Box>
+                </td>
+              </tr>
+            </tfoot>
+          </Table>
+        </Sheet>
+      );
+    } else {
+      return <div>Error loading component</div>;
+    }
+  }
+
   const onRegulationChange = (name: string | null) => {
     if (name == null) throw Error();
     //todo: retrieve examRegulation from database
@@ -235,8 +466,7 @@ function Item( {entry, nestedKeys, level}:{entry: Array<string | unknown>, neste
                           {
                             name: {
                               moduleID: '04-00-0028',
-                              moduleName:
-                                'Introduction to Mathematical Logic',
+                              moduleName: 'Introduction to Mathematical Logic',
                               moduleCredits: 9,
                               moduleLanguage: 'Englisch',
                               moduleApplicability:
@@ -396,8 +626,7 @@ function Item( {entry, nestedKeys, level}:{entry: Array<string | unknown>, neste
                           {
                             name: {
                               moduleID: '04-10-0047/de',
-                              moduleName:
-                                'Einführung in die Finanzmathematik',
+                              moduleName: 'Einführung in die Finanzmathematik',
                               moduleCredits: 5,
                               moduleLanguage: 'Deutsch',
                               moduleApplicability:
@@ -512,8 +741,7 @@ function Item( {entry, nestedKeys, level}:{entry: Array<string | unknown>, neste
                       {
                         name: {
                           moduleID: '41-21-0922',
-                          moduleName:
-                            'English Paternoster for Mathematicians',
+                          moduleName: 'English Paternoster for Mathematicians',
                           moduleCredits: 3,
                           moduleLanguage: 'english',
                           moduleApplicability:
@@ -570,20 +798,22 @@ function Item( {entry, nestedKeys, level}:{entry: Array<string | unknown>, neste
           }
         ]
       }
-    }
+    };
     setExamRegulation({
       jsonSchema: JSON.stringify(x),
       name: 'B'
-    })
-    setExamPlan(x)
+    });
+    //setExamPlan(x);
+    examPlan = x;
+    console.log(examPlan);
     if (typeOfExamPlan !== null) {
       //todo: change somehow if nebenfach plan selected
       setDisplayExamPlan(true);
     }
     //todo: delete if relevant whether nebenfach or prüfungsplan
     setDisplayExamPlan(true);
-  }; 
- 
+  };
+
   return (
     <>
       <h1>Antrag Detailansicht</h1>
@@ -598,7 +828,6 @@ function Item( {entry, nestedKeys, level}:{entry: Array<string | unknown>, neste
               newValue: string | null
             ) => {
               onRegulationChange(newValue);
-    
             }}
           >
             {examRegulationNames.map((name) => (
@@ -622,7 +851,6 @@ function Item( {entry, nestedKeys, level}:{entry: Array<string | unknown>, neste
           orientation="horizontal"
           onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
             setTypeOfExamPlan(event.target.value)
-            
           }
         >
           {['Prüfungsplan', 'Nebenfachplan'].map((value) => (
@@ -658,10 +886,17 @@ function Item( {entry, nestedKeys, level}:{entry: Array<string | unknown>, neste
         </RadioGroup>
       </Box>
       <div>
-        {displayExamPlan && Object.entries(JSON.parse(examRegulation?.jsonSchema)).map((entry) => (
-          <Item entry = {entry}  nestedKeys={""} level={0} />
-        ))}
-        {JSON.stringify(examPlan)}
+        {displayExamPlan &&
+          Object.entries(JSON.parse(examRegulation?.jsonSchema)).map(
+            (entry) => <Item entry={entry} nestedKeys={''} level={0} />
+          )}
+        <Button
+          variant="outlined"
+          sx={{ marginTop: 2, marginBottom: 2 }}
+          onClick={() => console.log(examPlan)}
+        >
+          Submit
+        </Button>
       </div>
     </>
   );
