@@ -8,8 +8,9 @@ const modulehelper = require('../database/modulHelper');
 describe('Modules API Tests', () => {
   // Setup
   beforeAll(async () => {
-    await db.sequelize.sync({ force: true });
-    await new Promise((resolve) => setTimeout(resolve, 10000));
+    await db.sequelize.sync();
+    // wait 3 sec
+    await new Promise((resolve) => setTimeout(resolve, 3000));
     console.log('Database ready');
   });
 
@@ -91,8 +92,12 @@ describe('Modules API Tests', () => {
     modulehelper.deleteModulById(newModule.id);
   });
 
-  // Test 4
-  test('GET /api/intenr/getAllModulsMin: It should return all modules with minimal information parsed for json editor', async () => {
+  test('POST /api/intern/addModul: It should respond with a 400 status if data is not provided', async () => {
+    const response = await request(app).post('/api/intern/addModul');
+    expect(response.statusCode).toBe(400);
+  });
+
+  test('GET /api/intern/getAllModulsMin: It should return all modules with minimal information parsed for json editor', async () => {
     const newModule = {
       moduleID: Math.floor(Math.random() * 10000000).toString(),
       moduleName: 'Numerik',
@@ -122,40 +127,6 @@ describe('Modules API Tests', () => {
     }
     expect(containsNewModule).toBe(true);
     modulehelper.deleteModulById(newModule.moduleID);
-  });
-
-  // Test 5
-  test('POST /api/intern/addModule: It should add a new module and respond with status code 200', async () => {
-    // module with random id
-    const newModule = {
-      id: Math.floor(Math.random() * 10000000).toString(),
-      name: 'Test Module',
-      credits: 3,
-      language: 'English',
-      applicability: 'Computer Science'
-    };
-
-    const response = await request(app)
-      .post('/api/intern/addModule')
-      .send(newModule);
-
-    expect(response.statusCode).toBe(200);
-    // Check if the module was added to the database, wait 2 sec (just to be sure on slow computers)
-    await new Promise((resolve) => setTimeout(resolve, 2000));
-    expect(await modulehelper.isModuleExists(newModule.id)).toBe(true);
-    expect(await modulehelper.isModuleExists('ISJDSJGDJGSDIJOGSIKGD')).toBe(
-      false
-    );
-    expect(await modulehelper.getAllModules()).toContainEqual(
-      expect.objectContaining({
-        moduleID: newModule.id,
-        moduleName: newModule.name,
-        moduleCredits: newModule.credits,
-        moduleLanguage: newModule.language,
-        moduleApplicability: newModule.applicability
-      })
-    );
-    modulehelper.deleteModuleById(newModule.id);
   });
 
   // Test 6
