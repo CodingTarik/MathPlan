@@ -1,10 +1,11 @@
 import * as React from 'react';
 import InfoOutlined from '@mui/icons-material/InfoOutlined';
-import { Select, Option, FormControl, FormLabel, Radio, RadioGroup, Sheet, Typography} from '@mui/joy';
+import { Select, Option, FormControl, FormLabel, Radio, RadioGroup, Sheet, Typography, Textarea} from '@mui/joy';
 import { Button, Box } from '@mui/material';
 import {PlanForm} from './examPlan';
 import { setExamPlan, getExamPlan } from './examPlanVariable';
-
+import objectPath from 'object-path';
+import ExternalModules from './externalModules'
 
 
 export default function ExamPlanForm() {
@@ -18,7 +19,7 @@ export default function ExamPlanForm() {
   const [typeOfExamPlan, setTypeOfExamPlan] = React.useState<string | null>(
     null
   );
-  const [displayExamPlan, setDisplayExamPlan] = React.useState(false);
+  const [hasExamPlan, setHasExamPlan] = React.useState(false);
 
   const examRegulationNames = [
     'B.Sc. Mathematik/ Mathematik 2018',
@@ -470,12 +471,7 @@ export default function ExamPlanForm() {
       name: name
     });
     setExamPlan(x)
-    if (typeOfExamPlan !== null) {
-      //todo: change somehow if nebenfach plan selected
-      setDisplayExamPlan(true);
-    }
-    //todo: delete if relevant whether nebenfach or prüfungsplan
-    setDisplayExamPlan(true);
+    setHasExamPlan(true)
   };
 
   return (
@@ -549,19 +545,23 @@ export default function ExamPlanForm() {
           ))}
         </RadioGroup>
       </Box>
-      <div>
-        {displayExamPlan &&
-          Object.entries(JSON.parse(examRegulation?.jsonSchema)).map(
-            (entry) => <PlanForm entry={entry} nestedKeys={''} level={0} />
-          )}
+      {(hasExamPlan && typeOfExamPlan) && <div>
+        {Object.entries(JSON.parse(examRegulation?.jsonSchema)).map(
+            (entry) => <PlanForm entry={entry} nestedKeys={''} level={0} />)}
+        <FormControl sx={{ marginTop: 2, marginBottom: 2 }}>
+          <FormLabel>Weitere Anmerkungen zum Prüfungs- bzw. Nebenfachplan (max. 5000 Zeichen)</FormLabel>
+            <Textarea minRows={4} maxRows= {8}  onChange={(event) => {if (event.target.value.length > 5000) window.alert("Die Anmerkung ist zu lang, so kann nur ein Teil der Anmerkung gespeichert werden."); else {const examPlan = getExamPlan(); objectPath.set(examPlan, "area.notesStudent", event.target.value), setExamPlan(examPlan)}}} />
+        </FormControl>
         <Button
           variant="outlined"
           sx={{ marginTop: 2, marginBottom: 2 }}
           onClick={() => console.log(getExamPlan())}
         >
-          Save
+          Als Entwurf speichern
         </Button>
-      </div>
+        <ExternalModules></ExternalModules>
+      </div>}
+      
     </>
   );
 }
