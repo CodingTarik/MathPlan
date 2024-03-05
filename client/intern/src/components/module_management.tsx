@@ -168,9 +168,7 @@ export default function ModuleManagementPage() {
             {/* If the search button is clicked and rowsFound is not empty the rows are displayed and the fields where one can add a module set if a module is clicked on */}
             {rowsFound.map((row) => (
               <tr key={row.moduleID} onClick = {() => {
-                setAddModuleParameters([row.moduleID, row.moduleName, row.moduleCredits, row.moduleLanguage, row.moduleApplicability]
-                .map((s) => s === null? "" : s)) // if module is incomplete, some values are null
-                }} >
+                setAddModuleParameters([row.moduleID, row.moduleName, row.moduleCredits, row.moduleLanguage, row.moduleApplicability]);}} >
                 <td>{row.moduleID}</td>
                 <td>{row.moduleName}</td>
                 <td>{row.moduleCredits}</td>

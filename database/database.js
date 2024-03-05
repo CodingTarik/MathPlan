@@ -190,10 +190,10 @@ const getIncompleteModules = () => {
   console.log('testing getting incomplete modules...');
   const parameters = {
     [Op.or]: [
-      { moduleName: null },
-      { moduleCredits: null },
-      { moduleLanguage: null },
-      { moduleApplicability: null }
+      { moduleName: '' },
+      { moduleCredits: -1 },
+      { moduleLanguage: '' },
+      { moduleApplicability: '' }
     ]
   };
   return Modul.findAll({

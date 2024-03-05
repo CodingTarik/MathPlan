@@ -233,7 +233,7 @@ test('GET /api/intern/getIncompleteModules: It should return all the incomplete 
   };
   const newModule1 = {
     moduleID: Math.floor(Math.random() * 10000000).toString(),
-    moduleName: null, // TODO
+    moduleName: '',
     moduleCredits: 5,
     moduleLanguage: 'English',
     moduleApplicability: 'B.Sc. Mathematik'
@@ -241,7 +241,7 @@ test('GET /api/intern/getIncompleteModules: It should return all the incomplete 
   const newModule2 = {
     moduleID: Math.floor(Math.random() * 10000000).toString(),
     moduleName: 'Numerik',
-    moduleCredits: null, // TODO
+    moduleCredits: -1,
     moduleLanguage: 'English',
     moduleApplicability: 'B.Sc. Mathematik'
   };
@@ -249,7 +249,7 @@ test('GET /api/intern/getIncompleteModules: It should return all the incomplete 
     moduleID: Math.floor(Math.random() * 10000000).toString(),
     moduleName: 'Numerik',
     moduleCredits: 5,
-    moduleLanguage: null, // TODO
+    moduleLanguage: '',
     moduleApplicability: 'B.Sc. Mathematik'
   };
   const newModule4 = {
@@ -257,14 +257,14 @@ test('GET /api/intern/getIncompleteModules: It should return all the incomplete 
     moduleName: 'Numerik',
     moduleCredits: 5,
     moduleLanguage: 'English',
-    moduleApplicability: null // TODO
+    moduleApplicability: ''
   };
   const newModule5 = {
-    moduleID: Math.floor(Math.random() * 10000000).toString(), // TODO
-    moduleName: null,
-    moduleCredits: null,
-    moduleLanguage: null,
-    moduleApplicability: null
+    moduleID: Math.floor(Math.random() * 10000000).toString(),
+    moduleName: '',
+    moduleCredits: -1,
+    moduleLanguage: '',
+    moduleApplicability: ''
   };
   await db.addModul(
     newModule0.moduleID,
