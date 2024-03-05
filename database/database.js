@@ -54,19 +54,19 @@ let Modul /** @type {ModulModel} */ = sequelize.define('Modul', {
   },
   moduleName: {
     type: Sequelize.STRING,
-    allowNull: true
+    allowNull: true // TODO rückgängig?
   },
   moduleCredits: {
     type: Sequelize.INTEGER,
-    allowNull: true
+    allowNull: true // TODO rückgängig?
   },
   moduleLanguage: {
     type: Sequelize.STRING,
-    allowNull: true
+    allowNull: true // TODO rückgängig?
   },
   moduleApplicability: {
     type: Sequelize.STRING,
-    allowNull: true
+    allowNull: true // TODO rückgängig?
   }
 });
 
@@ -159,8 +159,7 @@ const getAllModules = () => {
  * @param {string} moduleCredits
  * @param {string} moduleLanguage
  * @param {string} moduleApplicability
- * @returns {Promise<{count: number; rows: Object[];}>} A promise that is rejected or fulfilled depending on the success of getting the module(s). If
- * it is fulfilled it returns the number of matching modules and the modules themselves.
+ * @returns {Promise<{count: number; rows: Object[];}>} A promise that is rejected or fulfilled depending on the success of getting the module(s). If it is fulfilled, it returns the number of matching modules and the modules themselves.
  */
 const getModules = (
   moduleID,
@@ -183,23 +182,18 @@ const getModules = (
   });
 };
 
+/**
+ * Gets all incomplete modules. Incomplete modules are ones that are have at least on attribute that equals 'null'. //TODO null
+ * @returns {Promise<Array<Object>>} A promise that is rejected or fulfilled depending on the success of getting the module(s). If it is fulfilled, it returns an array of all incomplete modules.
+ */
 const getIncompleteModules = () => {
   console.log('testing getting incomplete modules...');
-  // TODO comments
   const parameters = {
     [Op.or]: [
-      {
-        moduleName: null
-      },
-      {
-        moduleCredits: null
-      },
-      {
-        moduleLanguage: null
-      },
-      {
-        moduleApplicability: null
-      }
+      { moduleName: null },
+      { moduleCredits: null },
+      { moduleLanguage: null },
+      { moduleApplicability: null }
     ]
   };
   return Modul.findAll({

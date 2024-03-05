@@ -2,7 +2,7 @@ const path = require('path');
 const db = require(path.join(__dirname, '../database/database.js'));
 
 /**
- * if a request is made the addModul function of the database is called by the controller and the added module is sent back as a response
+ * If a request is made, the addModul function of the database is called by the controller and the added module is sent back as a response
  * @param {Object} req
  * @param {Object} res
  * @returns if the passed data is not sufficient as in does not contain a module id
@@ -68,7 +68,7 @@ const deleteModulById = (req, res) => {
 };
 
 /**
- * if a request is made the getModules function of the database is called by the controller and the matching module(s)
+ * if a request is made, the getModules function of the database is called by the controller and the matching module(s)
  * is sent back as a response if there are less than 50 matching modules and no other error occurs
  * @param {Object} req
  * @param {Object} res
@@ -99,13 +99,14 @@ const getModules = (req, res) => {
 };
 
 /**
- * if a request is made the getModules function of the database is called by the controller and the matching module(s)
- * is sent back as a response if there are less than 50 matching modules and no other error occurs
- * @param {Object} req
- * @param {Object} res
+ * If a request is made, the getIncompleteModules function of the database is called by the controller,
+ * and a response is sent based on the success or failure of the deletion. On success, an array of all
+ * incomplete modules is sent.
+ * @param {Object} req - The request object (not used)
+ * @param {Object} res - The response object
+ * @returns {void} - Sends a response based on the success or failure of the findAll-function
  */
 const getIncompleteModules = (req, res) => {
-  // TODO comments
   db.getIncompleteModules()
     .then((data) => {
       res.send(data);
