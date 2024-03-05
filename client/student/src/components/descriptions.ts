@@ -7,7 +7,7 @@ const descriptions = {
     minCreditPointsOverall:
       'Diese Anzahl an CP muss minimal erbracht werden in diesem Bereich: ',
     maxCreditPointsOverall:
-      'Diese Anzahl an CP muss maximal erbracht werden in diesem Bereich: ',
+      'Diese Anzahl an CP kann maximal erbracht werden in diesem Bereich: ',
     minCreditPointsPraktikum:
       'Die minimale Anzahl an CP, die für Praktika in diesem Bereich erbracht werden kann: ',
     maxCreditPointsPraktikum:
