@@ -1,5 +1,7 @@
 {
   "dependencies": {
+    "@types/jquery": "^3.5.29",
+    "@types/select2": "^4.0.63",
     "animate.css": "^4.1.1",
     "aos": "^2.3.4",
     "axios": "^1.6.2",
@@ -24,6 +26,7 @@
     "react": "^18.2.0",
     "react-router-dom": "^6.22.0",
     "rimraf": "^5.0.5",
+    "select2": "^4.1.0-rc.0",
     "sequelize": "^6.35.1",
     "sqlite3": "^5.1.6",
     "winston": "^3.11.0",
@@ -68,6 +71,7 @@
     "lint": "eslint .",
     "lint:fix": "eslint --fix .",
     "precommit": "npm run lint",
+    "gitHookUninstall": "git config --unset core.hooksPath",
     "prepare": "husky install",
     "uninstallHusky": "git config --unset core.hooksPath",
     "format": "prettier --plugin=prettier-plugin-ejs --write \"**/*.{js,html,ejs,ts,json,css}\"",

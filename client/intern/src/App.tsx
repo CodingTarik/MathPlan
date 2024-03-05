@@ -11,6 +11,12 @@ import SchoolIcon from '@mui/icons-material/School';
 import ReceiptLongIcon from '@mui/icons-material/ReceiptLong';
 import PolicyIcon from '@mui/icons-material/Policy';
 import SettingsIcon from '@mui/icons-material/Settings';
+import $ from 'jquery';
+import ExaminationRegulationApp from './components/examinationRegulationApp';
+//@ts-expect-error json-editor is not typed
+import * as JSONEditor from '@json-editor/json-editor';
+import 'select2/dist/css/select2.css';
+import select2 from 'select2';
 
 import AddModuleFields from './components/moduleManagement';
 import PdfFileUpload from './components/uploadPdfToServer';
@@ -23,6 +29,17 @@ import PdfFileUpload from './components/uploadPdfToServer';
 function App() {
   // State to manage the currently selected tab index
   const [index, setIndex] = React.useState(0);
+
+  // Adding jsoneditor and select2
+  window.JSONEditor = JSONEditor.JSONEditor;
+  
+  // Add jquery to window
+  // @ts-expect-error need this for jsoneditor to expand this to select2
+  window.$ = window.jQuery = $;
+
+  // Extend JQuery with select2
+  // @ts-expect-error select2 is not typed correctly
+  select2($);
 
   // Color options for different tabs
   const colors = ['primary', 'neutral', 'success', 'warning'] as const;
@@ -160,7 +177,7 @@ function App() {
           <b>Second</b> tab panel content
         </TabPanel>
         <TabPanel value="2">
-          <b>Third</b> tab panel content
+          <ExaminationRegulationApp></ExaminationRegulationApp>
         </TabPanel>
         <TabPanel value="3">
           <b>Fourth</b> tab panel content
