@@ -100,10 +100,14 @@ async function uploadPdfToDatabase(files : Array<Array<JSON>>): Promise<string>{
           moduleValues[i] = '';
         }
       }
+      let credits = moduleValues[2].slice(0, -3);
+      if (credits === '') // there was no information on credit points
+        // empty string converted into int results in NaN, which results in null when inserted into database
+        credits = '-1';
       const modul : Modul = { // the modul object to be inserted or updated in the database
         id: moduleValues[0],
         name: moduleValues[1],
-        credits: parseInt(moduleValues[2].slice(0, -3)),
+        credits: parseInt(credits),
         language: moduleValues[3],
         applicability: moduleValues[4]
       }

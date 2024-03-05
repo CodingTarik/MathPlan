@@ -54,11 +54,10 @@ describe('ExamRegulation API Tests', () => {
     const examReg = await dbhelper.getExamRegulation(
       newExamRegulationRequest.internalName
     );
+    expect(examReg.name).toEqual(newExamRegulationRequest.internalName);
     expect(
-      examReg.name
-    ).toEqual(newExamRegulationRequest.internalName);
-    expect(
-      (await dbhelper.getExamRegulation(newExamRegulationRequest.internalName)).jsonSchema
+      (await dbhelper.getExamRegulation(newExamRegulationRequest.internalName))
+        .jsonSchema
     ).toEqual(JSON.stringify(newExamRegulation));
   });
   test('not existance exam regulation name', async () => {

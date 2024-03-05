@@ -27,8 +27,7 @@
           "replace": ""
         }
       ]
-    }
-  ,
+    },
     {
       "propertyName": "moduleName",
       "readFrom": "Modulname",
@@ -43,8 +42,7 @@
       "readTo": "Arbeitsaufwand",
       "useResultAtIndex": 0,
       "postprocessing": []
-    }
-  ,
+    },
     {
       "propertyName": "moduleLanguage",
       "readFrom": "Modulname",

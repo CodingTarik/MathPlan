@@ -25,7 +25,9 @@ export async function getSelectEditorExtend() {
  * @param {string} internalName - The internal name of the examination regulation.
  * @returns {Promise<boolean>} Whether the save was successful.
  */
-export async function saveExamRegulation(internalName: string): Promise<boolean> {
+export async function saveExamRegulation(
+  internalName: string
+): Promise<boolean> {
   // Get the current value of the examination regulation from the JSON editor.
   const examValue = window.JSONEditorInstance.getValue();
 
@@ -39,7 +41,9 @@ export async function saveExamRegulation(internalName: string): Promise<boolean>
  * @description This function initializes the JSON editor with the examination regulation schema and sets up the watcher for changes.
  * @param {React.MutableRefObject<null | HTMLDivElement>} ref - The reference to the div that will contain the JSON editor.
  */
-export async function initializeJsonEditor(ref: React.MutableRefObject<null | HTMLDivElement>) {
+export async function initializeJsonEditor(
+  ref: React.MutableRefObject<null | HTMLDivElement>
+) {
   // Check if the reference is current.
   if (ref.current) {
     // Get the select editor extension.
@@ -51,7 +55,7 @@ export async function initializeJsonEditor(ref: React.MutableRefObject<null | HT
       iconlib: 'fontawesome4',
       schema: schema,
       no_additional_properties: true,
-      ajax: true,
+      ajax: true
     });
 
     // Set the JSON editor instance on the window object.
@@ -84,7 +88,8 @@ function watchEditorChanges(editor: any) {
         const module = editor.getEditor(match[0]).getValue();
 
         // Define the paths to the credit points and module ID of the module.
-        const creditPoints = match[1] + '.module' + '.' + match[2] + '.creditPoints';
+        const creditPoints =
+          match[1] + '.module' + '.' + match[2] + '.creditPoints';
         const moduleID = match[1] + '.module' + '.' + match[2] + '.moduleID';
 
         // Set the credit points and module ID of the module in the JSON editor.
@@ -102,7 +107,10 @@ function watchEditorChanges(editor: any) {
     // For each editor in the JSON editor, set up a watcher for changes.
     for (const key in editor.editors) {
       // Check if the key is a property of the editors object and is not the root editor.
-      if (Object.prototype.hasOwnProperty.call(editor.editors, key) && key !== 'root') {
+      if (
+        Object.prototype.hasOwnProperty.call(editor.editors, key) &&
+        key !== 'root'
+      ) {
         // we dont want to double watch the same key so we have to unwatch every key first
         // regardless if it is already watched or not
         // Unwatch the key.

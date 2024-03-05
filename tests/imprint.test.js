@@ -24,6 +24,8 @@ describe('Imprint URL Test', () => {
     expect(hrefAttribute).toBe(config.web.IMPRINT_URL);
 
     // Additional check: Ensure that the href value is not a specific invalid URL
-    expect(hrefAttribute).not.toBe('https://example.comdjsghdsjghdjshgjdshgjdshgjdshgjdsg');
+    expect(hrefAttribute).not.toBe(
+      'https://example.comdjsghdsjghdjshgjdshgjdshgjdshgjdsg'
+    );
   });
 });

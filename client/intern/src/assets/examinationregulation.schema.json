@@ -226,7 +226,7 @@
         "modulerange": {
           "type": "array",
           "format": "table",
-          "items": { "$ref": "#/definitions/modulerange"},
+          "items": { "$ref": "#/definitions/modulerange" },
           "default": [],
           "title": "Module Range",
           "propertyOrder": 1003
@@ -244,7 +244,10 @@
         "name": {
           "type": "object",
           "format": "select2",
-          "enumSource": {"$ref": "api/intern/getAllModulsMin", "title": "moduleName"},
+          "enumSource": {
+            "$ref": "api/intern/getAllModulsMin",
+            "title": "moduleName"
+          },
           "title": "Module Name",
           "options": {
             "inputAttributes": {

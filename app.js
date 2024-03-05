@@ -69,7 +69,10 @@ app.use(
   '/assets/typed',
   express.static(path.join(__dirname, 'node_modules/typed.js/dist'))
 );
-app.use('/assets/sweetalert2', express.static(path.join(__dirname, 'node_modules/sweetalert2/dist')));
+app.use(
+  '/assets/sweetalert2',
+  express.static(path.join(__dirname, 'node_modules/sweetalert2/dist'))
+);
 // parse requests of content-type - application/json
 app.use(express.json());
 

@@ -12,7 +12,8 @@ const upload = multer({ storage });
  * @param res The response.
  */
 const uploadPDF = (req, res) => {
-  upload.array('file')(req, res, async (err) => { // upload multiple files in an array
+  upload.array('file')(req, res, async (err) => {
+    // upload multiple files in an array
     if (err) {
       throw new Error('Error while uploading files:', err);
     } else {
@@ -20,7 +21,7 @@ const uploadPDF = (req, res) => {
       try {
         const listOfUploadedModuleHandBooks = []; // list of uploaded module handbooks
         // map each file to a promise that resolves to the modules
-        const promises = req.files.map(async file => {
+        const promises = req.files.map(async (file) => {
           console.log('Name of the uploaded PDF-File: ' + file.originalname); // log the original name of each file
           try {
             const modules = await readAndFilterData(file.buffer);
@@ -37,7 +38,7 @@ const uploadPDF = (req, res) => {
       } catch (err) {
         res.status(500).send('Error while uploading files:' + err);
       }
-    };
+    }
   });
 };
 

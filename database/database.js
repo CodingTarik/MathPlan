@@ -36,7 +36,8 @@ if (process.env.NODE_ENV !== 'test') {
     dialect: configFile.database.DB_DIALECT, // can be set to 'mysql' or 'sqlite'
     storage: './database.sqlite' // For SQLite, define the path to the SQLite file
   };
-} else { // use test database instead of actual one
+} else {
+  // use test database instead of actual one
   config /** @type {DatabaseConfig} */ = {
     logging: configFile.dev.DEBUG ? (msg) => logger.database(msg) : false,
     dialect: 'sqlite',

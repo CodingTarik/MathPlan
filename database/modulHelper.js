@@ -101,11 +101,21 @@ const getModules = (
   moduleApplicability
 ) => {
   const parameters = {};
-  if (!(moduleID === 'undefined')) { parameters.moduleID = { [Sequelize.Op.like]: `%${moduleID}%` }; }
-  if (!(moduleName === 'undefined')) { parameters.moduleName = { [Sequelize.Op.like]: `%${moduleName}%` }; }
-  if (!(moduleCredits === 'undefined')) { parameters.moduleCredits = moduleCredits; }
-  if (!(moduleLanguage === 'undefined')) { parameters.moduleLanguage = moduleLanguage; }
-  if (!(moduleApplicability === 'undefined')) { parameters.moduleApplicability = moduleApplicability; }
+  if (!(moduleID === 'undefined')) {
+    parameters.moduleID = { [Sequelize.Op.like]: `%${moduleID}%` };
+  }
+  if (!(moduleName === 'undefined')) {
+    parameters.moduleName = { [Sequelize.Op.like]: `%${moduleName}%` };
+  }
+  if (!(moduleCredits === 'undefined')) {
+    parameters.moduleCredits = moduleCredits;
+  }
+  if (!(moduleLanguage === 'undefined')) {
+    parameters.moduleLanguage = moduleLanguage;
+  }
+  if (!(moduleApplicability === 'undefined')) {
+    parameters.moduleApplicability = moduleApplicability;
+  }
   return Modul.findAndCountAll({
     where: parameters,
     limit: 50,
@@ -136,7 +146,14 @@ const getOneModule = (moduleID) => {
  * @param {string} moduleApplicability - The new (modified) applicability of the module
  * @returns {Promise<Array<number, number>>} A promise that is rejected or fulfilled depending on the success of updating the module
  */
-const updateModule = (searchModuleID, moduleID, moduleName, moduleCredits, moduleLanguage, moduleApplicability) => {
+const updateModule = (
+  searchModuleID,
+  moduleID,
+  moduleName,
+  moduleCredits,
+  moduleLanguage,
+  moduleApplicability
+) => {
   const modul = {
     moduleID,
     moduleName,

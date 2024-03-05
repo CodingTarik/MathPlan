@@ -47,14 +47,16 @@ const addModul = async (req, res) => {
  * @returns {void} - Sends a response based on the success or failure of the search with status 200 in case of success and with status 500, iff an error occured while searching for a module with requested id
  */
 const getOneModule = (req, res) => {
-  modulHelper.getOneModule(req.params.id)
-    .then(data => {
+  modulHelper
+    .getOneModule(req.params.id)
+    .then((data) => {
       res.send(data);
     })
-    .catch(err => {
+    .catch((err) => {
       // for the upload modules to the database functionality
       res.status(500).send({
-        message: err.message || 'Error retrieving Tutorial with id=' + req.params.id
+        message:
+          err.message || 'Error retrieving Tutorial with id=' + req.params.id
       });
     });
 };
@@ -74,14 +76,21 @@ const updateModule = (req, res) => {
     return;
   }
 
-  modulHelper.updateModule(req.params.id, req.body.id, req.body.name, req.body.credits, req.body.language, req.body.applicability)
-    .then(data => {
+  modulHelper
+    .updateModule(
+      req.params.id,
+      req.body.id,
+      req.body.name,
+      req.body.credits,
+      req.body.language,
+      req.body.applicability
+    )
+    .then((data) => {
       res.send(data);
     })
-    .catch(err => {
+    .catch((err) => {
       res.status(500).send({
-        message:
-         err.message || 'Mistake while modifying module'
+        message: err.message || 'Mistake while modifying module'
       });
     });
 };
@@ -96,7 +105,8 @@ const updateModule = (req, res) => {
 const deleteModulById = async (req, res) => {
   const moduleId = req.params.id; // Assuming the module ID is in the route parameters
 
-  if (!moduleId) { // mMn ist abfrage unnötig; wenn keine id gegeben, gibts eine 404, weil andere URL gesucht wird (eine ohne Parameter)
+  if (!moduleId) {
+    // mMn ist abfrage unnötig; wenn keine id gegeben, gibts eine 404, weil andere URL gesucht wird (eine ohne Parameter)
     res.status(400).send({
       message: 'Module ID is required!'
     });

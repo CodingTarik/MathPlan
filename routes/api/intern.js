@@ -19,7 +19,10 @@ router.post('/addExamRegulation', dbController.addOrUpdateExamRegulation);
 // for modules
 router.post('/addModul', dbController.addModul);
 router.post('/deleteModulById', dbController.deleteModulById);
-router.get('/getModules/:id/:name/:credits/:language/:applicability', dbController.getModules);
+router.get(
+  '/getModules/:id/:name/:credits/:language/:applicability',
+  dbController.getModules
+);
 router.get('/getOneModule/:id', dbController.getOneModule);
 router.put('/updateModule/:id', dbController.updateModule);
 // for pdf parser
