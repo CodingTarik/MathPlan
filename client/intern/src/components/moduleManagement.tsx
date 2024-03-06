@@ -8,11 +8,12 @@ import Table from '@mui/joy/Table';
 import { AxiosError } from 'axios';
 
 /**
- * Called when button is clicked to create new database entry and add it to database
+ * Called when button is clicked to create new database entry and add it to database or to modify existing entry
  * @param values The entries made by the user for each of the input fields (id, name, credits, language, applicability)
  */
 function handleButtonClick(values: string[]) {
-    const newModule = {
+  // wrapping module as javascript object (is automatically converted into JSON by axios)
+    const tmpModule = {
       id: values[0],
       name: values[1],
       credits: values[2],
@@ -20,15 +21,41 @@ function handleButtonClick(values: string[]) {
       applicability: values[4]
     };
 
-    ModuleServices.create(newModule)
-      .then((response: { data: object; }) => { 
-        console.log("Success at saving module");
-        console.log(response.data);
-      })
-      .catch((e: Error) => { 
-        console.log("Error while saving module");
-        console.log(e);
-      });
+  // test if module with ID tmpModule.id is already in database
+  ModuleServices.getByID(tmpModule.id)
+    .then((response: { data: object; }) => {
+      if (response.data) { // ID was found (data !== null)
+        console.log("trying retrieving module by ID: data found");
+        // modifying module
+        ModuleServices.update(values[0], tmpModule)
+          .then(() => {
+            console.log("module modification successful");
+            ModuleServices.getByID(tmpModule.id).then((response: { data: object; }) => {
+              console.log(response.data);
+            }).catch((e: Error) => { 
+              console.log(e);
+            });
+          })
+          .catch((e: Error) => { 
+            console.log(e);
+          });
+      } else { // ID was not found (data === null)
+        console.log("trying retrieving module by ID: data not found");
+        // inserting module
+        ModuleServices.create(tmpModule)
+          .then((response: { data: object; }) => { 
+            console.log("Success at saving module");
+            console.log(response.data);
+          })
+          .catch((e: Error) => { 
+            console.log("Error while saving module");
+            console.log(e);
+          });
+      }
+    })
+    .catch((e: Error) => {
+      console.log(e);
+    });
     
 }
 
@@ -46,16 +73,16 @@ function isAddButtonDisabled(values: string[]) {
  * @returns the UI for manually inserting modules into the database and searching for certain modules
  */
 export default function ModuleManagementPage() {
-  const [addModuleParameters, setAddModuleParameters] = React.useState(Array(5).fill(""));
+  const [moduleParameters, setModuleParameters] = React.useState(Array(5).fill(""));
   const  [rowsFound, setRowsFound] = React.useState(Array(0).fill({moduleID: "", moduleName: "", moduleCredits: NaN, moduleLanguage: "", moduleApplicability: ""}));
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>, entryIdentifier: number) => {
-    const nextModule = addModuleParameters.slice();
+    const nextModule = moduleParameters.slice();
     nextModule[entryIdentifier] = event.target.value;
-    setAddModuleParameters(nextModule);
+    setModuleParameters(nextModule);
    };
 
-  // if the search button is clicked, the empty fields are set to undefinded and then getModules is called
+  // if the search button is clicked the empty fields are set to undefinded and then getModules is called
   const handleSearchClick = (values: string[]) => {
     const values_copy = Array(5).fill("")
     for (let i = 0; i < 5; i++) {
@@ -80,19 +107,19 @@ export default function ModuleManagementPage() {
       });
   }
 
-  // if the incomplete module search button is clicked, the database is searched for modules with incomplete information
-  const handleIncompleteSearchClick = () => {
-    ModuleServices.getIncompleteModules()
-    .then((response: { data: { moduleID: string; moduleName: string; moduleCredits: number; moduleLanguage: string; moduleApplicability: string; createdAt: object; id: object, updatedAt: object}[]; }) => { 
-      console.log("Success at getting incomplete modules");
-      console.log(response.data);
-      setRowsFound(response.data);
-    })
-    .catch((e: AxiosError) => {
-        console.log("Error while getting module");
-        console.log(e);
-    });
-  }
+// if the incomplete module search button is clicked, the database is searched for modules with incomplete information
+const handleIncompleteSearchClick = () => {
+  ModuleServices.getIncompleteModules()
+  .then((response: { data: { moduleID: string; moduleName: string; moduleCredits: number; moduleLanguage: string; moduleApplicability: string; createdAt: object; id: object, updatedAt: object}[]; }) => { 
+    console.log("Success at getting incomplete modules");
+    console.log(response.data);
+    setRowsFound(response.data);
+  })
+  .catch((e: AxiosError) => {
+      console.log("Error while getting module");
+      console.log(e);
+  });
+}
 
   return (
     <>
@@ -105,12 +132,12 @@ export default function ModuleManagementPage() {
       autoComplete="off"
     >
       <div>
-        {/* Each of the TextFields updates its entry of the addModuleParameters array when changed */}
+        {/* Each of the TextFields updates its entry of the moduleParameters array when changed */}
         <TextField
           required
           id="Modulnummer"
           label="Modulnummer"
-          value = {addModuleParameters.slice()[0]}
+          value = {moduleParameters.slice()[0]}
           defaultValue=""
           onChange={(event: React.ChangeEvent<HTMLInputElement>) => {handleChange(event, 0)}}
         />
@@ -118,7 +145,7 @@ export default function ModuleManagementPage() {
           required
           id="Modulname"
           label="Modulname"
-          value = {addModuleParameters.slice()[1]}
+          value = {moduleParameters.slice()[1]}
           defaultValue=""
           onChange={(event: React.ChangeEvent<HTMLInputElement>) => {handleChange(event, 1)}}
         />
@@ -126,7 +153,7 @@ export default function ModuleManagementPage() {
           required
           id="CP-Anzahl"
           label="CP-Anzahl"
-          value = {addModuleParameters.slice()[2]}
+          value = {moduleParameters.slice()[2]}
           type="number"
           InputLabelProps={{
             shrink: true,
@@ -137,7 +164,7 @@ export default function ModuleManagementPage() {
           required
           id="Sprache"
           label="Sprache"
-          value = {addModuleParameters.slice()[3]}
+          value = {moduleParameters.slice()[3]}
           defaultValue=""
           onChange={(event: React.ChangeEvent<HTMLInputElement>) => {handleChange(event, 3)}}
         />
@@ -145,14 +172,14 @@ export default function ModuleManagementPage() {
           required
           id="Verwendbarkeit"
           label="Verwendbarkeit"
-          value = {addModuleParameters.slice()[4]}
+          value = {moduleParameters.slice()[4]}
           defaultValue=""
           onChange={(event: React.ChangeEvent<HTMLInputElement>) => {handleChange(event, 4)}}
         />
       </div>
       </Box>
-        <Button variant="outlined" sx={{ marginTop: 2, marginBottom: 2 }} disabled = {isAddButtonDisabled(addModuleParameters)} onClick = {() => handleButtonClick(addModuleParameters)}>Speichern</Button>
-        <Button variant="outlined"  sx={{ marginTop: 2, marginBottom: 2 }} onClick = {() => handleSearchClick(addModuleParameters)}>Suchen</Button>
+        <Button variant="outlined" sx={{ marginTop: 2, marginBottom: 2 }} disabled = {isAddButtonDisabled(moduleParameters)} onClick = {() => handleButtonClick(moduleParameters)}>Speichern</Button>
+        <Button variant="outlined"  sx={{ marginTop: 2, marginBottom: 2 }} onClick = {() => handleSearchClick(moduleParameters)}>Suchen</Button>
         <Button variant="outlined"  sx={{ marginTop: 2, marginBottom: 2 }} onClick = {() => handleIncompleteSearchClick()}>Unvollständige Module suchen</Button>
         <Table hoverRow sx={{ '& tr > *:not(:first-child)': { textAlign: 'right' } }}>
           <thead>
@@ -168,7 +195,7 @@ export default function ModuleManagementPage() {
             {/* If the search button is clicked and rowsFound is not empty the rows are displayed and the fields where one can add a module set if a module is clicked on */}
             {rowsFound.map((row) => (
               <tr key={row.moduleID} onClick = {() => {
-                setAddModuleParameters([row.moduleID, row.moduleName, row.moduleCredits, row.moduleLanguage, row.moduleApplicability]);}} >
+                setModuleParameters([row.moduleID, row.moduleName, row.moduleCredits, row.moduleLanguage, row.moduleApplicability]);}} >
                 <td>{row.moduleID}</td>
                 <td>{row.moduleName}</td>
                 <td>{row.moduleCredits}</td>

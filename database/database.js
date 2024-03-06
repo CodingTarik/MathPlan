@@ -1,8 +1,16 @@
 const path = require('path');
+const logger = require(path.join(__dirname, '../logger'));
+
 // Config
 const configFile = require(path.join(__dirname, '../config.js'));
 const Sequelize = require('sequelize');
-const { Op } = require('sequelize');
+
+// Models
+const Modul = require(path.join(__dirname, './models/modul.js'));
+const User = require(path.join(__dirname, './models/user.js'));
+const ExaminationRegulation = require(
+  path.join(__dirname, './models/examinationregulation.js')
+);
 
 /**
  * Database connection configuration
@@ -16,202 +24,39 @@ const { Op } = require('sequelize');
  */
 
 // Define database connection parameters
-const config /** @type {DatabaseConfig} */ = {
-  database: configFile.database.DB_DATABASE,
-  username: configFile.database.DB_USER, // Your MySQL username
-  password: configFile.database.DB_PASSWORD, // Your MySQL password
-  host: configFile.database.DB_HOST,
-  dialect: configFile.database.DB_DIALECT, // can be set to 'mysql' or 'sqlite'
-  storage: './database.sqlite' // For SQLite, define the path to the SQLite file
-};
+// eslint-disable-next-line prefer-const
+let config;
+if (process.env.NODE_ENV !== 'test') {
+  config /** @type {DatabaseConfig} */ = {
+    database: configFile.database.DB_DATABASE,
+    username: configFile.database.DB_USER, // Your MySQL username
+    password: configFile.database.DB_PASSWORD, // Your MySQL password
+    host: configFile.database.DB_HOST,
+    logging: configFile.dev.DEBUG ? (msg) => logger.database(msg) : false,
+    dialect: configFile.database.DB_DIALECT, // can be set to 'mysql' or 'sqlite'
+    storage: './database.sqlite' // For SQLite, define the path to the SQLite file
+  };
+} else {
+  // use test database instead of actual one
+  config /** @type {DatabaseConfig} */ = {
+    logging: configFile.dev.DEBUG ? (msg) => logger.database(msg) : false,
+    dialect: 'sqlite',
+    storage: 'database.test.sqlite'
+  };
+}
 
 // create a sequelize object
 const sequelize = new Sequelize(config);
 
-// the table with the courses and its attributes is defined
-// here and below as well we write 'modul' instead of 'module' to clarify that we mean university modules not NodeJS modules
-/**
- * Sequelize model for university modules
- * @typedef {Object} ModulModel
- * @property {number} id - Artificial primary key for the module
- * @property {string} moduleID - The module ID
- * @property {string} moduleName - The module name
- * @property {number} moduleCredits - The number of credits for the module
- * @property {string} moduleLanguage - The language of the module
- * @property {string} moduleApplicability - The applicability of the module
- */
-
-let Modul /** @type {ModulModel} */ = sequelize.define('Modul', {
-  id: {
-    type: Sequelize.INTEGER,
-    autoIncrement: true,
-    primaryKey: true
-  },
-  moduleID: {
-    type: Sequelize.STRING,
-    allowNull: false,
-    unique: true
-  },
-  moduleName: {
-    type: Sequelize.STRING,
-    allowNull: true // TODO rückgängig?
-  },
-  moduleCredits: {
-    type: Sequelize.INTEGER,
-    allowNull: true // TODO rückgängig?
-  },
-  moduleLanguage: {
-    type: Sequelize.STRING,
-    allowNull: true // TODO rückgängig?
-  },
-  moduleApplicability: {
-    type: Sequelize.STRING,
-    allowNull: true // TODO rückgängig?
-  }
-});
-
-/**
- * Modul setter
- * @param {Object} newModul
- */
-const setModul = (newModul) => {
-  Modul = newModul;
-};
-
-/**
- * Adds a module to the database
- * @param {string} moduleID - The module ID
- * @param {string} moduleName - The module name
- * @param {number} moduleCredits - The number of credits for the module
- * @param {string} moduleLanguage - The language of the module
- * @param {string} moduleApplicability - The applicability of the module
- * @returns {Promise} A promise that is rejected or fulfilled depending on the success of adding the module
- */
-const addModul = (
-  moduleID,
-  moduleName,
-  moduleCredits,
-  moduleLanguage,
-  moduleApplicability
-) => {
-  const modul = {
-    moduleID,
-    moduleName,
-    moduleCredits,
-    moduleLanguage,
-    moduleApplicability
-  };
-  return Modul.create(modul);
-};
-
-/**
- * Checks if a module with the given ID exists in the database
- * @param {string} moduleID - The module ID to check
- * @returns {Promise<boolean>} A promise that resolves to true if the module exists, false otherwise
- */
-const isModuleExists = (moduleID) => {
-  return Modul.findOne({
-    where: {
-      moduleID
-    }
-  }).then((result) => !!result);
-};
-
-/**
- * Deletes a module from the database based on its ID
- * @param {string} moduleID - The module ID to delete
- * @returns {boolean} True if the module is deleted, false otherwise
- */
-const deleteModulById = async (moduleID) => {
-  try {
-    const affectedRows = await Modul.destroy({
-      where: {
-        moduleID
-      }
-    });
-
-    // If affectedRows is greater than 0, it means at least one record was deleted
-    return affectedRows > 0;
-  } catch (error) {
-    console.error('Error deleting module:', error);
-    return false; // Return false if an error occurs during deletion
-  }
-};
-
-/**
- * Gets all modules from the database
- * @returns {Promise<Array<ModulModel>>} A promise that resolves to an array of all modules
- */
-const getAllModules = () => {
-  return Modul.findAll();
-};
-
-/**
- * Gets the modules that match the parameters, match meaning:
- * if a moduleID is provided: moduleID of returned modules must contain the given moduleID
- * if a moduleName is provided: moduleName of returned modules must contain the given moduleName
- * if a moduleCredits is provided: moduleCredits of returned modules must equal the given moduleCredits
- * if a moduleLanguage is provided: moduleLanguage of returned modules must equal the given moduleLanguage
- * if a moduleApplicability is provided: moduleApplicability of returned modules must equal the given moduleApplicability.
- * If more than 50 modules match only the first 50 are returned.
- * @param {string} moduleID
- * @param {string} moduleName
- * @param {string} moduleCredits
- * @param {string} moduleLanguage
- * @param {string} moduleApplicability
- * @returns {Promise<{count: number; rows: Object[];}>} A promise that is rejected or fulfilled depending on the success of getting the module(s). If it is fulfilled, it returns the number of matching modules and the modules themselves.
- */
-const getModules = (
-  moduleID,
-  moduleName,
-  moduleCredits,
-  moduleLanguage,
-  moduleApplicability
-) => {
-  const parameters = {};
-  if (!(moduleID === 'undefined')) { parameters.moduleID = { [Sequelize.Op.like]: `%${moduleID}%` }; }
-  if (!(moduleName === 'undefined')) { parameters.moduleName = { [Sequelize.Op.like]: `%${moduleName}%` }; }
-  if (!(moduleCredits === 'undefined')) { parameters.moduleCredits = moduleCredits; }
-  if (!(moduleLanguage === 'undefined')) { parameters.moduleLanguage = moduleLanguage; }
-  if (!(moduleApplicability === 'undefined')) { parameters.moduleApplicability = moduleApplicability; }
-  console.log(parameters);
-  return Modul.findAndCountAll({
-    where: parameters,
-    limit: 50,
-    order: [['moduleID', 'ASC']]
-  });
-};
-
-/**
- * Gets all incomplete modules. Incomplete modules are ones that are have at least on attribute that equals 'null'. //TODO null
- * @returns {Promise<Array<Object>>} A promise that is rejected or fulfilled depending on the success of getting the module(s). If it is fulfilled, it returns an array of all incomplete modules.
- */
-const getIncompleteModules = () => {
-  console.log('testing getting incomplete modules...');
-  const parameters = {
-    [Op.or]: [
-      { moduleName: '' },
-      { moduleCredits: -1 },
-      { moduleLanguage: '' },
-      { moduleApplicability: '' }
-    ]
-  };
-  return Modul.findAll({
-    where: parameters,
-    order: [['moduleID', 'ASC']]
-  });
+// Initialize models
+const models = {
+  Modul: Modul(sequelize),
+  User: User(sequelize),
+  ExaminationRegulation: ExaminationRegulation(sequelize)
 };
 
 module.exports = {
   config,
-  Sequelize,
   sequelize,
-  Modul,
-  setModul,
-  addModul,
-  isModuleExists,
-  deleteModulById,
-  getAllModules,
-  getModules,
-  getIncompleteModules
+  models
 };

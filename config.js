@@ -1,5 +1,29 @@
-// load the environment variables from the .env file in the root of the project
+// Load the environment variables from the .env file in the root of the project
 require('dotenv').config();
+
+/**
+ * Configuration object for the application.
+ * @typedef {Object} AppConfig
+ * @property {Object} database - Database configuration.
+ * @property {string} database.DB_HOST - Database host.
+ * @property {string} database.DB_USER - Database user.
+ * @property {string} database.DB_DIALECT - Database dialect. Currently supports 'mysql' and 'sqlite'.
+ * @property {string} database.DB_PASSWORD - Database password.
+ * @property {string} database.DB_DATABASE - Database name.
+ * @property {Object} server - Server configuration.
+ * @property {number} server.PORT_HTTPS - HTTPS port.
+ * @property {string} server.CERT_PATH - HTTPS certificate path.
+ * @property {string} server.CERT_SECRET_PATH - HTTPS certificate secret path.
+ * @property {number} server.PORT_HTTP - HTTP port.
+ * @property {boolean} server.HTTP_REDIRECT - Enable HTTP redirect to HTTPS.
+ * @property {boolean} server.ALLOW_HTTP - Enable HTTP.
+ * @property {boolean} server.ALLOW_HTTPS - Enable HTTPS.
+ * @property {string} server.HOST - Server host.
+ * @property {Object} web - Web configuration.
+ * @property {string} web.DEFAULT_LANGUAGE - Default language for the web.
+ * @property {Object} dev - Development configuration.
+ * @property {boolean} dev.DEBUG - Debug mode.
+ */
 
 // Initialize an empty config object
 const config = {};
@@ -48,13 +72,32 @@ config.web = {};
 // Set the default language for the web, defaulting to 'de' if not provided
 config.web.DEFAULT_LANGUAGE = process.env.DEFAULT_LANGUAGE || 'de';
 
+// the faq url the website will redirect if faq_url_activate is active
+config.web.FAQ_URL = process.env.FAQ_URL || 'www.example.org';
+// page name
+config.web.PAGE_NAME = process.env.PAGE_NAME || 'Materno';
+// support email for footer
+config.web.SUPPORT_EMAIL = process.env.SUPPORT_EMAIL || 'example@example.com';
+// defined if faq item in menu banner is activate redirects to faq_url
+config.web.FAQ_URL_ACTIVE = testBool(process.env.FAQ_URL_ACTIVE);
+// Defines if faq on startpage is active
+config.web.FAQ_STARTPAGE_ACTIVE = testBool(process.env.FAQ_STARTPAGE_ACTIVE);
+// imprint url for redirect
+config.web.IMPRINT_URL = process.env.IMPRINT_URL || 'https://example.com';
+// privacy policy url for redirect
+config.web.PRIVACY_POLICY_URL =
+  process.env.PRIVACY_POLICY_URL || 'https://example.com';
+// social media links for footer
+config.web.SOCIAL_MEDIA_ACTIVE = testBool(process.env.SOCIAL_MEDIA_ACTIVE);
+// social media links
+config.web.FACEBOOK_URL =
+  process.env.FACEBOOK_URL || 'https://www.facebook.com/';
+config.web.TWITTER_URL = process.env.TWITTER_URL || 'https://twitter.com/';
+config.web.INSTAGRAM_URL =
+  process.env.INSTAGRAM_URL || 'https://www.instagram.com/';
 // Initialize an empty dev configuration object
 config.dev = {};
 config.dev.DEBUG = testBool(process.env.DEBUG) || false;
-
-// Initalize data configuration object
-config.data = {};
-config.data.imprinturl = process.env.IMPRINT_URL || 'https://example.com';
 
 /**
  * For more information on the security headers, see:
@@ -91,7 +134,7 @@ const securityHeaderConfig = {
       // Added inlinescript hash for Cross-Site-Policy
       'script-src': [
         "'self'",
-        "'sha256-GC6sqCnhg9h2PIYTnsmfFvS16ZCgwoa54eMaC8jr/Zw='"
+        "'sha256-IDUqR6tWhL1G3sb2OcqoFkgpOOaNXEb5Ey7yfuaH8xU='"
       ],
       'default-src': ["'self'"],
       'form-action': ["'self'"],
@@ -122,7 +165,8 @@ module.exports = config;
 /**
  * Checks a boolean text and returns the corresponding boolean value.
  *
- * @function testBool
+ * @function
+ * @name testBool
  * @param {string} textBool - The boolean text to check.
  * @returns {boolean} Returns `true` if the input is case-insensitively equal to 'true', otherwise `false`.
  */

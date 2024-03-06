@@ -11,8 +11,15 @@ import SchoolIcon from '@mui/icons-material/School';
 import ReceiptLongIcon from '@mui/icons-material/ReceiptLong';
 import PolicyIcon from '@mui/icons-material/Policy';
 import SettingsIcon from '@mui/icons-material/Settings';
+import $ from 'jquery';
+import ExaminationRegulationApp from './components/examinationRegulationApp';
+//@ts-expect-error json-editor is not typed
+import * as JSONEditor from '@json-editor/json-editor';
+import 'select2/dist/css/select2.css';
+import select2 from 'select2';
 
-import ModuleManagementPage from './components/module_management';
+import ModuleManagementPage from './components/moduleManagement';
+import PdfFileUpload from './components/uploadPdfToServer';
 /**
  * JSX structure representing the entire intern application.
  *
@@ -22,6 +29,17 @@ import ModuleManagementPage from './components/module_management';
 function App() {
   // State to manage the currently selected tab index
   const [index, setIndex] = React.useState(0);
+
+  // Adding jsoneditor and select2
+  window.JSONEditor = JSONEditor.JSONEditor;
+  
+  // Add jquery to window
+  // @ts-expect-error need this for jsoneditor to expand this to select2
+  window.$ = window.jQuery = $;
+
+  // Extend JQuery with select2
+  // @ts-expect-error select2 is not typed correctly
+  select2($);
 
   // Color options for different tabs
   const colors = ['primary', 'neutral', 'success', 'warning'] as const;
@@ -149,13 +167,17 @@ function App() {
           - The content can be customized for each tab.
         */}
         <TabPanel value="0">
+          <div>
            <ModuleManagementPage/>
+           <hr style={{ height: '4px', borderWidth: 0, color: 'gray', backgroundColor: 'gray' }} /> {/*horizontal line*/}
+           <PdfFileUpload/>
+           </div>
         </TabPanel>
         <TabPanel value="1">
           <b>Second</b> tab panel content
         </TabPanel>
         <TabPanel value="2">
-          <b>Third</b> tab panel content
+          <ExaminationRegulationApp></ExaminationRegulationApp>
         </TabPanel>
         <TabPanel value="3">
           <b>Fourth</b> tab panel content
