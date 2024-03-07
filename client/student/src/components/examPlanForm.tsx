@@ -5,9 +5,10 @@ import { Button, Box, } from '@mui/material';
 import {PlanForm} from './examPlan';
 import { setExamPlan, getExamPlan } from './examPlanVariable';
 import objectPath from 'object-path';
+import {AxiosError} from 'axios';
 import {getExamRegulations} from '../../../intern/src/database_services/ExamRegulationService.ts'
 
-export default async function ExamPlanForm() {
+export default function ExamPlanForm() {
   const [examRegulation, setExamRegulation] = React.useState<{
     jsonSchema: string;
     name: string;
@@ -21,14 +22,18 @@ export default async function ExamPlanForm() {
   const [hasExamPlan, setHasExamPlan] = React.useState(false);
 
   let examRegulationNames = new Array<string>;
-  try {
-    const responseData = await getExamRegulations();
+  React.useEffect(() => {
+    getExamRegulations()
+  .then((responseData: { jsonSchema: object, name:string}[]) => { 
     console.log("Success at getting exam Regulations");
     examRegulationNames = responseData.map((entry) => entry.name)
     console.log(examRegulationNames)
-
-  } 
-  catch(e) { console.log(e) }
+  })
+  .catch((e: AxiosError) => { console.log(e) })
+  }, []);
+    
+  
+  
   
   /* examRegulationNames = [
     'B.Sc. Mathematik/ Mathematik 2018',
