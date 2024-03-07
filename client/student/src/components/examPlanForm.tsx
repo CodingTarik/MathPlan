@@ -7,6 +7,7 @@ import { setExamPlan, getExamPlan } from './examPlanVariable';
 import objectPath from 'object-path';
 import {AxiosError} from 'axios';
 import {getExamRegulations} from '../../../intern/src/database_services/ExamRegulationService.ts'
+import {saveExamPlan} from '../database_services/ExamPlanService.ts'
 
 export default function ExamPlanForm() {
   const [examRegulation, setExamRegulation] = React.useState<{
@@ -131,7 +132,7 @@ export default function ExamPlanForm() {
         <Button
           variant="outlined"
           sx={{ marginTop: 2, marginBottom: 2 }}
-          onClick={() => console.log(getExamPlan())}
+          onClick={() => { saveExamPlan(JSON.stringify(getExamPlan()), examRegulation.name); console.log(getExamPlan())}}
         >
           Als {typeOfExamPlan}-Entwurf speichern
         </Button>
