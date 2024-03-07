@@ -30,7 +30,6 @@ export default function ExamPlanForm() {
     console.log("Success at getting exam Regulations");
     setExamRegulationNames(responseData.map((entry) => entry.name))
     setExamRegulations(responseData);
-    console.log(examRegulationNames)
   })
   .catch((e: AxiosError) => { console.log(e) })
   }, []);
