@@ -129,6 +129,11 @@ export default function ExternalModules({
               ]);
               setExamPlan(examPlan);
               setAddedModules([...addedModules, currentModule]);
+              setCurrentModule({
+                moduleCredits: NaN,
+                moduleID: '',
+                moduleName: ''
+              });
             }}
             size="sm"
           >
