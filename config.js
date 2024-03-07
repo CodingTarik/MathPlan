@@ -1,6 +1,30 @@
-// load the environment variables from the .env file in the root of the project
+// Load the environment variables from the .env file in the root of the project
 require('dotenv').config();
 require('dotenv').config({ path: '.secret' });
+
+/**
+ * Configuration object for the application.
+ * @typedef {Object} AppConfig
+ * @property {Object} database - Database configuration.
+ * @property {string} database.DB_HOST - Database host.
+ * @property {string} database.DB_USER - Database user.
+ * @property {string} database.DB_DIALECT - Database dialect. Currently supports 'mysql' and 'sqlite'.
+ * @property {string} database.DB_PASSWORD - Database password.
+ * @property {string} database.DB_DATABASE - Database name.
+ * @property {Object} server - Server configuration.
+ * @property {number} server.PORT_HTTPS - HTTPS port.
+ * @property {string} server.CERT_PATH - HTTPS certificate path.
+ * @property {string} server.CERT_SECRET_PATH - HTTPS certificate secret path.
+ * @property {number} server.PORT_HTTP - HTTP port.
+ * @property {boolean} server.HTTP_REDIRECT - Enable HTTP redirect to HTTPS.
+ * @property {boolean} server.ALLOW_HTTP - Enable HTTP.
+ * @property {boolean} server.ALLOW_HTTPS - Enable HTTPS.
+ * @property {string} server.HOST - Server host.
+ * @property {Object} web - Web configuration.
+ * @property {string} web.DEFAULT_LANGUAGE - Default language for the web.
+ * @property {Object} dev - Development configuration.
+ * @property {boolean} dev.DEBUG - Debug mode.
+ */
 
 // Initialize an empty config object
 const config = {};
@@ -152,7 +176,8 @@ module.exports = config;
 /**
  * Checks a boolean text and returns the corresponding boolean value.
  *
- * @function testBool
+ * @function
+ * @name testBool
  * @param {string} textBool - The boolean text to check.
  * @returns {boolean} Returns `true` if the input is case-insensitively equal to 'true', otherwise `false`.
  */
