@@ -21,12 +21,13 @@ export default function ExamPlanForm() {
   );
   const [hasExamPlan, setHasExamPlan] = React.useState(false);
 
-  let examRegulationNames = new Array<string>;
+  const [examRegulationNames, setExamRegulationNames] = React.useState<Array<string>>([])
+
   React.useEffect(() => {
     getExamRegulations()
   .then((responseData: { jsonSchema: object, name:string}[]) => { 
     console.log("Success at getting exam Regulations");
-    examRegulationNames = responseData.map((entry) => entry.name)
+    setExamRegulationNames(responseData.map((entry) => entry.name))
     console.log(examRegulationNames)
   })
   .catch((e: AxiosError) => { console.log(e) })
