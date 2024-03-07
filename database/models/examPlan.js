@@ -1,10 +1,10 @@
 const { DataTypes } = require('sequelize'); // The Sequelize data types.
 
 /**
- * Define the ExaminationRegulation model.
+ * Define the ExamPlan model.
  *
  * @param {import('sequelize').Sequelize} sequelize - The Sequelize instance.
- * @returns {import('sequelize').Model} The ExaminationRegulation model.
+ * @returns {import('sequelize').Model} The ExamPlan model.
  */
 module.exports = (sequelize) => {
   /**
@@ -13,12 +13,13 @@ module.exports = (sequelize) => {
 
   /**
    * @type {Model}
-   * @namespace ExaminationRegulation
+   * @namespace ExamPlan
    * @property {integer} id - The primary key for the examination regulation.
    * @property {string} name - The name of the examination regulation.
    * @property {string} jsonSchema - The JSON schema associated with the examination regulation.
+   * @property {date} approvalDate - the date at which the Office for Student Affairs approved a submission
    */
-  const ExaminationRegulation = sequelize.define('ExaminationRegulation', {
+  const ExamPlan = sequelize.define('ExamPlan', {
     id: {
       type: DataTypes.INTEGER,
       autoIncrement: true,
@@ -32,45 +33,33 @@ module.exports = (sequelize) => {
     jsonSchema: {
       type: DataTypes.TEXT('long'),
       allowNull: false
+    },
+    approvalDate: {
+      type: DataTypes.DATE,
+      allowNull: true
     }
   });
 
   /**
-   * Define associations for the ExaminationRegulation model.
+   * Define associations for the ExamPlan model.
    *
    * @param {Object} models - The Sequelize models.
    */
-  ExaminationRegulation.associate = (models) => {
+  ExamPlan.associate = (models) => {
     /**
-     * Define a N:1 relationship with the User model, representing the creator of the regulation.
+     * Define a N:1 relationship with the User model, representing the creator of the plan.
      *
-     * @memberof ExaminationRegulation
+     * @memberof ExamPlan
      * @method
      * @name belongsToCreator
      * @param {Object} models.User - The User model.
      * @param {Object} options - Additional options e.g. foreignKey-Name.
      */
-    ExaminationRegulation.belongsTo(models.User, {
+    ExamPlan.belongsTo(models.User, {
       foreignKey: 'createdBy',
       as: 'creator'
     });
-
-    /**
-     * Define a N:M relationship with the User model, representing users who edited the regulation.
-     *
-     * @memberof ExaminationRegulation
-     * @method
-     * @name belongsToManyEditors
-     * @param {Object} models.User - The User model.
-     * @param {Object} options - Additional options, such as the name of the association table.
-     */
-    ExaminationRegulation.belongsToMany(models.User, {
-      through: 'EditedByUser',
-      foreignKey: 'regulationId',
-      otherKey: 'editedById',
-      as: 'editors'
-    });
   };
 
-  return ExaminationRegulation;
+  return ExamPlan;
 };
