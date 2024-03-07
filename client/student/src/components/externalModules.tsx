@@ -44,7 +44,7 @@ export default function ExternalModules({
           onClick={() => setDisplayAdd(true)}
         >
           {' '}
-          Leistung hinzufügen
+          Anerkannte Leistung hinzufügen
         </Button>
       )}
       {displayAdd && (
@@ -137,7 +137,7 @@ export default function ExternalModules({
             }}
             size="sm"
           >
-            Anerkannte Leistung hinzufügen
+            Leistung hinzufügen
           </Button>
         </div>
       )}

@@ -19,6 +19,10 @@ router.post('/addExamRegulation', dbController.addOrUpdateExamRegulation);
 
 router.get('/getAllExamRegulationsMin', dbController.getAllExamRegulationsMin);
 
+// for exam plans
+router.delete(`/deleteExamPlan/:id`, dbController.deleteExamPlan)
+router.post('/api/intern/addExamPlan', dbController.addExamPlan);
+
 // for modules
 router.post('/addModul', dbController.addModul);
 router.post('/deleteModulById', dbController.deleteModulById);

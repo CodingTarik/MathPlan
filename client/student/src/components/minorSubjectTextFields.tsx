@@ -11,7 +11,7 @@ export default function MinorSubjectTextFields({
     return <div><FormControl sx={{ marginTop: 2, marginBottom: 2 }}>
     
       <Textarea minRows={1} maxRows= {2}  onChange={(event) => {if (event.target.value.length > 100) window.alert("Der Name ist zu lang, so kann nur ein Teil gespeichert werden."); else {const examPlan = getExamPlan(); objectPath.set(examPlan, nestedKeys+".minorSubject", event.target.value), setExamPlan(examPlan)}}} />
-      <FormHelperText>Geben Sie hier wenn nötig Ihr Nebenfach an (max. 100 Zeichen)</FormHelperText>
+      <FormHelperText>Geben Sie hier, wenn nötig, Ihr Nebenfach an (max. 100 Zeichen)</FormHelperText>
   </FormControl>
   <FormControl sx={{ marginTop: 2, marginBottom: 2 }}>
   
