@@ -39,7 +39,7 @@
           >
         </li>
         <% } %>
-        <% if( isTeach ) { %> 
+        <% if( isTeach || isIntern ) { %> 
         <li class="nav-item">
           <a class="nav-link" href="/teach"
             ><i class="fa fa-university"></i> Dozierende</a
@@ -64,7 +64,7 @@
       <ul class="navbar-nav" style="margin-left: auto">
         <% if ( isloggedin) { %> 
           <p style=" text-align: center; margin: auto; padding-right: 0.5cm;">
-            Wilkommen, <%= username %>.
+            Wilkommen, <%= name %>.
           </p>
           
           <button href="/logout" class="btn btn-outline-light rounded-pill me-2">

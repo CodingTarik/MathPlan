@@ -1,6 +1,7 @@
 const express = require('express');
 const path = require('path');
 const router = express.Router();
+const checkRole = require(path.join(__dirname, '../auth/roleChecker.js')).checkRole;
 
 router.get('/', (req, res, next) => {
   res.render('layout/index', {
@@ -9,7 +10,7 @@ router.get('/', (req, res, next) => {
   });
 });
 
-router.get('/teach', function (req, res, next) {
+router.get('/teach', checkRole('teacher'), function (req, res, next) {
   if (req.session.isIntern || req.session.isTeach) {
     console.log('Intern');
     next();
@@ -25,27 +26,18 @@ router.get('/teach', function (req, res, next) {
 
 const internPath = path.join(__dirname, '..', 'client', 'build', 'intern');
 
-router.get('/intern', function (req, res, next) {
-  if (req.session.isIntern) {
-    next();
-  } else {
-    res.redirect('/');
-  }
-}, (req, res, next) => {
+router.get('/intern', checkRole('intern'), (req, res, next) => {
   res.render('layout/index', {
     body: '../../client/build/intern/index.html',
     title: 'Intern'
   });
 });
+
 router.use(
   '/intern',
+  checkRole('intern'),
   express.static(internPath, { index: false, redirect: false })
 );
-
-router.get('/about/:name', (req, res) => {
-  // Übergeben von Parameter Name an Seitenrenderer
-  res.render('index', { title: `Über uns ${req.params.name}` });
-});
 
 // when the idp is not reachable
 router.get('/loginnotworking', (req, res) => {

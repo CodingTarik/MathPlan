@@ -96,20 +96,10 @@ app.use(
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 
-// Register session middleware handling
-app.use((req, res, next) => {
-  const session = req.session;
-  res.locals.isloggedin = false;
-  res.locals.isIntern = session?.isIntern ? session?.isIntern : false;
-  res.locals.isTeach = session?.isTeach ? session?.isTeach : false;
-  res.locals.session = session || false;
-  res.locals.username = session?.username ? session?.username : 'no User';
-  next();
-});
-
 // Register login
 sso.setupSessionAndOpenID(app);
 
+// Routing
 app.use('/api', api);
 app.use('/', pages);
 

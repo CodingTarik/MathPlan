@@ -163,6 +163,7 @@ const securityHeaderConfig = {
 config.server.HELMET = securityHeaderConfig;
 
 config.auth = {};
+config.auth.admin = process.env.ADMIN;
 config.auth.openid_client_id = process.env.OPENID_CLIENT_ID;
 config.auth.openid_client_secret = process.env.OPENID_CLIENT_SECRET;
 config.auth.openid_discovery_url = process.env.OPENID_DISCOVERY_URL;
