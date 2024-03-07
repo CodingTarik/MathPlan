@@ -16,6 +16,9 @@ const pdfUploadController = require(
 router.get('/getAllModuls', dbController.getAllModulsForJSONEditor);
 router.get('/getAllModulsMin', dbController.getAllModulsMin);
 router.post('/addExamRegulation', dbController.addOrUpdateExamRegulation);
+
+router.get('/getAllExamRegulationsMin', dbController.getAllExamRegulationsMin);
+
 // for modules
 router.post('/addModul', dbController.addModul);
 router.post('/deleteModulById', dbController.deleteModulById);

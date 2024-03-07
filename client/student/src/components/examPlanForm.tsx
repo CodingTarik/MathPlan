@@ -1,13 +1,13 @@
 import * as React from 'react';
 import InfoOutlined from '@mui/icons-material/InfoOutlined';
 import { Select, Option, FormControl, FormLabel, Radio, RadioGroup, Sheet, Typography, Textarea} from '@mui/joy';
-import { Button, Box } from '@mui/material';
+import { Button, Box, } from '@mui/material';
 import {PlanForm} from './examPlan';
 import { setExamPlan, getExamPlan } from './examPlanVariable';
 import objectPath from 'object-path';
+import {getExamRegulations} from '../../../intern/src/database_services/ExamRegulationService.ts'
 
-
-export default function ExamPlanForm() {
+export default async function ExamPlanForm() {
   const [examRegulation, setExamRegulation] = React.useState<{
     jsonSchema: string;
     name: string;
@@ -20,7 +20,17 @@ export default function ExamPlanForm() {
   );
   const [hasExamPlan, setHasExamPlan] = React.useState(false);
 
-  const examRegulationNames = [
+  let examRegulationNames = new Array<string>;
+  try {
+    const responseData = await getExamRegulations();
+    console.log("Success at getting exam Regulations");
+    examRegulationNames = responseData.map((entry) => entry.name)
+    console.log(examRegulationNames)
+
+  } 
+  catch(e) { console.log(e) }
+  
+  /* examRegulationNames = [
     'B.Sc. Mathematik/ Mathematik 2018',
     'B.Sc. Mathematik/Wirtschaftsmathematik (2018)',
     'M.Sc. Mathematik/Wirtschaftsmathematik (2018)',
@@ -29,10 +39,9 @@ export default function ExamPlanForm() {
     'M.Sc. Mathematics (2018)',
     'Lehramt an Gymnasien (2017)',
     'Lehramt an Gymnasien (2023)'
-  ];
+  ]; */
 
   
-
   const onRegulationChange = (name: string | null) => {
     if (name == null) throw Error();
     //todo: retrieve examRegulation from database

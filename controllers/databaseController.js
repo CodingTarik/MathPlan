@@ -294,6 +294,39 @@ const getModules = (req, res) => {
       }
     });
 };
+/**
+ * Retrieve all exam regulations with minimal information.
+ * @param {*} req the request
+ * @param {*} res the result
+ */
+const getAllExamRegulationsMin = async (req, res) => {
+  try {
+    // Retreive all exam regulation schemas
+    const examRegulationSchemas =
+      await examRegulationHelper.getAllExamRegulations();
+
+    // we just want attribute name and jsonSchema
+    const finalExamRegulationSchemas = [];
+    examRegulationSchemas.forEach((schema) => {
+      finalExamRegulationSchemas.push({
+        name: schema.name,
+        jsonSchema: schema.jsonSchema
+      });
+    });
+
+    // Send a success response
+    res.status(200).send(finalExamRegulationSchemas);
+  } catch (error) {
+    console.error('Error retrieving exam regulation schemas:', error);
+
+    // Send an error response
+    res.status(500).json({
+      success: false,
+      message: 'Error retrieving exam regulation schemas.',
+      error: error.message
+    });
+  }
+};
 
 module.exports = {
   addModul,
@@ -301,6 +334,7 @@ module.exports = {
   getAllModulsForJSONEditor,
   getAllModulsMin,
   addOrUpdateExamRegulation,
+  getAllExamRegulationsMin,
   updateModule,
   getOneModule,
   getModules
