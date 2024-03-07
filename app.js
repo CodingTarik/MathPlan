@@ -92,25 +92,22 @@ app.use(
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 
-// Register login
-sso.setupSessionAndOpenID(app).then(() => {
-  // has to happen after the session is registered
-  // because session is async and then route registration for / could happen before the session is registered
-  // so /login would redirect to 404
-  // Routing
-  app.use('/', (req, res, next) => {
-    const session = req.session;
-    console.log('session: ' + session);
-    res.locals.isloggedin = !!session;
-    res.locals.isIntern = session?.isIntern ? session?.isIntern : false;
-    res.locals.isTeach = session?.isTeach ? session?.isTeach : false;
-    res.locals.session = session || false;
-    res.locals.username = session?.username ? session?.username : 'no User';
-    next();
-  });
-  app.use('/api', api);
-  app.use('/', pages);
+// Register session middleware handling
+app.use((req, res, next) => {
+  const session = req.session;
+  res.locals.isloggedin = false;
+  res.locals.isIntern = session?.isIntern ? session?.isIntern : false;
+  res.locals.isTeach = session?.isTeach ? session?.isTeach : false;
+  res.locals.session = session || false;
+  res.locals.username = session?.username ? session?.username : 'no User';
+  next();
 });
+
+// Register login
+sso.setupSessionAndOpenID(app);
+
+app.use('/api', api);
+app.use('/', pages);
 
 try {
   if (process.env.NODE_ENV !== 'test') {
@@ -128,7 +125,7 @@ try {
     // HTTP-Server
     if (config.server.ALLOW_HTTP) {
       let httpServer = null;
-      if (config.HTTP_REDIRECT) {
+      if (config.server.HTTP_REDIRECT) {
         httpServer = http.createServer((req, res) => {
           res.writeHead(301, {
             Location:
@@ -155,9 +152,10 @@ try {
     // HTTPS-Server
     /* eslint-disable security/detect-non-literal-fs-filename */
     if (config.server.ALLOW_HTTPS) {
+      logger.info('Reading certificate file from ' + config.server.CERT_PATH);
       const options = {
-        key: fs.readFileSync(config.server.CERT_PATH, 'utf8'),
-        cert: fs.readFileSync(config.server.CERT_SECRET_PATH, 'utf8')
+        key: fs.readFileSync(config.server.CERT_SECRET_PATH, 'utf8'),
+        cert: fs.readFileSync(config.server.CERT_PATH, 'utf8')
       };
       /* eslint-enable security/detect-non-literal-fs-filename */
 

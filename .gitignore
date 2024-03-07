@@ -7,6 +7,9 @@
 # Ignore node_modules directory
 /node_modules
 
+# ignore frontmatter
+frontmatter.json
+.frontmatter
 
 # Ignore build folder
 /client/build
