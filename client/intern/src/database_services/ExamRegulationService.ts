@@ -40,7 +40,7 @@ export async function saveExamRegulationFunction(
 export const getExamRegulations = async () => {
   try {
     // Send axios get request to /api/intern/getAllexamRegulationsMin
-    const response: AxiosResponse<{jsonSchema: object, name:string}[]> = await axios.get(
+    const response: AxiosResponse<{jsonSchema: string, name:string}[]> = await axios.get(
       '/api/intern/getAllexamRegulationsMin'
     );
     // Update the state with the fetched exam regulations

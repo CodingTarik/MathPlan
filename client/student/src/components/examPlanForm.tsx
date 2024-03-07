@@ -22,14 +22,14 @@ export default function ExamPlanForm() {
   const [hasExamPlan, setHasExamPlan] = React.useState(false);
 
   const [examRegulationNames, setExamRegulationNames] = React.useState<Array<string>>([])
- 
+  const [examRegulations, setExamRegulations] = React.useState<Array<{jsonSchema: string, name: string}>>([])
 
   React.useEffect(() => {
     getExamRegulations()
-  .then((responseData: { jsonSchema: object, name:string}[]) => { 
+  .then((responseData: { jsonSchema: string, name:string}[]) => { 
     console.log("Success at getting exam Regulations");
     setExamRegulationNames(responseData.map((entry) => entry.name))
-    console.log(examRegulationNames)
+    setExamRegulations(responseData);
   })
   .catch((e: AxiosError) => { console.log(e) })
   }, []);
@@ -41,8 +41,8 @@ export default function ExamPlanForm() {
   const onRegulationChange = (name: string | null) => {
     if (name == null) throw Error();
     //todo: retrieve examRegulation from database
-    let x = new Object;
-    if (name === "B.Sc. Mathematik/ Mathematik 2018"){
+    
+    /* if (name === "B.Sc. Mathematik/ Mathematik 2018"){
       x = {
         area: {
           name: 'B.Sc. Mathematik/Mathematik 2018',
@@ -469,13 +469,13 @@ export default function ExamPlanForm() {
     }
     else if (name === 'Lehramt an Gymnasien (2023)'){
       x = {"area":{"name":"Pflichtbereich Mathematik","minCreditPointsOverall":83}}
+    } */
+    const x = examRegulations.find((elem) => elem.name === name)
+    if (x){
+      setExamRegulation(x);
+      setExamPlan(JSON.parse(x.jsonSchema));
+      setHasExamPlan(true)
     }
-    setExamRegulation({
-      jsonSchema: JSON.stringify(x),
-      name: name
-    });
-    setExamPlan(x)
-    setHasExamPlan(true)
   };
 
   return (
