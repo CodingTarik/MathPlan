@@ -22,6 +22,7 @@ export default function ExamPlanForm() {
   const [hasExamPlan, setHasExamPlan] = React.useState(false);
 
   const [examRegulationNames, setExamRegulationNames] = React.useState<Array<string>>([])
+ 
 
   React.useEffect(() => {
     getExamRegulations()
@@ -35,17 +36,6 @@ export default function ExamPlanForm() {
     
   
   
-  
-  /* examRegulationNames = [
-    'B.Sc. Mathematik/ Mathematik 2018',
-    'B.Sc. Mathematik/Wirtschaftsmathematik (2018)',
-    'M.Sc. Mathematik/Wirtschaftsmathematik (2018)',
-    'M.Sc. Mathematik/Mathematik (2018)',
-    'M.Sc. Mathematik Interdisziplinär (2018)',
-    'M.Sc. Mathematics (2018)',
-    'Lehramt an Gymnasien (2017)',
-    'Lehramt an Gymnasien (2023)'
-  ]; */
 
   
   const onRegulationChange = (name: string | null) => {
