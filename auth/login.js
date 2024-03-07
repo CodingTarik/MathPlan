@@ -71,7 +71,9 @@ const setupOpenID = (app) => {
     try {
       const params = client.callbackParams(req);
       const tokenSet = await client.callback(config.auth.REDIRECT_URI, params);
-      userinfo = await client.userinfo(req.session.tokenSet.access_token);
+      const userinfo = await client.userinfo(tokenSet.access_token);
+      req.session.userinfo = userinfo;
+      logger.info('User logged in info: ' + JSON.stringify(userinfo));
     } catch (err) {
       logger.error(err);
       renderError(req, res, err);
