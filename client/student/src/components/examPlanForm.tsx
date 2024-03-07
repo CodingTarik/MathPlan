@@ -5,7 +5,6 @@ import { Button, Box } from '@mui/material';
 import {PlanForm} from './examPlan';
 import { setExamPlan, getExamPlan } from './examPlanVariable';
 import objectPath from 'object-path';
-import ExternalModules from './externalModules'
 
 
 export default function ExamPlanForm() {
@@ -477,6 +476,7 @@ export default function ExamPlanForm() {
   return (
     <>
       <h1>Antrag Detailansicht</h1>
+      {(!hasExamPlan || typeOfExamPlan===null) &&
       <Box sx={{ p: 2, border: 1, borderRadius: 2 }}>
         <FormControl sx={{ width: 300 }}>
           <FormLabel>Prüfungsordnung</FormLabel>
@@ -544,7 +544,7 @@ export default function ExamPlanForm() {
             </Sheet>
           ))}
         </RadioGroup>
-      </Box>
+      </Box>}
       {(hasExamPlan && typeOfExamPlan) && <div>
         {Object.entries(JSON.parse(examRegulation?.jsonSchema)).map(
             (entry) => <PlanForm entry={entry} nestedKeys={''} level={0} />)}
@@ -557,9 +557,9 @@ export default function ExamPlanForm() {
           sx={{ marginTop: 2, marginBottom: 2 }}
           onClick={() => console.log(getExamPlan())}
         >
-          Als Entwurf speichern
+          Als {typeOfExamPlan}-Entwurf speichern
         </Button>
-        <ExternalModules></ExternalModules>
+
       </div>}
       
     </>
