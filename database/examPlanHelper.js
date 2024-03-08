@@ -15,6 +15,7 @@ const addExamPlan = async (
   };
 
   return ExamPlan.create(newPlan).catch((err) => {
+    // should only happen if connection to database breaks (not tested)
     throw new Error(err);
   });
 };
@@ -30,7 +31,7 @@ const deleteExamPlan = async (ID) => {
 
     // If affectedRows is greater than 0, it means at least one record was deleted
     return affectedRows > 0;
-  } catch (error) {
+  } catch (error) { // should only happen if connection to database breaks (not tested)
     logger.error('Error deleting exam plan:', error);
     return false; // Return false if an error occurs during deletion
   }

@@ -40,8 +40,7 @@ module.exports = (sequelize) => {
     },
     typeOfPlan: {
       type: DataTypes.STRING,
-      allowNull: false,
-      unique: false
+      allowNull: false
     }
   });
 
