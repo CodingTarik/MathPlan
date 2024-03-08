@@ -22,9 +22,11 @@ interface ExternalModule {
 }
 
 export default function ExternalModules({
-  nestedKeys
+  nestedKeys,
+  name
 }: {
-  nestedKeys: string;
+  nestedKeys: string,
+  name: string;
 }) {
   const [displayAdd, setDisplayAdd] = React.useState<boolean>(false);
   const [addedModules, setAddedModules] = React.useState<ExternalModule[]>([]);
@@ -33,7 +35,9 @@ export default function ExternalModules({
     moduleID: '',
     moduleName: ''
   });
-  return (
+  const needsNoButtonToAddExternalModules = ["Pflichtbereich Mathematik", "Überfachlicher Pflichtbereich"]
+  return <div>
+    {!needsNoButtonToAddExternalModules.includes(name) && 
     <div>
       {!displayAdd && (
         <Button
@@ -76,7 +80,15 @@ export default function ExternalModules({
                 const credits = Number(event?.target.value);
                 if (isNaN(credits)) {
                   window.alert('Die Credit Points müssen eine Zahl sein');
-                } else {
+                } else if (!event?.target.value){
+                  const tmp = {
+                    moduleID: currentModule.moduleID,
+                    moduleName: currentModule.moduleName,
+                    moduleCredits: NaN
+                  };
+                  setCurrentModule(tmp);
+                }
+                else {
                   {
                     const tmp = {
                       moduleID: currentModule.moduleID,
@@ -139,6 +151,20 @@ export default function ExternalModules({
           >
             Leistung hinzufügen
           </Button>
+          <Button
+            sx={{ mt: 2, ml:2 }}
+            onClick={() => {
+              setDisplayAdd(false);
+              setCurrentModule({
+                moduleCredits: NaN,
+                moduleID: '',
+                moduleName: ''
+              });
+            }}
+            size="sm"
+          >
+            Abbrechen
+          </Button>
         </div>
       )}
       {addedModules.length != 0 && (
@@ -154,18 +180,18 @@ export default function ExternalModules({
             mb: 2
           }}
         >
-          <Table sx={{ textAlign: 'left' }} borderAxis="bothBetween">
+          <Table sx={{ textAlign: 'left'}} borderAxis="bothBetween">
             <tbody>
               {addedModules.map((row) => (
                 <tr>
-                  <td style={{ wordBreak: 'break-word', width: '40%' }}>
+                  <td style={{ wordBreak: 'break-word'}}>
                     {row.moduleID}
                   </td>
-                  <td style={{ wordBreak: 'break-word', width: '40%' }}>
+                  <td style={{ wordBreak: 'break-word'}}>
                     {row.moduleName}
                   </td>
-                  <td style={{ width: '15%' }}>{row.moduleCredits} CP</td>
-                  <td style={{ width: '5%' }}>
+                  <td style={{ wordBreak: 'break-word'}}>{row.moduleCredits} CP</td>
+                  <td style={{width: '50px'}}>
                     <Box sx={{ display: 'flex', gap: 1 }}>
                       <IconButton
                         onClick={() => {
@@ -205,6 +231,6 @@ export default function ExternalModules({
           </Table>
         </Sheet>
       )}
-    </div>
-  );
+    </div>}</div>
+  
 }

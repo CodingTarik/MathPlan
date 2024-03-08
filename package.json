@@ -24,15 +24,16 @@
     "object-path": "^0.11.8",
     "pdf-parse": "^1.1.1",
     "react": "^18.2.0",
+    "react-markdown": "^9.0.1",
     "react-router-dom": "^6.22.0",
     "rimraf": "^5.0.5",
     "select2": "^4.1.0-rc.0",
     "sequelize": "^6.35.1",
     "sqlite3": "^5.1.6",
-    "winston": "^3.11.0",
-    "winston-daily-rotate-file": "^4.7.1",
     "sweetalert2": "^11.6.13",
-    "typed.js": "^2.1.0"
+    "typed.js": "^2.1.0",
+    "winston": "^3.11.0",
+    "winston-daily-rotate-file": "^4.7.1"
   },
   "devDependencies": {
     "@jest/globals": "^29.7.0",

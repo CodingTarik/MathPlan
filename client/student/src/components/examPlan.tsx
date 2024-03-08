@@ -12,6 +12,7 @@ import ExternalModules from './externalModules';
 import MinorSubjectTextFields from './minorSubjectTextFields.tsx';
 import { Box } from '@mui/material';
 import objectPath from 'object-path';
+import Markdown from 'react-markdown'
 
 type Modul = {
   moduleID: string;
@@ -89,8 +90,7 @@ function PlanForm({
           let moduleEntry = new Array<string | unknown>();
           let containsSubarea = false;
           let subareaEntry = new Array<string | unknown>();
-          let isMandotoryArea = false;
-          let minorSubjectArea = false;
+          let nameSubarea = "";
           return (
             <div>
               <Accordion defaultExpanded={true}>
@@ -109,12 +109,7 @@ function PlanForm({
                 <AccordionDetails>
                   {Object.entries(e).map((newEntry) => {
                     if (newEntry[0] === 'name') {
-                      if (newEntry[1].includes('Pflichtbereich')) {
-                        isMandotoryArea = true;
-                      }
-                      if (newEntry[1].includes('Nebenfach') || newEntry[1].includes('Nicht-mathematischer Vertiefungsbereich')){
-                        minorSubjectArea = true;
-                      }
+                      nameSubarea = newEntry[1];
                       return;
                     } else if (newEntry[0] === 'module') {
                       containsModules = true;
@@ -142,12 +137,12 @@ function PlanForm({
                       level={level + 1}
                     />
                   )}
-                  {!isMandotoryArea && (
-                    <ExternalModules
+                  
+                    <ExternalModules name = {nameSubarea}
                       nestedKeys={nestedKeys + key + '.' + index}
                     ></ExternalModules>
-                  )}
-                  {minorSubjectArea && (<MinorSubjectTextFields nestedKeys={nestedKeys + key + '.' + index}></MinorSubjectTextFields>)}
+                  
+                  <MinorSubjectTextFields name = {nameSubarea} nestedKeys={nestedKeys + key + '.' + index}></MinorSubjectTextFields>
                   
                   {containsSubarea && (
                     <PlanForm
@@ -165,10 +160,8 @@ function PlanForm({
     );
   } else if (Object.keys(descriptions).includes(key)) {
     return (
-      <Typography textAlign="left" level="body-md">
-        {descriptions[key as DescriptionsKey]}
-        {value as string}
-      </Typography>
+        <div style ={{textAlign: "left"}} ><Markdown>{descriptions[key as DescriptionsKey] + value as string}</Markdown></div>
+      
     );
   } else if (key === 'name') {
     const levelTitle = level < 5 ? levels[level] : levels[4];
