@@ -331,7 +331,6 @@ const getAllExamRegulationsMin = async (req, res) => {
   }
 };
 
-
 const addExamPlan = async (req, res) => {
   try {
     // Access the JSON schema from the request body

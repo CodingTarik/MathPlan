@@ -132,7 +132,15 @@ export default function ExamPlanForm() {
         <Button
           variant="outlined"
           sx={{ marginTop: 2, marginBottom: 2 }}
-          onClick={() => { saveExamPlan(JSON.stringify(getExamPlan()), examRegulation.name); console.log(getExamPlan())}}
+          onClick={() => { saveExamPlan(JSON.stringify(getExamPlan()), examRegulation.name).then((response: { data: object; }) => { 
+            console.log("Success at saving examPlan");
+            console.log(response.data);
+          })
+          .catch((e: Error) => { 
+            console.log("Error while saving examPlan");
+            console.log(e);
+          });
+          console.log(getExamPlan())}}
         >
           Als {typeOfExamPlan}-Entwurf speichern
         </Button>
