@@ -43,7 +43,6 @@ export const getExamRegulations = async () => {
     const response: AxiosResponse<{jsonSchema: string, name:string}[]> = await axios.get(
       '/api/intern/getAllexamRegulationsMin'
     );
-    // Update the state with the fetched exam regulations
     return response.data;
   } catch (error) {
     console.error(error);

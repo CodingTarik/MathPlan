@@ -2,7 +2,7 @@
 import './App.css';
 import { HashRouter, Route, Routes} from 'react-router-dom';
 import Overview from './components/examPlanOverview';
-import ApplicationForm from './components/examPlanForm';
+import ExamPlanFormStartPage from './components/examPlanFormStartPage';
 
 /**
  * JSX structure representing the entire intern application.
@@ -16,7 +16,7 @@ function App() {
       <HashRouter>
       <div><Routes>
         <Route path="/" element={<Overview />}/>
-        <Route path="/applicationform" element={<ApplicationForm />}/>
+        <Route path="/applicationform" element={<ExamPlanFormStartPage />}/>
         </Routes>
       </div>
       </HashRouter>

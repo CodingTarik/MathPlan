@@ -1,156 +1,209 @@
-import * as React from 'react';
-import InfoOutlined from '@mui/icons-material/InfoOutlined';
-import { Select, Option, FormControl, FormLabel, Radio, RadioGroup, Sheet, Typography, Textarea} from '@mui/joy';
-import { Button, Box, } from '@mui/material';
-import {PlanForm} from './examPlan';
-import { setExamPlan, getExamPlan } from './examPlanVariable';
+import { descriptions } from './descriptions.ts';
+import TableForModules from './tableForModules.tsx';
+import { setExamPlan, getExamPlan } from './examPlanVariable.ts';
+import {
+  TypographySystem,
+  Typography,
+  Accordion,
+  AccordionDetails,
+  AccordionSummary
+} from '@mui/joy';
+import ExternalModules from './externalModules.tsx';
+import MinorSubjectTextFields from './minorSubjectTextFields.tsx';
+import { Box } from '@mui/material';
 import objectPath from 'object-path';
-import {AxiosError} from 'axios';
-import {getExamRegulations} from '../../../intern/src/database_services/ExamRegulationService.ts'
-import {saveExamPlan} from '../database_services/ExamPlanService.ts'
+import Markdown from 'react-markdown';
 
-export default function ExamPlanForm() {
-  const [examRegulation, setExamRegulation] = React.useState<{
-    jsonSchema: string;
-    name: string;
-  }>({
-    jsonSchema: '',
-    name: ''
-  });
-  const [typeOfExamPlan, setTypeOfExamPlan] = React.useState<string | null>(
-    null
-  );
-  const [hasExamPlan, setHasExamPlan] = React.useState(false);
+type Modul = {
+  moduleID: string;
+  moduleName: string;
+  moduleCredits: string;
+  moduleLanguage: string;
+  moduleApplicability: string;
+};
+type ModulWrapper = {
+  name: Modul;
+  moduleID: string;
+  creditPoints: number;
+  pflicht: boolean;
+  nichtwählbarmitmodul: Array<object>;
+};
+type DescriptionsKey = keyof typeof descriptions;
 
-  const [examRegulationNames, setExamRegulationNames] = React.useState<Array<string>>([])
-  const [examRegulations, setExamRegulations] = React.useState<Array<{jsonSchema: string, name: string}>>([])
- 
-
-
-  React.useEffect(() => {
-    getExamRegulations()
-  .then((responseData: { jsonSchema: string, name:string}[]) => { 
-    console.log("Success at getting exam Regulations");
-    setExamRegulationNames(responseData.map((entry) => entry.name))
-    setExamRegulations(responseData);
-  })
-  .catch((e: AxiosError) => { console.log(e) })
-  }, []);
-    
-
-
-  
-
-  
-  const onRegulationChange = (name: string | null) => {
-    if (name == null) throw Error();
-
-    const x = examRegulations.find((elem) => elem.name === name)
-    if (x){
-      setExamRegulation(x);
-      setExamPlan(JSON.parse(x.jsonSchema));
-      setHasExamPlan(true)
-    }
-  };
-
-  return (
-    <>
-      <h1>Antrag Detailansicht</h1>
-      {(!hasExamPlan || typeOfExamPlan===null) &&
-      <Box sx={{ p: 2, border: 1, borderRadius: 2 }}>
-        <FormControl sx={{ width: 300 }}>
-          <FormLabel>Prüfungsordnung</FormLabel>
-          <Select
-            placeholder="Wählen Sie eine Prüfungsordnung"
-            sx={{ width: 300 }}
-            onChange={(
-              _event: React.SyntheticEvent | null,
-              newValue: string | null
-            ) => {
-              onRegulationChange(newValue);
-            }}
-          >
-            {examRegulationNames.map((name) => (
-              <Option value={name}>{name}</Option>
-            ))}
-          </Select>
-        </FormControl>
-        <Typography
-          variant="soft"
-          color="primary"
-          level="body-md"
-          startDecorator={<InfoOutlined />}
-          sx={{ mt: 2, p: 2 }}
-        >
-          Hinweis: Wenn im Master die Studienrichtung gewechselt wird, muss ein
-          seperater Prüfungsplan ausgefüllt werden.
-        </Typography>
-        <RadioGroup
-          size="lg"
-          sx={{ gap: 1.5, mt: 2 }}
-          orientation="horizontal"
-          onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
-            setTypeOfExamPlan(event.target.value)
-          }
-        >
-          {['Prüfungsplan', 'Nebenfachplan'].map((value) => (
-            <Sheet
-              key={value}
-              sx={{ p: 2, borderRadius: 'md', boxShadow: 'sm' }}
-            >
-              <Radio
-                label={`${value}`}
-                overlay
-                disableIcon
-                value={value}
-                slotProps={{
-                  label: ({ checked }) => ({
-                    sx: {
-                      fontWeight: 'lg',
-                      fontSize: 'md',
-                      color: checked ? 'text.primary' : 'text.secondary'
+/**
+ *
+ * @param entry key value pair that is part of the exam regulation
+ * @param nestedKeys the path to this key value pair within the exam regulation object
+ * @param level the depth at which the key value pair can be found in the exam regulation
+ * @returns UI for the actual exam plan form
+ */
+function ExamPlanForm({
+  entry,
+  nestedKeys,
+  level
+}: {
+  entry: Array<string | unknown>;
+  nestedKeys: string;
+  level: number;
+}) {
+  // type of titles at different levels
+  const levels = ['h1', 'h2', 'h3', 'h4', 'title-lg'];
+  // key-value pair
+  const key = entry[0] as string;
+  const value = entry[1];
+  if (nestedKeys) {
+    nestedKeys = nestedKeys + '.' + key;
+  }
+  if (key === 'area') {
+    /** recursively call ExamPlanForm for every key-value pair in the value object, the key-value pair that contains the name of the exam regulation is the key-value pair which is passed as a
+     * param for the first function call since it is the accordion summary (part that is still visible is accordion is not expanded)
+     */
+    return (
+      <Box sx={{ p: 4, border: 1, borderRadius: 2, mt: 2 }}>
+        <Accordion defaultExpanded={true}>
+          <AccordionSummary>
+            {Object.entries(value as object).map(
+              (newEntry) =>
+                newEntry[0] === 'name' && (
+                  <ExamPlanForm
+                    entry={newEntry}
+                    nestedKeys={nestedKeys}
+                    level={level + 1}
+                  />
+                )
+            )}
+          </AccordionSummary>
+          <AccordionDetails>
+            {Object.entries(value as object).map(
+              (newEntry) =>
+                newEntry[0] !== 'name' && (
+                  <ExamPlanForm
+                    entry={newEntry}
+                    nestedKeys={nestedKeys}
+                    level={level + 1}
+                  />
+                )
+            )}
+          </AccordionDetails>
+        </Accordion>
+      </Box>
+    );
+  } else if (key === 'subarea') {
+    /** For every subarea in the value array recursively call ExamPlanForm for every key-value pair in the subarea object.
+     * If a subarea contains more subareas or modules that ExamPlanForm call is done at the end, so that the order of the UI components is always the same.
+     */
+    return (
+      <Box sx={{ border: 0.5, borderRadius: 2, ml: 8, p: 3, mt: 2, mb: 2 }}>
+        {(value as Array<object>).map((e: object, index: number) => {
+          let containsModules = false;
+          let moduleEntry = new Array<string | unknown>();
+          let containsSubarea = false;
+          let subareaEntry = new Array<string | unknown>();
+          let nameSubarea = '';
+          return (
+            <div>
+              <Accordion defaultExpanded={true}>
+                <AccordionSummary>
+                  {Object.entries(e).map(
+                    (newEntry) =>
+                      newEntry[0] === 'name' && (
+                        <ExamPlanForm
+                          entry={newEntry}
+                          nestedKeys={nestedKeys + '.' + index}
+                          level={level + 1}
+                        />
+                      )
+                  )}
+                </AccordionSummary>
+                <AccordionDetails>
+                  {Object.entries(e).map((newEntry) => {
+                    if (newEntry[0] === 'name') {
+                      nameSubarea = newEntry[1];
+                      return;
+                    } else if (newEntry[0] === 'module') {
+                      containsModules = true;
+                      moduleEntry = newEntry;
+                      return;
+                    } else if (newEntry[0] === 'subarea') {
+                      containsSubarea = true;
+                      subareaEntry = newEntry;
+                      return;
+                    } else {
+                      return (
+                        <ExamPlanForm
+                          entry={newEntry}
+                          nestedKeys={nestedKeys + '.' + index}
+                          level={level + 1}
+                        />
+                      );
                     }
-                  }),
-                  action: ({ checked }) => ({
-                    sx: (theme) => ({
-                      ...(checked && {
-                        '--variant-borderWidth': '2px',
-                        '&&': { borderColor: theme.vars.palette.primary[500] }
-                      })
-                    })
-                  })
-                }}
-              />
-            </Sheet>
-          ))}
-        </RadioGroup>
-      </Box>}
-      {(hasExamPlan && typeOfExamPlan) && <div  style={{minWidth: '900px'}}>
-        {Object.entries(JSON.parse(examRegulation?.jsonSchema)).map(
-            (entry) => <PlanForm entry={entry} nestedKeys={''} level={0} />)}
-        <FormControl sx={{ marginTop: 2, marginBottom: 2 }}>
-          <FormLabel>Weitere Anmerkungen zum Prüfungs- bzw. Nebenfachplan (max. 5000 Zeichen)</FormLabel>
-            <Textarea minRows={4} maxRows= {8}  onChange={(event) => {if (event.target.value.length > 5000) window.alert("Die Anmerkung ist zu lang, so kann nur ein Teil der Anmerkung gespeichert werden."); else {const examPlan = getExamPlan(); objectPath.set(examPlan, "area.notesStudent", event.target.value), setExamPlan(examPlan)}}} />
-        </FormControl>
-        <Button
-          variant="outlined"
-          sx={{ marginTop: 2, marginBottom: 2 }}
-          onClick={() => { saveExamPlan(JSON.stringify(getExamPlan()), examRegulation.name, typeOfExamPlan).then((response: { data: object; }) => { 
-            console.log("Success at saving examPlan");
-            console.log(response.data);
-          })
-          .catch((e: Error) => { 
-            console.log("Error while saving examPlan");
-            console.log(e);
-          });
-          window.alert("Der " + {typeOfExamPlan}+ "-Entwurf wurde erfolgreich gespeichert.")
-          console.log(getExamPlan())}}
-        >
-          Als {typeOfExamPlan}-Entwurf speichern
-        </Button>
+                  })}
 
-      </div>}
-      
-    </>
-  );
+                  {containsModules && (
+                    <ExamPlanForm
+                      entry={moduleEntry}
+                      nestedKeys={nestedKeys + '.' + index}
+                      level={level + 1}
+                    />
+                  )}
+
+                  <ExternalModules
+                    name={nameSubarea}
+                    nestedKeys={nestedKeys + '.' + index}
+                  ></ExternalModules>
+
+                  <MinorSubjectTextFields
+                    name={nameSubarea}
+                    nestedKeys={nestedKeys + '.' + index}
+                  ></MinorSubjectTextFields>
+
+                  {containsSubarea && (
+                    <ExamPlanForm
+                      entry={subareaEntry}
+                      nestedKeys={nestedKeys + '.' + index}
+                      level={level + 1}
+                    />
+                  )}
+                </AccordionDetails>
+              </Accordion>
+            </div>
+          );
+        })}
+      </Box>
+    );
+  } else if (Object.keys(descriptions).includes(key)) {
+    // the information contained in the exam regulation like minNumberSeminars,.. is rendered as markdown with a descriptive string as specified in descriptions.ts
+    return (
+      <div style={{ textAlign: 'left' }}>
+        <Markdown>
+          {(descriptions[key as DescriptionsKey] + value) as string}
+        </Markdown>
+      </div>
+    );
+  } else if (key === 'name') {
+    // depending on the level the name is rendered as a certain style of title
+    const levelTitle = level < 5 ? levels[level] : levels[4];
+    return (
+      <Typography
+        textAlign="left"
+        level={levelTitle as keyof TypographySystem}
+        sx={{ mb: 1, mt: 2 }}
+      >
+        {value as string}
+      </Typography>
+    );
+  } else if (key === 'module') {
+    // initially no modules are stored in each area, this is set in the exam plan variable
+    const examPlan = getExamPlan();
+    objectPath.set(examPlan, nestedKeys, []);
+    setExamPlan(examPlan);
+    const rows = value as ModulWrapper[];
+    return (
+      <TableForModules rows={rows} nestedKeys={nestedKeys}></TableForModules>
+    );
+  } else {
+    return <div>Error loading component</div>;
+  }
 }
+
+export { ExamPlanForm };
