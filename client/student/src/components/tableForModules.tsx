@@ -19,6 +19,12 @@ type ModulWrapper = {
   nichtwählbarmitmodul: Array<object>;
 };
 
+/**
+ * 
+ * @param a 
+ * @param b 
+ * @returns comparator for the moduleName field
+ */
 function descendingComparator(a: ModulWrapper, b: ModulWrapper) {
   if (b['name']['moduleName'] < a['name']['moduleName']) {
     return -1;
@@ -29,6 +35,12 @@ function descendingComparator(a: ModulWrapper, b: ModulWrapper) {
   return 0;
 }
 
+/**
+ * 
+ * @param array 
+ * @param comparator 
+ * @returns sorts the array depending on the comparator
+ */
 function stableSort(
   array: readonly ModulWrapper[],
   comparator: (a: ModulWrapper, b: ModulWrapper) => number
@@ -48,6 +60,10 @@ function stableSort(
 
 const headCells: readonly string[] = ['Name', 'Nummer', 'CP', 'Sprache'];
 
+/**
+ * 
+ * @returns the UI for the table head
+ */
 function TableHead() {
   return (
     <thead>
@@ -61,6 +77,12 @@ function TableHead() {
   );
 }
 
+/**
+ * 
+ * @param numSelected 
+ * @param selected 
+ * @returns the UI for the tool bar which shows how many and which modules have been selected
+ */
 function TableToolbar({
   numSelected,
   selected
@@ -95,6 +117,12 @@ function TableToolbar({
   );
 }
 
+/**
+ * 
+ * @param row the actual modules wrapped by modulwrapper
+ * @param nestedKeys the path to this subarea within the exam regulation object
+ * @returns the UI for a module table
+ */
 export default function TableForModules({
   rows,
   nestedKeys
@@ -104,6 +132,11 @@ export default function TableForModules({
 }) {
   const [selected, setSelected] = React.useState<readonly ModulWrapper[]>([]);
 
+  /**
+   * if a row ic clicked the selected object and the exam plan vaariable gets updated
+   * @param _event 
+   * @param wrapper the module wrapper that was clicked
+   */
   const handleClick = (
     _event: React.MouseEvent<unknown>,
     wrapper: ModulWrapper

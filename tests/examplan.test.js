@@ -108,7 +108,7 @@ describe('ExamPlan API Tests', () => {
   });
 
   test('It should respond with false if the exam plan to be deleted does not exist', async () => {
-    const response = await dbhelper.deleteExamPlan(Math.floor(Math.random() * 10000000)); // very unlikely to alreadyd exist in database
+    const response = await dbhelper.deleteExamPlan(Math.floor(Math.random() * 10000000)); // very unlikely to already exist in database
     expect(response).toBe(false);
   });
 });

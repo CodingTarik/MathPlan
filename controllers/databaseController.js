@@ -331,10 +331,16 @@ const getAllExamRegulationsMin = async (req, res) => {
   }
 };
 
+/**
+ * Function that adds exam plan while assuming the necessary fields are contained in the body
+ * @param {*} req the request
+ * @param {*} res the result
+ * @returns
+ */
 const addExamPlan = async (req, res) => {
   // Access the JSON schema from the request body
   const examPlanRequest = req.body;
-  // check if contains fields examRegulation and internalName
+  // check if contains fields examPlanString, name and typeOfPlan
   if (
     !examPlanRequest.examPlanString ||
     !examPlanRequest.name ||
@@ -368,77 +374,8 @@ const addExamPlan = async (req, res) => {
         error: err.message
       });
     });
-  /*  try {
-    // Access the JSON schema from the request body
-    const examPlanRequest = req.body;
-    // check if contains fields examRegulation and internalName
-    if (
-      !examPlanRequest.examPlanString ||
-      !examPlanRequest.name ||
-      !examPlanRequest.typeOfPlan
-    ) {
-      res.status(400).send({
-        message:
-          'Content can not be empty! Contains an empty field'
-      });
-      return;
-    }
-    const examPlanString = examPlanRequest.examPlanString;
-    const name = examPlanRequest.name;
-    const typeOfPlan = examPlanRequest.typeOfPlan
-
-    await examPlanHelper.addExamPlan(
-      examPlanString,
-      name,
-      typeOfPlan
-    );
-
-    // Send a success response
-    res.status(200).json({
-      success: true,
-      message: 'Exam plan processed successfully.'
-    });
-  } catch (error) {
-    // Handle any errors that occurred during processing
-    logger.error('Error processing exam plan: ' + error.message);
-
-    // Send an error response
-    res.status(500).json({
-      success: false,
-      message: 'Error processing exam plan.',
-      error: error.message
-    });
-  } */
 };
-/* const deleteExamPlan = async (req, res) => {
-  const ID = req.params.id; // Assuming the module ID is in the route parameters
 
-  if (!ID) {
-    res.status(400).send({
-      message: 'Exam Plan ID is required!'
-    });
-    return;
-  }
-
-  examPlanHelper
-    .deleteExamPlan(ID)
-    .then((deleted) => {
-      if (deleted) {
-        res.send({
-          message: 'Exam plan was deleted successfully.'
-        });
-      } else {
-        res.status(404).send({
-          message: `Exam plan with ID ${ID} not found.`
-        });
-      }
-    })
-    .catch((err) => {
-      res.status(500).send({
-        message: err.message || 'Error deleting exam plan!'
-      });
-    });
-}; */
 module.exports = {
   addModul,
   deleteModulById,

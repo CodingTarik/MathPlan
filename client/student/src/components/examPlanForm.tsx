@@ -9,7 +9,7 @@ import {
   AccordionSummary
 } from '@mui/joy';
 import ExternalModules from './externalModules.tsx';
-import MinorSubjectTextFields from './minorSubjectTextFields.tsx';
+import MinorSubjectEtcTextFields from './minorSubjectEtcTextFields.tsx';
 import { Box } from '@mui/material';
 import objectPath from 'object-path';
 import Markdown from 'react-markdown';
@@ -152,10 +152,10 @@ function ExamPlanForm({
                     nestedKeys={nestedKeys + '.' + index}
                   ></ExternalModules>
 
-                  <MinorSubjectTextFields
+                  <MinorSubjectEtcTextFields
                     name={nameSubarea}
                     nestedKeys={nestedKeys + '.' + index}
-                  ></MinorSubjectTextFields>
+                  ></MinorSubjectEtcTextFields>
 
                   {containsSubarea && (
                     <ExamPlanForm

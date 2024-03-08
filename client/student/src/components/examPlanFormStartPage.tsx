@@ -186,17 +186,16 @@ export default function ExamPlanFormStartPage() {
                 .then((response: { data: object }) => {
                   console.log('Success at saving examPlan');
                   console.log(response.data);
+                  window.alert(
+                    'Der ' +
+                      { typeOfExamPlan } +
+                      '-Entwurf wurde erfolgreich gespeichert.'
+                  );
                 })
                 .catch((e: Error) => {
                   console.log('Error while saving examPlan');
                   console.log(e);
                 });
-              window.alert(
-                'Der ' +
-                  { typeOfExamPlan } +
-                  '-Entwurf wurde erfolgreich gespeichert.'
-              );
-              console.log(getExamPlan());
             }}
           >
             Als {typeOfExamPlan}-Entwurf speichern

@@ -1,7 +1,13 @@
-// Import the ExaminationRegulation model from the database.
 const ExamPlan = require('./database.js').models.ExamPlan;
 const logger = require('../logger');
 
+/**
+ *
+ * @param {string} examPlanString
+ * @param {string} name
+ * @param {string} typeOfPlan
+ * @returns A promise that resolves to the saved exam Plan if the request is successful.
+ */
 const addExamPlan = async (
   examPlanString,
   name,
@@ -20,6 +26,11 @@ const addExamPlan = async (
   });
 };
 
+/**
+ *
+ * @param {number} ID
+ * @returns A promise that resolves to true if the exam plan is deleted, false otherwise
+ */
 const deleteExamPlan = async (ID) => {
   try {
     logger.info(`Deleting ExamPlan with ID ${ID}...`);
@@ -37,6 +48,11 @@ const deleteExamPlan = async (ID) => {
   }
 };
 
+/**
+ *
+ * @param {number} id
+ * @returns A promise that resolves to true if the exam plan already exists
+ */
 const isExamPlanExists = async (id) => {
   return await ExamPlan.findOne({
     where: {
@@ -45,8 +61,12 @@ const isExamPlanExists = async (id) => {
   }).then((result) => !!result);
 };
 
+/**
+ *
+ * @param {number} id
+ * @returns A promise that resolves to the exam plan if found
+ */
 const getExamPlan = async (id) => {
-  // Find the examination regulation in the database.
   return ExamPlan.findOne({
     where: {
       id
@@ -54,7 +74,6 @@ const getExamPlan = async (id) => {
   }).then((result) => result);
 };
 
-// Export the functions.
 module.exports = {
   addExamPlan,
   deleteExamPlan,
