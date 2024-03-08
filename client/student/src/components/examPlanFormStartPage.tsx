@@ -142,7 +142,7 @@ export default function ExamPlanFormStartPage() {
           </RadioGroup>
         </Box>
       )}
-      {hasExamPlan && typeOfExamPlan && (
+      {hasExamPlan && typeOfExamPlan === "Prüfungsplan" && (
         <div style={{ minWidth: '900px' }}>
           {Object.entries(JSON.parse(examRegulation?.jsonSchema)).map(
             (entry) => (
@@ -187,9 +187,7 @@ export default function ExamPlanFormStartPage() {
                   console.log('Success at saving examPlan');
                   console.log(response.data);
                   window.alert(
-                    'Der ' +
-                      { typeOfExamPlan } +
-                      '-Entwurf wurde erfolgreich gespeichert.'
+                    'Der Entwurf wurde erfolgreich gespeichert.'
                   );
                 })
                 .catch((e: Error) => {
