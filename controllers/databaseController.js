@@ -332,29 +332,65 @@ const getAllExamRegulationsMin = async (req, res) => {
 };
 
 const addExamPlan = async (req, res) => {
-  try {
+  // Access the JSON schema from the request body
+  const examPlanRequest = req.body;
+  // check if contains fields examRegulation and internalName
+  if (
+    !examPlanRequest.examPlanString ||
+    !examPlanRequest.name ||
+    !examPlanRequest.typeOfPlan
+  ) {
+    res.status(400).send({
+      message:
+        'Content can not be empty! Contains an empty field'
+    });
+    return;
+  }
+  const examPlanString = examPlanRequest.examPlanString;
+  const name = examPlanRequest.name;
+  const typeOfPlan = examPlanRequest.typeOfPlan
+  examPlanHelper.addExamPlan(
+    examPlanString,
+    name,
+    typeOfPlan
+  )
+  .then((data) => {
+    res.send(data);
+  })
+  .catch((err) => {
+    // Handle any errors that occurred during processing
+    logger.error('Error processing exam plan: ' + err.message);
+
+    // Send an error response
+    res.status(500).send({
+      success: false,
+      message: 'Error processing exam plan.',
+      error: err.message
+    }); 
+  });
+ /*  try {
     // Access the JSON schema from the request body
     const examPlanRequest = req.body;
     // check if contains fields examRegulation and internalName
     if (
       !examPlanRequest.examPlanString ||
-      !examPlanRequest.name
+      !examPlanRequest.name ||
+      !examPlanRequest.typeOfPlan
     ) {
       res.status(400).send({
         message:
-          'Content can not be empty! Empty field: ' +
-          (!examPlanRequest.examPlanString
-            ? 'examPlanString'
-            : 'name')
+          'Content can not be empty! Contains an empty field'
       });
       return;
     }
     const examPlanString = examPlanRequest.examPlanString;
     const name = examPlanRequest.name;
+    const typeOfPlan = examPlanRequest.typeOfPlan
 
     await examPlanHelper.addExamPlan(
       examPlanString,
-      name
+      name,
+      typeOfPlan
     );
 
     // Send a success response
@@ -372,9 +408,9 @@ const addExamPlan = async (req, res) => {
       message: 'Error processing exam plan.',
       error: error.message
     });
-  }
+  } */
 };
-const deleteExamPlan = async (req, res) => {
+/* const deleteExamPlan = async (req, res) => {
   const ID = req.params.id; // Assuming the module ID is in the route parameters
 
   if (!ID) {
@@ -402,7 +438,7 @@ const deleteExamPlan = async (req, res) => {
         message: err.message || 'Error deleting exam plan!'
       });
     });
-};
+}; */
 module.exports = {
   addModul,
   deleteModulById,
@@ -414,5 +450,5 @@ module.exports = {
   getOneModule,
   getModules,
   addExamPlan,
-  deleteExamPlan
+  
 };

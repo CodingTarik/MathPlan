@@ -37,6 +37,11 @@ module.exports = (sequelize) => {
     approvalDate: {
       type: DataTypes.DATE,
       allowNull: true
+    },
+    typeOfPlan: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      unique: false
     }
   });
 

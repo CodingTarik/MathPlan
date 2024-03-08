@@ -4,12 +4,14 @@ const logger = require('../logger');
 
 const addExamPlan = async (
   examPlanString,
-  name
+  name,
+  typeOfPlan
 ) => {
   const newPlan = {
     jsonSchema: examPlanString,
     name,
-    approvalDate: null
+    approvalDate: null,
+    typeOfPlan: typeOfPlan
   };
 
   return ExamPlan.create(newPlan).catch((err) => {
@@ -29,13 +31,33 @@ const deleteExamPlan = async (ID) => {
     // If affectedRows is greater than 0, it means at least one record was deleted
     return affectedRows > 0;
   } catch (error) {
-    logger.error('Error deleting module:', error);
+    logger.error('Error deleting exam plan:', error);
     return false; // Return false if an error occurs during deletion
   }
 };
 
+const isExamPlanExists = async (id) => {
+    return await ExamPlan.findOne({
+      where: {
+        id: id
+      }
+    }).then((result) => !!result); 
+  };
+
+
+const getExamPlan = async (id) => {
+    // Find the examination regulation in the database.
+    return ExamPlan.findOne({
+      where: {
+        id: id
+      }
+    }).then((result) => result);
+  };
+
 // Export the functions.
 module.exports = {
   addExamPlan,
-  deleteExamPlan
+  deleteExamPlan,
+  isExamPlanExists,
+  getExamPlan
 };
