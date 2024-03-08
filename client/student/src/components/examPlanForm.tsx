@@ -143,6 +143,7 @@ export default function ExamPlanForm() {
             console.log("Error while saving examPlan");
             console.log(e);
           });
+          window.alert("Der " + {typeOfExamPlan}+ "-Entwurf wurde erfolgreich gespeichert.")
           console.log(getExamPlan())}}
         >
           Als {typeOfExamPlan}-Entwurf speichern
