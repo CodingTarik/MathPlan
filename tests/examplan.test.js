@@ -38,14 +38,14 @@ describe('ExamPlan API Tests', () => {
     const newExamPlanRequest = {
       name: Math.floor(Math.random() * 10000000).toString(),
       examPlanString: JSON.stringify(newExamPlan),
-      typeOfPlan: "Prüfungsplan"
+      typeOfPlan: 'Prüfungsplan'
     };
     const response = await request(app)
       .post('/api/intern/addExamPlan')
       .send(newExamPlanRequest);
 
     expect(response.statusCode).toBe(200);
-    console.log(response)
+    console.log(response);
     // Check if the exam regulation was added to the database, wait 2 sec
     await new Promise((resolve) => setTimeout(resolve, 3000));
     expect(
@@ -54,17 +54,17 @@ describe('ExamPlan API Tests', () => {
       )
     ).toBe(true);
     const examPlan = await dbhelper.getExamPlan(
-        JSON.parse(response.text).id
+      JSON.parse(response.text).id
     );
     expect(examPlan.name).toEqual(newExamPlanRequest.name);
     expect(examPlan.jsonSchema
-    ).toEqual(JSON.stringify(newExamPlan)); 
-    await dbhelper.deleteExamPlan(JSON.parse(response.text).id)
+    ).toEqual(JSON.stringify(newExamPlan));
+    await dbhelper.deleteExamPlan(JSON.parse(response.text).id);
     expect(
-        await dbhelper.isExamPlanExists(
-          JSON.parse(response.text).id
-        )
-      ).toBe(false);
+      await dbhelper.isExamPlanExists(
+        JSON.parse(response.text).id
+      )
+    ).toBe(false);
   });
   test('not exists a id of a exam regulation', async () => {
     expect(
@@ -73,7 +73,7 @@ describe('ExamPlan API Tests', () => {
       )
     ).toBe(false);
   });
-  
+
   test('It should respond with a 400 status if some fields are not provided', async () => {
     let response = await request(app)
       .post('/api/intern/addExamPlan')
@@ -96,10 +96,10 @@ describe('ExamPlan API Tests', () => {
       .post('/api/intern/addExamPlan')
       .send(newExamPlanRequestTest);
     expect(response.statusCode).toBe(400);
-  }); 
+  });
 
   test('It should respond with false if exam plan to be deleted does not exist', async () => {
     const response = await dbhelper.deleteExamPlan(Math.floor(Math.random() * 10000000));
-    expect(response).toBe(false)
-  }); 
+    expect(response).toBe(false);
+  });
 });

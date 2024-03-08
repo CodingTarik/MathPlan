@@ -11,7 +11,7 @@ const addExamPlan = async (
     jsonSchema: examPlanString,
     name,
     approvalDate: null,
-    typeOfPlan: typeOfPlan
+    typeOfPlan
   };
 
   return ExamPlan.create(newPlan).catch((err) => {
@@ -37,22 +37,21 @@ const deleteExamPlan = async (ID) => {
 };
 
 const isExamPlanExists = async (id) => {
-    return await ExamPlan.findOne({
-      where: {
-        id: id
-      }
-    }).then((result) => !!result); 
-  };
-
+  return await ExamPlan.findOne({
+    where: {
+      id
+    }
+  }).then((result) => !!result);
+};
 
 const getExamPlan = async (id) => {
-    // Find the examination regulation in the database.
-    return ExamPlan.findOne({
-      where: {
-        id: id
-      }
-    }).then((result) => result);
-  };
+  // Find the examination regulation in the database.
+  return ExamPlan.findOne({
+    where: {
+      id
+    }
+  }).then((result) => result);
+};
 
 // Export the functions.
 module.exports = {

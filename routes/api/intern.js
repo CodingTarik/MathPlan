@@ -20,7 +20,7 @@ router.post('/addExamRegulation', dbController.addOrUpdateExamRegulation);
 router.get('/getAllExamRegulationsMin', dbController.getAllExamRegulationsMin);
 
 // for exam plans
-//router.delete('/deleteExamPlan/:id', dbController.deleteExamPlan);
+// router.delete('/deleteExamPlan/:id', dbController.deleteExamPlan);
 router.post('/addExamPlan', dbController.addExamPlan);
 
 // for modules

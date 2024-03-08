@@ -348,27 +348,27 @@ const addExamPlan = async (req, res) => {
   }
   const examPlanString = examPlanRequest.examPlanString;
   const name = examPlanRequest.name;
-  const typeOfPlan = examPlanRequest.typeOfPlan
+  const typeOfPlan = examPlanRequest.typeOfPlan;
   examPlanHelper.addExamPlan(
     examPlanString,
     name,
     typeOfPlan
   )
-  .then((data) => {
-    res.send(data);
-  })
-  .catch((err) => {
+    .then((data) => {
+      res.send(data);
+    })
+    .catch((err) => {
     // Handle any errors that occurred during processing
-    logger.error('Error processing exam plan: ' + err.message);
+      logger.error('Error processing exam plan: ' + err.message);
 
-    // Send an error response
-    res.status(500).send({
-      success: false,
-      message: 'Error processing exam plan.',
-      error: err.message
-    }); 
-  });
- /*  try {
+      // Send an error response
+      res.status(500).send({
+        success: false,
+        message: 'Error processing exam plan.',
+        error: err.message
+      });
+    });
+  /*  try {
     // Access the JSON schema from the request body
     const examPlanRequest = req.body;
     // check if contains fields examRegulation and internalName
@@ -449,6 +449,6 @@ module.exports = {
   updateModule,
   getOneModule,
   getModules,
-  addExamPlan,
-  
+  addExamPlan
+
 };
