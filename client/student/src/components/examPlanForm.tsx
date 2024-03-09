@@ -50,7 +50,6 @@ export default function ExamPlanForm({examRegulation}: {examRegulation: {
                 "Prüfungsplan"
               )
                 .then((response: { data: object }) => {
-                  console.log('Success at saving examPlan');
                   console.log(response.data);
                   window.alert(
                     'Der Entwurf wurde erfolgreich gespeichert.'

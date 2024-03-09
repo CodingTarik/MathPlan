@@ -14,6 +14,11 @@ import React from 'react';
 import { setExamPlan, getExamPlan } from './examPlanVariable';
 import objectPath from 'object-path';
 
+const needsNoButtonToAddExternalModules = [
+  'Pflichtbereich Mathematik',
+  'Überfachlicher Pflichtbereich'
+];
+
 interface ExternalModule {
   moduleName: string;
   moduleID: string;
@@ -33,17 +38,17 @@ export default function ExternalModules({
   nestedKeys: string;
   name: string;
 }) {
+  // shall the input fields be displayed
   const [displayInputFields, setDisplayInputFields] = React.useState<boolean>(false);
+  // the modules that have been added
   const [addedModules, setAddedModules] = React.useState<ExternalModule[]>([]);
+  // the content of the module in the input
   const [currentModule, setCurrentModule] = React.useState<ExternalModule>({
     moduleCredits: NaN,
     moduleID: '',
     moduleName: ''
   });
-  const needsNoButtonToAddExternalModules = [
-    'Pflichtbereich Mathematik',
-    'Überfachlicher Pflichtbereich'
-  ];
+  
   return (
     <div>
       {!needsNoButtonToAddExternalModules.includes(name) && (
