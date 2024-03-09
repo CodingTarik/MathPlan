@@ -135,8 +135,7 @@ export default function AddModuleFields() {
         <DialogTitle id="alert-dialog-title">Bestätigung</DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-description">
-            Bist du dir sicher, dass du das Modul mit ID 
-            {moduleToBeDeleted}, löschen möchtest?
+            {"Bist du dir sicher, dass du das Modul mit ID " + moduleToBeDeleted + "löschen möchtest?"}
           </DialogContentText>
         </DialogContent>
         <DialogActions>
