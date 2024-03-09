@@ -1,10 +1,9 @@
-const { DataTypes } = require('sequelize');
+const { DataTypes } = require('sequelize'); // The Sequelize data types.
 
 /**
  * Define the ExaminationRegulation model.
  *
  * @param {import('sequelize').Sequelize} sequelize - The Sequelize instance.
- * @param {import('sequelize').DataTypes} DataTypes - The Sequelize data types.
  * @returns {import('sequelize').Model} The ExaminationRegulation model.
  */
 module.exports = (sequelize) => {
