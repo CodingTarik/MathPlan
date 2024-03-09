@@ -332,6 +332,31 @@ describe('Modules API Tests', () => {
 });
 
 // Test 11
+test('DELETE /api/intern/deleteModule/:id: It should respond with a 404 status if the module was not found', async () => {
+  const moduleId = Math.floor(Math.random() * 10000000).toString();
+  const response = await request(app)
+    .delete(`/api/intern/deleteModule/${moduleId}`);
+  expect(response.statusCode).toBe(404);
+});
+
+// Test 12
+test('DELETE /api/intern/deleteModule/:id: It should delete an existing module', async () => {
+  const newModule = {
+    moduleID: Math.floor(Math.random() * 10000000).toString(),
+    moduleName: 'Numerik',
+    moduleCredits: 5,
+    moduleLanguage: 'English',
+    moduleApplicability: 'B.Sc. Mathematik'
+  };
+  await modulehelper.addModul(newModule.moduleID, newModule.moduleName, newModule.moduleCredits, newModule.moduleLanguage, newModule.moduleApplicability);
+  const response1 = await request(app)
+    .delete(`/api/intern/deleteModule/${newModule.moduleID}`);
+  expect(response1.statusCode).toBe(200);
+  const response2 = await modulehelper.isModuleExists(newModule.moduleID);
+  expect(response2).toBe(false);
+});
+
+// Test 13
 test('GET /api/intern/getIncompleteModules: It should return all the incomplete modules', async () => {
   // insert modules
   const newModule0 = {
@@ -434,6 +459,7 @@ test('GET /api/intern/getIncompleteModules: It should return all the incomplete 
   modulehelper.deleteModulById(newModule5.moduleID);
 });
 
+// Test 14
 test('GET /api/intern/getIncompleteModules: It should respond with an empty array if no module is incomplete', async () => {
   const response1 = await request(app).get('/api/intern/getIncompleteModules');
   expect(response1.statusCode).toBe(200);
