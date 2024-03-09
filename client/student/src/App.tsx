@@ -10,7 +10,6 @@ import ExamPlanFormStartPage from './components/examPlanFormStartPage';
  * @returns {JSX.Element} The rendered React element.
  */
 function App() {
-  // JSX structure representing the entire application
   return (
       <HashRouter>
       <div><Routes>
