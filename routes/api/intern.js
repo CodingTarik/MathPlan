@@ -18,7 +18,7 @@ router.get('/getAllModulsMin', dbController.getAllModulsMin);
 router.post('/addExamRegulation', dbController.addOrUpdateExamRegulation);
 // for modules
 router.post('/addModul', dbController.addModul);
-router.post('/deleteModulById', dbController.deleteModulById);
+router.delete('/deleteModule/:id', dbController.deleteModulById);
 router.get(
   '/getModules/:id/:name/:credits/:language/:applicability',
   dbController.getModules

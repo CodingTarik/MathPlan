@@ -349,7 +349,9 @@ test('DELETE /api/intern/deleteModule/:id: It should delete an existing module',
     moduleApplicability: 'B.Sc. Mathematik'
   };
   await modulehelper.addModul(newModule.moduleID, newModule.moduleName, newModule.moduleCredits, newModule.moduleLanguage, newModule.moduleApplicability);
-  const response = await request(app)
+  const response1 = await request(app)
     .delete(`/api/intern/deleteModule/${newModule.moduleID}`);
-  expect(response.statusCode).toBe(200);
+  expect(response1.statusCode).toBe(200);
+  const response2 = await modulehelper.isModuleExists(newModule.moduleID);
+  expect(response2).toBe(false);
 });
