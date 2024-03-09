@@ -15,8 +15,7 @@ const http = axios.create({
  * @returns a promise that is rejected or fulfilled depending on the success of adding the module
  */
 const create = (data: object) => {
-  const x = http.post('/addModul', data);
-  return x;
+  return http.post('/addModul', data);
 };
 
 /**
@@ -64,6 +63,14 @@ const getModules = (
 };
 
 /**
+ * sends get request for incomplete modules
+ * @returns a promise that is rejected or fulfilled depending on the success of getting the module(s); it rejects if there is a problem with the database
+ */
+const getIncompleteModules = () => {
+  return http.get('/getIncompleteModules');
+};
+
+/**
  * sends a request with the id of the module that needs to be deleted
  * @param id 
  * @returns a promise that is rejected or fulfilled depending on the success of deleting the module
@@ -76,6 +83,7 @@ const ModuleServices = {
   update,
   getByID,
   getModules,
+  getIncompleteModules,
   deleteModule
 };
 

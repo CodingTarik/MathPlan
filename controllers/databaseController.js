@@ -8,7 +8,7 @@ const examRegulationHelper = require(
 );
 const configFile = require(path.join(__dirname, '../config.js'));
 /**
- * if a request is made the addModul function of the database is called by the controller and the added module is sent back as a response
+ * If a request is made, the addModul function of the database is called by the controller and the added module is sent back as a response
  * @param {Object} req - The request object
  * @param {Object} res - The response object
  * @returns {void} - Sends a response with if the passed data is not sufficient as it does not contain a module id
@@ -120,7 +120,7 @@ const deleteModulById = async (req, res) => {
       }
     })
     .catch((err) => {
-      res.status(500).send({
+      res.status(500).send({ // only occurs when there a problems with the database connection and is therefore not tested
         message: err.message || 'Error deleting module!'
       });
     });
@@ -256,6 +256,7 @@ const addOrUpdateExamRegulation = async (req, res) => {
     });
   }
 };
+
 /**
  * if a request is made the getModules function of the database is called by the controller and the matching module(s)
  * is sent back as a response if there are less than MAX_NUMBER_FOUND_MODULES as specified in the config file matching modules and no other error occurs
@@ -288,6 +289,26 @@ const getModules = (req, res) => {
     });
 };
 
+/**
+ * If a request is made, the getIncompleteModules function of the database is called by the controller,
+ * and a response is sent based on the success or failure of the search. On success, an array of all
+ * incomplete modules is sent.
+ * @param {Object} req - The request object (not used)
+ * @param {Object} res - The response object
+ * @returns {void} - Sends a response based on the success or failure of the findAll-function
+ */
+const getIncompleteModules = (req, res) => {
+  modulHelper.getIncompleteModules()
+    .then((data) => {
+      res.send(data);
+    })
+    .catch((err) => { // should only occur if the connection to the database breaks (not tested)
+      res.status(500).send({
+        message: err.message || 'Error getting module!'
+      });
+    });
+};
+
 module.exports = {
   addModul,
   deleteModulById,
@@ -296,5 +317,6 @@ module.exports = {
   addOrUpdateExamRegulation,
   updateModule,
   getOneModule,
-  getModules
+  getModules,
+  getIncompleteModules
 };

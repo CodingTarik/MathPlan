@@ -346,7 +346,140 @@ test('DELETE /api/intern/deleteModule/:id: It should delete an existing module',
     moduleApplicability: 'B.Sc. Mathematik'
   };
   await modulehelper.addModul(newModule.moduleID, newModule.moduleName, newModule.moduleCredits, newModule.moduleLanguage, newModule.moduleApplicability);
-  const response = await request(app)
+  const response1 = await request(app)
     .delete(`/api/intern/deleteModule/${newModule.moduleID}`);
+  expect(response1.statusCode).toBe(200);
+  const response2 = await modulehelper.isModuleExists(newModule.moduleID);
+  expect(response2).toBe(false);
+});
+
+// Test 13
+test('GET /api/intern/getIncompleteModules: It should return all the incomplete modules', async () => {
+  // insert modules
+  const newModule0 = {
+    moduleID: Math.floor(Math.random() * 10000000).toString(),
+    moduleName: 'Numerik',
+    moduleCredits: 5,
+    moduleLanguage: 'English',
+    moduleApplicability: 'B.Sc. Mathematik'
+  };
+  const newModule1 = {
+    moduleID: Math.floor(Math.random() * 10000000).toString(),
+    moduleName: '',
+    moduleCredits: 5,
+    moduleLanguage: 'English',
+    moduleApplicability: 'B.Sc. Mathematik'
+  };
+  const newModule2 = {
+    moduleID: Math.floor(Math.random() * 10000000).toString(),
+    moduleName: 'Numerik',
+    moduleCredits: -1,
+    moduleLanguage: 'English',
+    moduleApplicability: 'B.Sc. Mathematik'
+  };
+  const newModule3 = {
+    moduleID: Math.floor(Math.random() * 10000000).toString(),
+    moduleName: 'Numerik',
+    moduleCredits: 5,
+    moduleLanguage: '',
+    moduleApplicability: 'B.Sc. Mathematik'
+  };
+  const newModule4 = {
+    moduleID: Math.floor(Math.random() * 10000000).toString(),
+    moduleName: 'Numerik',
+    moduleCredits: 5,
+    moduleLanguage: 'English',
+    moduleApplicability: ''
+  };
+  const newModule5 = {
+    moduleID: Math.floor(Math.random() * 10000000).toString(),
+    moduleName: '',
+    moduleCredits: -1,
+    moduleLanguage: '',
+    moduleApplicability: ''
+  };
+  await modulehelper.addModul(
+    newModule0.moduleID,
+    newModule0.moduleName,
+    newModule0.moduleCredits,
+    newModule0.moduleLanguage,
+    newModule0.moduleApplicability
+  );
+  await modulehelper.addModul(
+    newModule1.moduleID,
+    newModule1.moduleName,
+    newModule1.moduleCredits,
+    newModule1.moduleLanguage,
+    newModule1.moduleApplicability
+  );
+  await modulehelper.addModul(
+    newModule2.moduleID,
+    newModule2.moduleName,
+    newModule2.moduleCredits,
+    newModule2.moduleLanguage,
+    newModule2.moduleApplicability
+  );
+  await modulehelper.addModul(
+    newModule3.moduleID,
+    newModule3.moduleName,
+    newModule3.moduleCredits,
+    newModule3.moduleLanguage,
+    newModule3.moduleApplicability
+  );
+  await modulehelper.addModul(
+    newModule4.moduleID,
+    newModule4.moduleName,
+    newModule4.moduleCredits,
+    newModule4.moduleLanguage,
+    newModule4.moduleApplicability
+  );
+  await modulehelper.addModul(
+    newModule5.moduleID,
+    newModule5.moduleName,
+    newModule5.moduleCredits,
+    newModule5.moduleLanguage,
+    newModule5.moduleApplicability
+  );
+
+  const response = await request(app).get('/api/intern/getIncompleteModules');
   expect(response.statusCode).toBe(200);
+  expect(response.body.length).toBe(5);
+  expect(response.body).toContainEqual(expect.objectContaining(newModule1));
+  expect(response.body).not.toContainEqual(expect.objectContaining(newModule0));
+
+  // wrap up
+  modulehelper.deleteModulById(newModule0.moduleID);
+  modulehelper.deleteModulById(newModule1.moduleID);
+  modulehelper.deleteModulById(newModule2.moduleID);
+  modulehelper.deleteModulById(newModule3.moduleID);
+  modulehelper.deleteModulById(newModule4.moduleID);
+  modulehelper.deleteModulById(newModule5.moduleID);
+});
+
+// Test 14
+test('GET /api/intern/getIncompleteModules: It should respond with an empty array if no module is incomplete', async () => {
+  const response1 = await request(app).get('/api/intern/getIncompleteModules');
+  expect(response1.statusCode).toBe(200);
+  expect(response1.body.length).toBe(0);
+  // add a module
+  const newModule = {
+    moduleID: Math.floor(Math.random() * 10000000).toString(),
+    moduleName: 'Numerik',
+    moduleCredits: 5,
+    moduleLanguage: 'English',
+    moduleApplicability: 'B.Sc. Mathematik'
+  };
+  await modulehelper.addModul(
+    newModule.moduleID,
+    newModule.moduleName,
+    newModule.moduleCredits,
+    newModule.moduleLanguage,
+    newModule.moduleApplicability
+  );
+
+  const response2 = await request(app).get('/api/intern/getIncompleteModules');
+  expect(response2.statusCode).toBe(200);
+  expect(response2.body.length).toBe(0);
+
+  modulehelper.deleteModulById(newModule.moduleID);
 });

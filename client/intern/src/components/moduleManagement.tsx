@@ -29,7 +29,7 @@ function isAddButtonDisabled(values: string[]) {
  * 
  * @returns the UI for manually inserting modules into the database and searching for certain modules
  */
-export default function AddModuleFields() {
+export default function ModuleManagementPage() {
   const [moduleParameters, setModuleParameters] = React.useState(Array(5).fill(""));
   const [rowsFound, setRowsFound] = React.useState(Array(0).fill({moduleID: "", moduleName: "", moduleCredits: NaN, moduleLanguage: "", moduleApplicability: ""}));
   const [moduleToBeDeleted, setModuleToBeDeleted] = React.useState<string | null>(null);
@@ -87,8 +87,13 @@ function handleButtonClick(values: string[]) {
     });
     
 }
+
+
+
+
+
   /**
-   * if delete button is clicked the dialog box is opened and the id of the module saved
+   * if delete button is clicked, the dialog box is opened and the id of the module is saved
    * @param id the moduleID of the module to be deleted
    */
   function handleDelete(id: string){
@@ -125,7 +130,7 @@ function handleButtonClick(values: string[]) {
         else console.error('moduleToBeOverwritten cannot be null'); 
   }
   /**
-   * if delete is clicked in the dialog box then the module is deleted,
+   * if delete is clicked in the dialog box, then the module is deleted,
    * the rows displayed are updated, and the success/failure of deleting the 
    * module is shown to the user
    */
@@ -196,6 +201,21 @@ function handleButtonClick(values: string[]) {
           console.log(e);
         });
   }
+
+// if the incomplete module search button is clicked, the database is searched for modules with incomplete information
+const handleIncompleteSearchClick = () => {
+  ModuleServices.getIncompleteModules()
+  .then((response: { data: { moduleID: string; moduleName: string; moduleCredits: number; moduleLanguage: string; moduleApplicability: string; createdAt: object; id: object, updatedAt: object}[]; }) => { 
+    console.log("Success at getting incomplete modules");
+    console.log(response.data);
+    setRowsFound(response.data);
+  })
+  .catch((e: AxiosError) => {
+      console.log("Error while getting module");
+      console.log(e);
+  });
+}
+
   return (
     <>
      <Dialog
@@ -277,7 +297,8 @@ function handleButtonClick(values: string[]) {
       </div>
       </Box>
         <Button variant="outlined" sx={{ marginTop: 2, marginBottom: 2 }} disabled = {isAddButtonDisabled(moduleParameters)} onClick = {() => handleButtonClick(moduleParameters)}>Speichern</Button>
-        <Button variant="outlined"  sx={{ marginTop: 2, marginBottom: 2 }} onClick = {() => handleSearchClick(moduleParameters)}>Suchen</Button>
+        <Button variant="outlined"  sx={{ marginTop: 2, marginBottom: 2, marginLeft: 2 }} onClick = {() => handleSearchClick(moduleParameters)}>Suchen</Button>
+        <Button variant="outlined"  sx={{ marginTop: 2, marginBottom: 2, marginLeft: 2 }} onClick = {() => handleIncompleteSearchClick()}>Unvollständige Module suchen</Button>
         <Table hoverRow sx={{ '& tr > *:not(:first-child)': { textAlign: 'right' } }}>
           <thead>
             <tr>
@@ -290,7 +311,7 @@ function handleButtonClick(values: string[]) {
             </tr>
           </thead>
           <tbody>
-            {/* If the search button is clicked and rowsFound is not empty the rows are displayed and the fields where one can add a module set if the edit icon is clicked and the module is deleted if the delete icon is clicked */}
+            {/* If the search button is clicked and rowsFound is not empty, the rows are displayed. The fields where one can add a module are set if the edit icon is clicked and the module is deleted if the delete icon is clicked */}
             {rowsFound.map((row) => (
               <tr key={row.moduleID} onClick =  {() => {}}  >
                 <td>{row.moduleID}</td>
@@ -301,14 +322,14 @@ function handleButtonClick(values: string[]) {
                 <td >
                 <Box sx={{ display: 'flex', gap: 1 }}>
                   <IconButton
-                    color="secondary"
+                    color="default"
                     onClick={() => {handleDelete(row.moduleID);}
                     }
                   >
                     <DeleteIcon />
                   </IconButton>
                   <IconButton
-                    color="secondary"
+                    color="info"
                     onClick={() => {setModuleParameters([row.moduleID, row.moduleName, row.moduleCredits, row.moduleLanguage, row.moduleApplicability]); window.scrollTo(0, 0);}
                     }
                   >
