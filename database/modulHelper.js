@@ -1,6 +1,7 @@
 const logger = require('../logger.js');
 const Modul = require('./database.js').models.Modul;
 const Sequelize = require('sequelize');
+const { Op } = require('sequelize');
 
 /**
  * Adds a module to the database
@@ -45,11 +46,6 @@ const isModuleExists = (moduleID) => {
 /**
  * Deletes a module from the database based on its ID
  * @param {string} moduleID - The module ID to delete
- * @returns {Promise} A promise that is rejected or fulfilled depending on the success of deleting the module
- */
-/**
- * Deletes a module from the database based on its ID
- * @param {string} moduleID - The module ID to delete
  * @returns {Promise<boolean>} A promise that resolves to true if the module is deleted, false otherwise
  */
 const deleteModulById = async (moduleID) => {
@@ -64,7 +60,7 @@ const deleteModulById = async (moduleID) => {
     // If affectedRows is greater than 0, it means at least one record was deleted
     return affectedRows > 0;
   } catch (error) {
-    logger.error('Error deleting module:', error);
+    logger.error('Error deleting module:', error); // only occurs when there a problems with the database connection and is therefore not tested
     return false; // Return false if an error occurs during deletion
   }
 };
@@ -163,6 +159,26 @@ const updateModule = (
   };
   return Modul.update(modul, { where: { moduleID: searchModuleID } });
 };
+
+/**
+ * Gets all incomplete modules. Incomplete modules are ones that are have at least on attribute that hold an empty string, or in case of moduleCredits -1.
+ * @returns {Promise<Array<Object>>} A promise that is rejected or fulfilled depending on the success of getting the module(s). If it is fulfilled, it returns an array of all incomplete modules.
+ */
+const getIncompleteModules = () => {
+  const parameters = {
+    [Op.or]: [
+      { moduleName: '' },
+      { moduleCredits: -1 },
+      { moduleLanguage: '' },
+      { moduleApplicability: '' }
+    ]
+  };
+  return Modul.findAll({
+    where: parameters,
+    order: [['moduleID', 'ASC']]
+  });
+};
+
 module.exports = {
   updateModule,
   getOneModule,
@@ -170,5 +186,6 @@ module.exports = {
   isModuleExists,
   deleteModulById,
   getAllModuls,
-  getModules
+  getModules,
+  getIncompleteModules
 };
