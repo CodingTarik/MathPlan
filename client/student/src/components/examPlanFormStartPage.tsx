@@ -21,7 +21,7 @@ import { saveExamPlan } from '../database_services/ExamPlanService.ts';
 
 /**
  * 
- * @returns the UI for the start page of the exam plan form where when the user selects a exam regulation and a type of exam plan the actual exam plan form is shown
+ * @returns the UI for the start page of the exam plan form where when the user can select a exam regulation and a type of exam plan. After that, the actual exam plan form is shown
  */
 export default function ExamPlanFormStartPage() {
   const [examRegulation, setExamRegulation] = React.useState<{
