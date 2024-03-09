@@ -47,7 +47,11 @@ app.use((req, res, next) => {
   res.locals.instagramurl = config.web.INSTAGRAM_URL;
   res.locals.pagename = config.web.PAGE_NAME;
   res.locals.privacypolicyurl = config.web.PRIVACY_POLICY_URL;
+  res.locals.supportresponsible = config.web.SUPPORT_RESPONSIBLE;
+  res.locals.supportemailactive = config.web.SUPPORT_EMAIL_ACTIVE;
   res.locals.supportemail = config.web.SUPPORT_EMAIL;
+  res.locals.supportlinkactive = config.web.SUPPORT_LINK_ACTIVE;
+  res.locals.supportlink = config.web.SUPPORT_LINK;
   next();
 });
 
