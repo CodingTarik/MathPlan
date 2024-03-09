@@ -99,7 +99,7 @@ export default function AddModuleFields() {
   }
 
   /**
-   * if delete is clicked in the dialog box then the module is deleted,
+   * if delete is clicked in the dialog box, then the module is deleted,
    * the rows displayed are updated, and the success/failure of deleting the 
    * module is shown to the user
    */
