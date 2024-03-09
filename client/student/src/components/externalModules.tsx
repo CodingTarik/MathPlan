@@ -208,10 +208,10 @@ export default function ExternalModules({
                   {addedModules.map((row) => (
                     <tr>
                       <td style={{ wordBreak: 'break-word' }}>
-                        {row.moduleID}
+                        {row.moduleName}
                       </td>
                       <td style={{ wordBreak: 'break-word' }}>
-                        {row.moduleName}
+                        {row.moduleID}
                       </td>
                       <td style={{ wordBreak: 'break-word' }}>
                         {row.moduleCredits} CP
