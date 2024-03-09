@@ -132,9 +132,11 @@ export default function TableForModules({
     const selectedIndex = selected.indexOf(wrapper);
     let newSelected: readonly ModulWrapper[] = [];
 
+    // the selected module is added
     if (selectedIndex === -1) {
       newSelected = newSelected.concat(selected, wrapper);
-    } else if (selectedIndex === 0) {
+    // or newSelected is selected with the module deleted from it if it was already selected 
+    } else {if (selectedIndex === 0) {
       newSelected = newSelected.concat(selected.slice(1));
     } else if (selectedIndex === selected.length - 1) {
       newSelected = newSelected.concat(selected.slice(0, -1));
@@ -143,7 +145,7 @@ export default function TableForModules({
         selected.slice(0, selectedIndex),
         selected.slice(selectedIndex + 1)
       );
-    }
+    }}
     setSelected(newSelected);
     const examPlan = getExamPlan();
 
