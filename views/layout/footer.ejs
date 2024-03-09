@@ -5,11 +5,11 @@
       <div class="col-md-4">
         <h5>Datenschutz</h5>
         <p>
-          Deine Privatsphäre ist uns wichtig. Hier findest du Informationen zum
+          Ihre Privatsphäre ist uns wichtig. Hier finden Sie Informationen zum
           Datenschutz.
         </p>
         <a href="<%= privacypolicyurl %>" class="text-light"
-          >Hier klicken, um zur Datenschutzerklärung zu kommen</a
+          >Hier klicken, um zur Datenschutzerklärung zu kommen.</a
         >
       </div>
       <div class="col-md-4">
@@ -21,15 +21,24 @@
       <div class="col-md-4">
         <h5>Kontakt</h5>
         <p>
-          Lehrveranstaltungsmanagement Mathematik <br />
-          <a class="text-light" href="<%= supportemail %>"
-            ><%= supportemail %></a
-          ><br />
+          <%= supportresponsible %>
+
+          <% if (supportemailactive) {%>
+          <br />
+          E-Mail:
+          <a class="text-light" href="mailto:<%= supportemail %>"><%= supportemail %></a>
+          <% } %>
+
+          <% if (supportlinkactive) {%>
+          <br />
+          Kontaktieren Sie uns
+          <a class="text-light" href="<%= supportlink %>">hier</a>.
+          <% } %>
         </p>
       </div>
     </div>
     <hr class="bg-light" />
-    <% if(scoialmedia) {%>
+    <% if(socialmedia) {%>
     <div class="row">
       <div class="col-md-12 text-center">
         <!-- Social-Media-Icons -->
