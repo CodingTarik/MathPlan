@@ -346,7 +346,7 @@ test('DELETE /api/intern/deleteModule/:id: It should delete an existing module',
     moduleLanguage: 'English',
     moduleApplicability: 'B.Sc. Mathematik'
   };
-  await db.addModul(newModule.moduleID, newModule.moduleName, newModule.moduleCredits, newModule.moduleLanguage, newModule.moduleApplicability);
+  await modulehelper.addModul(newModule.moduleID, newModule.moduleName, newModule.moduleCredits, newModule.moduleLanguage, newModule.moduleApplicability);
   const response = await request(app)
     .delete(`/api/intern/deleteModule/${newModule.moduleID}`);
   expect(response.statusCode).toBe(200);
