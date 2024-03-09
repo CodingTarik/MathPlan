@@ -69,7 +69,10 @@ app.use(
   '/assets/typed',
   express.static(path.join(__dirname, 'node_modules/typed.js/dist'))
 );
-app.use('/assets/sweetalert2', express.static(path.join(__dirname, 'node_modules/sweetalert2/dist')));
+app.use(
+  '/assets/sweetalert2',
+  express.static(path.join(__dirname, 'node_modules/sweetalert2/dist'))
+);
 // parse requests of content-type - application/json
 app.use(express.json());
 
@@ -82,6 +85,10 @@ app.use(
 app.use(
   '/assets/fontawesome',
   express.static(path.join(__dirname, '/node_modules/font-awesome'))
+);
+app.use(
+  '/assets/select2',
+  express.static(path.join(__dirname, 'node_modules/select2/dist'))
 );
 
 // Set view engine
@@ -108,7 +115,8 @@ try {
     // HTTP-Server
     if (config.server.ALLOW_HTTP) {
       let httpServer = null;
-      if (config.HTTP_REDIRECT) {
+      if (config.server.HTTP_REDIRECT) {
+        logger.info('HTTP REDIRECT ACTIVE');
         httpServer = http.createServer((req, res) => {
           res.writeHead(301, {
             Location:
@@ -125,9 +133,9 @@ try {
 
       httpServer.listen(config.server.PORT_HTTP, () => {
         logger.info(
-          `Die Anwendung ist auf ${chalk.cyanBright(
+          `The application is available on ${chalk.cyanBright(
             `http://${config.server.HOST}:${config.server.PORT_HTTP}`
-          )} verfügbar.`
+          )}.`
         );
       });
     }
@@ -144,9 +152,9 @@ try {
       https.createServer(options, app).listen(config.server.PORT_HTTPS, () => {
         logger.info(
           chalk.green(
-            `Die Anwendung ist auf ${chalk.cyanBright(
+            `The application is available on ${chalk.cyanBright(
               `https://${config.server.HOST}:${config.server.PORT_HTTPS}`
-            )} verfügbar.`
+            )}.`
           )
         );
       });

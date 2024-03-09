@@ -47,9 +47,9 @@
       "useResultAtIndex": 0,
       "postprocessing": [
         {
-        "find": "^.*Creditpoints\\s",
-        "flags": "g",
-        "replace": ""
+          "find": "^.*Creditpoints\\s",
+          "flags": "g",
+          "replace": ""
         }
       ],
       "plausibilityCheck": "^\\u2341$"

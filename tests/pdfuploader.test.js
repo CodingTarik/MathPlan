@@ -28,7 +28,9 @@ test('test the upload with an array with one null argument', async () => {
 });
 
 test('test the upload with an array with one valid argument', async () => {
-  const dataBuffer = fs.readFileSync(path.join(__dirname, 'resources/Modulhandbuch PO2018.pdf'));
+  const dataBuffer = fs.readFileSync(
+    path.join(__dirname, 'resources/Modulhandbuch PO2018.pdf')
+  );
   const formData = new FormData();
   formData.append('file', dataBuffer);
   const response = await request(app)
@@ -39,20 +41,33 @@ test('test the upload with an array with one valid argument', async () => {
 }, 10000);
 
 test('test the upload with an array with one invvalid argument', async () => {
-  const dataBuffer = fs.readFileSync(path.join(__dirname, 'resources/Pruefungsplan_BSc_PO_2018_MSc_PO_2018_2019-07-04.pdf'));
+  const dataBuffer = fs.readFileSync(
+    path.join(
+      __dirname,
+      'resources/Pruefungsplan_BSc_PO_2018_MSc_PO_2018_2019-07-04.pdf'
+    )
+  );
   const formData = new FormData();
   formData.append('file', dataBuffer);
   const response = await request(app)
     .post('/api/intern/uploadPDFtoServer')
-    .attach('file', dataBuffer, 'Pruefungsplan_BSc_PO_2018_MSc_PO_2018_2019-07-04.pdf');
+    .attach(
+      'file',
+      dataBuffer,
+      'Pruefungsplan_BSc_PO_2018_MSc_PO_2018_2019-07-04.pdf'
+    );
   expect(response.statusCode).toBe(200);
   expect(response.body[0].length).toBe(0);
   expect(response.body[1].length).toBe(1);
 });
 
 test('test the upload with array of two valid arguments', async () => {
-  const dataBuffer = fs.readFileSync(path.join(__dirname, 'resources/Modulhandbuch PO2018.pdf'));
-  const dataBuffer2 = fs.readFileSync(path.join(__dirname, 'resources/Modulhandbuch PO2018 - Kopie.pdf'));
+  const dataBuffer = fs.readFileSync(
+    path.join(__dirname, 'resources/Modulhandbuch PO2018.pdf')
+  );
+  const dataBuffer2 = fs.readFileSync(
+    path.join(__dirname, 'resources/Modulhandbuch PO2018 - Kopie.pdf')
+  );
   const formData = new FormData();
   formData.append('file', dataBuffer);
   formData.append('file', dataBuffer2);

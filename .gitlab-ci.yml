@@ -17,3 +17,8 @@ jest:
     - npm run build
     - npm run test
 
+test2:
+  image: node
+  script:
+    - npm install
+    - npx jest
