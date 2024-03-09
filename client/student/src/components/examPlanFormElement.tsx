@@ -22,7 +22,7 @@ type Modul = {
   moduleLanguage: string;
   moduleApplicability: string;
 };
-type ModulWrapper = {
+export type ModulWrapper = {
   name: Modul;
   moduleID: string;
   creditPoints: number;

@@ -3,21 +3,9 @@ import { Table, Checkbox, Typography, Sheet } from '@mui/joy';
 import objectPath from 'object-path';
 import { Box } from '@mui/material';
 import { setExamPlan, getExamPlan } from './examPlanVariable.ts';
+import { ModulWrapper} from './examPlanFormElement.ts';
 
-type Modul = {
-  moduleID: string;
-  moduleName: string;
-  moduleCredits: string;
-  moduleLanguage: string;
-  moduleApplicability: string;
-};
-type ModulWrapper = {
-  name: Modul;
-  moduleID: string;
-  creditPoints: number;
-  pflicht: boolean;
-  nichtwählbarmitmodul: Array<object>;
-};
+
 
 /**
  * 
@@ -39,7 +27,7 @@ function descendingComparator(a: ModulWrapper, b: ModulWrapper) {
  * 
  * @param array 
  * @param comparator 
- * @returns sorts the array depending on the comparator
+ * @returns the sorted array depending on the comparator, stable sort meaning that if two elements of the array are the same the one with the lower index in the array stays the one with the lower index
  */
 function stableSort(
   array: readonly ModulWrapper[],
