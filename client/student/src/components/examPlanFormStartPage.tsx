@@ -12,7 +12,7 @@ import {
   Textarea
 } from '@mui/joy';
 import { Button, Box } from '@mui/material';
-import { ExamPlanForm } from './examPlanForm.tsx';
+import { ExamPlanFormElement } from './examPlanFormElement.tsx';
 import { setExamPlan, getExamPlan } from './examPlanVariable.ts';
 import objectPath from 'object-path';
 import { AxiosError } from 'axios';
@@ -146,7 +146,7 @@ export default function ExamPlanFormStartPage() {
         <div style={{ minWidth: '900px' }}>
           {Object.entries(JSON.parse(examRegulation?.jsonSchema)).map(
             (entry) => (
-              <ExamPlanForm entry={entry} nestedKeys={''} level={0} />
+              <ExamPlanFormElement entry={entry} nestedKeys={''} level={0} />
             )
           )}
           <FormControl sx={{ marginTop: 2, marginBottom: 2 }}>
