@@ -338,7 +338,7 @@ const getAllExamRegulationsMin = async (req, res) => {
  * @returns
  */
 const addExamPlan = async (req, res) => {
-  // Access the JSON schema from the request body
+  // Access the field of the exam plan from the request body
   const examPlanRequest = req.body;
   // check if contains fields examPlanString, name and typeOfPlan
   if (

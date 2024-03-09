@@ -16,8 +16,9 @@ module.exports = (sequelize) => {
    * @namespace ExamPlan
    * @property {integer} id - The primary key for the examination regulation.
    * @property {string} name - The name of the examination regulation.
-   * @property {string} jsonSchema - The JSON schema associated with the examination regulation.
+   * @property {string} jsonSchema - The JSON string associated with the examination regulation.
    * @property {date} approvalDate - the date at which the Office for Student Affairs approved a submission
+   * @property {string} typeOfPlan - "Prüfungsplan" or "Nebenfachplan"
    */
   const ExamPlan = sequelize.define('ExamPlan', {
     id: {
