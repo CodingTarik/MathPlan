@@ -6,6 +6,7 @@ const modulHelper = require(path.join(__dirname, '../database/modulHelper.js'));
 const examRegulationHelper = require(
   path.join(__dirname, '../database/examRegulationHelper.js')
 );
+const configFile = require(path.join(__dirname, '../config.js'));
 /**
  * if a request is made the addModul function of the database is called by the controller and the added module is sent back as a response
  * @param {Object} req - The request object
@@ -257,7 +258,7 @@ const addOrUpdateExamRegulation = async (req, res) => {
 };
 /**
  * if a request is made the getModules function of the database is called by the controller and the matching module(s)
- * is sent back as a response if there are less than 50 matching modules and no other error occurs
+ * is sent back as a response if there are less than MAX_NUMBER_FOUND_MODULES as specified in the config file matching modules and no other error occurs
  * @param {Object} req
  * @param {Object} res
  */
@@ -271,14 +272,14 @@ const getModules = (req, res) => {
       req.params.applicability
     )
     .then((data) => {
-      if (data.count <= 50) res.send(data.rows);
-      else throw new Error('The search request yielded more than 50 requests');
+      if (data.count <= configFile.database.MAX_NUMBER_FOUND_MODULES) res.send(data.rows);
+      else throw new Error('The search request yielded more than ' + configFile.database.MAX_NUMBER_FOUND_MODULES + ' requests');
     })
     .catch((err) => {
-      if (err.message === 'The search request yielded more than 50 requests') {
+      if (err.message === 'The search request yielded more than ' + configFile.database.MAX_NUMBER_FOUND_MODULES + ' requests') {
         res
           .status(400)
-          .send('The search request yielded more than 50 requests');
+          .send({ message: 'too many results', num: configFile.database.MAX_NUMBER_FOUND_MODULES });
       } else {
         res.status(500).send({
           message: err.message || 'Error getting module!'

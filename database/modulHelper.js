@@ -1,6 +1,7 @@
 const logger = require('../logger.js');
 const Modul = require('./database.js').models.Modul;
 const Sequelize = require('sequelize');
+const configFile = require('../config.js');
 
 /**
  * Adds a module to the database
@@ -79,7 +80,7 @@ const getAllModuls = () => {
  * if a moduleCredits is provided: moduleCredits of returned modules must equal the given moduleCredits
  * if a moduleLanguage is provided: moduleLanguage of returned modules must equal the given moduleLanguage
  * if a moduleApplicability is provided: moduleApplicability of returned modules must equal the given moduleApplicability.
- * If more than 50 modules match only the first 50 are returned.
+ * If more than MAX_NUMBER_FOUND_MODULES as specified in the config file modules match only the first MAX_NUMBER_FOUND_MODULES modules are returned.
  * @param {string} moduleID
  * @param {string} moduleName
  * @param {string} moduleCredits
@@ -113,7 +114,7 @@ const getModules = (
   }
   return Modul.findAndCountAll({
     where: parameters,
-    limit: 50,
+    limit: configFile.database.MAX_NUMBER_FOUND_MODULES,
     order: [['moduleID', 'ASC']]
   });
 };

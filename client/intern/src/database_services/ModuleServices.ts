@@ -45,7 +45,7 @@ const getByID = (id: string) => {
  * @param credits
  * @param language
  * @param applicability
- * @returns a promise that is rejected or fulfilled depending on the success of getting the module(s), it rejects if there is a problem with the database or more than 50 modules match the request
+ * @returns a promise that is rejected or fulfilled depending on the success of getting the module(s), it rejects if there is a problem with the database or more than MAX_NUMBER_FOUND_MODULES as specified in the config file modules match the request
  */
 const getModules = (
   id: string,
