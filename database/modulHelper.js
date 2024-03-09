@@ -59,7 +59,7 @@ const deleteModulById = async (moduleID) => {
     // If affectedRows is greater than 0, it means at least one record was deleted
     return affectedRows > 0;
   } catch (error) {
-    logger.error('Error deleting module:', error);
+    logger.error('Error deleting module:', error); // only occurs when there a problems with the database connection and is therefore not tested
     return false; // Return false if an error occurs during deletion
   }
 };

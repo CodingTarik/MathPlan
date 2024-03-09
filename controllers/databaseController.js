@@ -119,7 +119,7 @@ const deleteModulById = async (req, res) => {
       }
     })
     .catch((err) => {
-      res.status(500).send({
+      res.status(500).send({ // only occurs when there a problems with the database connection and is therefore not tested
         message: err.message || 'Error deleting module!'
       });
     });
