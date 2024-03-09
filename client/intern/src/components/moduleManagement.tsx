@@ -266,7 +266,7 @@ export default function AddModuleFields() {
                     <DeleteIcon />
                   </IconButton>
                   <IconButton
-                    color="secondary"
+                    color="info"
                     onClick={() => {setModuleParameters([row.moduleID, row.moduleName, row.moduleCredits, row.moduleLanguage, row.moduleApplicability]); window.scrollTo(0, 0);}
                     }
                   >
