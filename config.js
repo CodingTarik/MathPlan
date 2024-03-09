@@ -83,15 +83,19 @@ config.server.HOST = process.env.HOST || 'localhost';
 
 // Initialize an empty web configuration object
 config.web = {};
-// Set the default language for the web, defaulting to 'de' if not provided
-config.web.DEFAULT_LANGUAGE = process.env.DEFAULT_LANGUAGE || 'de';
 
 // the faq url the website will redirect if faq_url_activate is active
 config.web.FAQ_URL = process.env.FAQ_URL || 'www.example.org';
 // page name
-config.web.PAGE_NAME = process.env.PAGE_NAME || 'Materno';
+config.web.PAGE_NAME = process.env.PAGE_NAME || 'MathPlan';
+// support: responsible person or group
+config.web.SUPPORT_RESPONSIBLE = process.env.SUPPORT_RESPONSIBLE;
 // support email for footer
+config.web.SUPPORT_EMAIL_ACTIVE = testBool(process.env.SUPPORT_EMAIL_ACTIVE);
 config.web.SUPPORT_EMAIL = process.env.SUPPORT_EMAIL || 'example@example.com';
+// support link for footer
+config.web.SUPPORT_LINK_ACTIVE = testBool(process.env.SUPPORT_LINK_ACTIVE);
+config.web.SUPPORT_LINK = process.env.SUPPORT_LINK || 'www.example.com';
 // defined if faq item in menu banner is activate redirects to faq_url
 config.web.FAQ_URL_ACTIVE = testBool(process.env.FAQ_URL_ACTIVE);
 // Defines if faq on startpage is active
