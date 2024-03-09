@@ -105,14 +105,6 @@ const updateModule = (req, res) => {
 const deleteModulById = async (req, res) => {
   const moduleId = req.params.id; // Assuming the module ID is in the route parameters
 
-  if (!moduleId) {
-    // mMn ist abfrage unnötig; wenn keine id gegeben, gibts eine 404, weil andere URL gesucht wird (eine ohne Parameter)
-    res.status(400).send({
-      message: 'Module ID is required!'
-    });
-    return;
-  }
-
   modulHelper
     .deleteModulById(moduleId)
     .then((deleted) => {
