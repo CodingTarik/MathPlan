@@ -175,7 +175,7 @@ function ExamPlanForm({
     // the information contained in the exam regulation like minNumberSeminars,.. is rendered as markdown with a descriptive string as specified in descriptions.ts
     return (
       <div style={{ textAlign: 'left' }}>
-        <Markdown>
+        <Markdown linkTarget="_blank">
           {(descriptions[key as DescriptionsKey] + value) as string}
         </Markdown>
       </div>
