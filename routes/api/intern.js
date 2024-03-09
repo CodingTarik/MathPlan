@@ -23,6 +23,8 @@ router.get(
   '/getModules/:id/:name/:credits/:language/:applicability',
   dbController.getModules
 );
+router.get('/getIncompleteModules', dbController.getIncompleteModules
+);
 router.get('/getOneModule/:id', dbController.getOneModule);
 router.put('/updateModule/:id', dbController.updateModule);
 // for pdf parser

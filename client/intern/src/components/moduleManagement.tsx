@@ -80,7 +80,7 @@ function isAddButtonDisabled(values: string[]) {
  * 
  * @returns the UI for manually inserting modules into the database and searching for certain modules
  */
-export default function AddModuleFields() {
+export default function ModuleManagementPage() {
   const [moduleParameters, setModuleParameters] = React.useState(Array(5).fill(""));
   const [rowsFound, setRowsFound] = React.useState(Array(0).fill({moduleID: "", moduleName: "", moduleCredits: NaN, moduleLanguage: "", moduleApplicability: ""}));
   const [moduleToBeDeleted, setModuleToBeDeleted] = React.useState<string | null>(null);
@@ -156,6 +156,21 @@ export default function AddModuleFields() {
         }
       });
   }
+
+// if the incomplete module search button is clicked, the database is searched for modules with incomplete information
+const handleIncompleteSearchClick = () => {
+  ModuleServices.getIncompleteModules()
+  .then((response: { data: { moduleID: string; moduleName: string; moduleCredits: number; moduleLanguage: string; moduleApplicability: string; createdAt: object; id: object, updatedAt: object}[]; }) => { 
+    console.log("Success at getting incomplete modules");
+    console.log(response.data);
+    setRowsFound(response.data);
+  })
+  .catch((e: AxiosError) => {
+      console.log("Error while getting module");
+      console.log(e);
+  });
+}
+
   return (
     <>
      <Dialog
@@ -235,7 +250,8 @@ export default function AddModuleFields() {
       </div>
       </Box>
         <Button variant="outlined" sx={{ marginTop: 2, marginBottom: 2 }} disabled = {isAddButtonDisabled(moduleParameters)} onClick = {() => handleButtonClick(moduleParameters)}>Speichern</Button>
-        <Button variant="outlined"  sx={{ marginTop: 2, marginBottom: 2 }} onClick = {() => handleSearchClick(moduleParameters)}>Suchen</Button>
+        <Button variant="outlined"  sx={{ marginTop: 2, marginBottom: 2, marginLeft: 2 }} onClick = {() => handleSearchClick(moduleParameters)}>Suchen</Button>
+        <Button variant="outlined"  sx={{ marginTop: 2, marginBottom: 2, marginLeft: 2 }} onClick = {() => handleIncompleteSearchClick()}>Unvollständige Module suchen</Button>
         <Table hoverRow sx={{ '& tr > *:not(:first-child)': { textAlign: 'right' } }}>
           <thead>
             <tr>
