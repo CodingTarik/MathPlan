@@ -92,33 +92,26 @@ export default function ExternalModules({
                 <Textarea
                   required
                   onChange={(event) => {
-                    if (event.target.value.length > 10)
-                      window.alert(
-                        'Der Eintrag für Anzahl CP ist zu lang und kann deswegen nicht gespeichert werden'
-                      );
-                    else {
+                      if (event.target.value.length > 10) {
+                        window.alert(
+                          'Der Eintrag für Anzahl CP ist zu lang und kann deswegen nicht gespeichert werden'
+                        );
+                        return;
+                      }
                       const credits = Number(event?.target.value);
                       if (isNaN(credits)) {
                         window.alert('Die Credit Points müssen eine Zahl sein');
-                      } else if (!event?.target.value) {
-                        const tmp = {
-                          moduleID: currentModule.moduleID,
-                          moduleName: currentModule.moduleName,
-                          moduleCredits: NaN
-                        };
-                        setCurrentModule(tmp);
-                      } else {
-                        {
-                          const tmp = {
-                            moduleID: currentModule.moduleID,
-                            moduleName: currentModule.moduleName,
-                            moduleCredits: credits
-                          };
-                          setCurrentModule(tmp);
-                        }
+                        return;
                       }
+                      const tmp = {
+                        moduleID: currentModule.moduleID,
+                        moduleName: currentModule.moduleName,
+                        moduleCredits: event?.target.value ? credits : NaN
+                      };
+                      setCurrentModule(tmp);
                     }
-                  }}
+  
+                  }
                 />
               </FormControl>
               <FormControl>
