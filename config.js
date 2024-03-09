@@ -20,6 +20,7 @@ require('dotenv').config();
  * @property {boolean} server.ALLOW_HTTPS - Enable HTTPS.
  * @property {string} server.HOST - Server host.
  * @property {Object} web - Web configuration.
+ * @property {string} web.DEFAULT_LANGUAGE - Default language for the web.
  * @property {string} web.PAGE_NAME - Name of the application shown in navbar and on startpage.
  * @property {boolean} web.FAQ_STARTPAGE_ACTIVE - Enable FAQ on startpage.
  * @property {boolean} web.FAQ_URL_ACTIVE - Enable FAQ in menu banner.
@@ -83,7 +84,8 @@ config.server.HOST = process.env.HOST || 'localhost';
 
 // Initialize an empty web configuration object
 config.web = {};
-
+// Set the default language for the web, defaulting to 'de' if not provided
+config.web.DEFAULT_LANGUAGE = process.env.DEFAULT_LANGUAGE || 'de';
 // the faq url the website will redirect if faq_url_activate is active
 config.web.FAQ_URL = process.env.FAQ_URL || 'www.example.org';
 // page name
