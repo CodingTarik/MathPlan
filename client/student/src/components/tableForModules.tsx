@@ -107,7 +107,7 @@ function TableToolbar({
 
 /**
  * 
- * @param row the actual modules wrapped by modulwrapper
+ * @param rows the actual modules wrapped by modulwrapper
  * @param nestedKeys the path to this subarea within the exam regulation object
  * @returns the UI for a module table
  */
