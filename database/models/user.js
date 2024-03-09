@@ -32,7 +32,7 @@ module.exports = (sequelize) => {
       allowNull: true,
       unique: true,
       validate: {
-        isNumeric: true
+        // isNumeric: true //TODO: uncomment when matrikelnumber is available
       }
     }
   });

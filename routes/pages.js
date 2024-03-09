@@ -10,14 +10,7 @@ router.get('/', (req, res, next) => {
   });
 });
 
-router.get('/teach', checkRole('teacher'), function (req, res, next) {
-  if (req.session.isIntern || req.session.isTeach) {
-    console.log('Intern');
-    next();
-  } else {
-    res.redirect('/');
-  }
-}, (req, res, next) => {
+router.get('/teach', checkRole('teacher'), (req, res, next) => {
   res.render('layout/index', {
     body: '../pages/teach.ejs',
     title: 'Dozierende'
@@ -43,6 +36,13 @@ router.use(
 router.get('/loginnotworking', (req, res) => {
   res.render('layout/index', {
     body: '../pages/nologinpossible.ejs'
+  });
+});
+
+// when the user has no access to the requested page
+router.get('/noaccess', (req, res) => {
+  res.render('layout/index', {
+    body: '../pages/noaccess.ejs'
   });
 });
 

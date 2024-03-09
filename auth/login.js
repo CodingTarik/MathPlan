@@ -8,6 +8,7 @@ const renderError = require('../routes/error').renderError;
 
 let client = null;
 
+// OpenID configuration
 const ssoconfig = {
   client_id: config.auth.openid_client_id,
   client_secret: config.auth.openid_client_secret,
@@ -15,14 +16,19 @@ const ssoconfig = {
   response_types: ['code']
 };
 
-const params = {
+const params = { // those are the parameters that work with the google login
   scope: 'openid email profile' // specify attributes to be returned (scope)
 };
 
+/**
+ * Function to generate a random secret key
+ * @returns {string} - A random generated key
+ */
 function generateSecretKey() {
   return crypto.randomBytes(64).toString('hex');
 }
 
+// Setup session and OpenID
 const setupSessionAndOpenID = (app) => {
   registerSession(app);
   logger.info('Session setup complete');
@@ -74,24 +80,24 @@ const setupOpenID = (app) => {
     timeout: 15000
   });
 
-  // TODO TRY CATCH IF ISSUER IS NOT REACHABLE OR TIMEOUT (USE LOGGER.ERROR)
   Issuer.discover(config.auth.openid_discovery_url)
     .then((issuer) => {
       client = new issuer.Client(ssoconfig);
     })
     .catch((err) => {
-      logger.error(err);
+      logger.error('Issuer not available. Caught ' + err);
     });
-
+  // handles the login route and redirects to the openid provider
   app.get('/login', (req, res) => {
     try {
       res.redirect(client.authorizationUrl(params));
     } catch (err) {
       logger.error(err);
+      res.redirect('/loginnotworking');
       renderError(req, res, err);
     }
   });
-
+  // handles the callback route and validates the user
   app.get('/callback', async (req, res) => {
     try {
       const params = client.callbackParams(req);
@@ -106,7 +112,7 @@ const setupOpenID = (app) => {
       renderError(req, res, err);
     }
   });
-
+  // handles the logout route and destroys the session
   app.get('/logout', (req, res) => {
     try {
       req.session.destroy(() => {
@@ -117,15 +123,11 @@ const setupOpenID = (app) => {
       renderError(req, res, err);
     }
   });
-
+  // test route to check if user is logged in
   app.get('/testlogin', async (req, res) => {
     try {
-      if (req.session.tokenSet) {
-        const userinfo = await client.userinfo(
-          req.session.tokenSet.access_token
-        );
-        console.log(userinfo);
-        res.send(`Welcome, ${userinfo.name} (${userinfo.email}) `);
+      if (req.session.user) {
+        res.send('Welcome, ' + req.session.user.name + ' (' + req.session.user.email + ')');
       } else {
         res.send('You are not logged in. <a href="/login">Login</a>');
       }
@@ -136,6 +138,14 @@ const setupOpenID = (app) => {
   });
 };
 
+/**
+ * Validates the user and performs necessary actions based on the user's information.
+ *
+ * @param {Object} req - The request object.
+ * @param {Object} res - The response object.
+ * @param {Object} userinfo - The user's information.
+ * @returns {Promise<void>} - A promise that resolves once the validation is complete.
+ */
 const validateUser = async (req, res, userinfo) => {
   const isAdmin = userinfo.email === config.auth.admin;
   // check if user exits in database
@@ -156,7 +166,7 @@ const validateUser = async (req, res, userinfo) => {
       userinfo.name,
       userinfo.email,
       isAdmin ? 'intern' : 'student',
-      0
+      userinfo.email // matrikelnumber to be added, when available
     );
     logger.info('User created: ' + req.session.user.email);
   }
