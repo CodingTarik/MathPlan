@@ -62,8 +62,14 @@ const getModules = (
     )}/${encodeURIComponent(applicability)}`
   );
 };
+
+/**
+ * sends a request with the id of the module that needs to be deleted
+ * @param id 
+ * @returns a promise that is rejected or fulfilled depending on the success of deleting the module
+ */
 const deleteModule = (id:string) => {
-  return http.delete(`/deleteModule/${id}`)
+  return http.delete(`/deleteModule/${encodeURIComponent(id)}`)
 }
 const ModuleServices = {
   create,

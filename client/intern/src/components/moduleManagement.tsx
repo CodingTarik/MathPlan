@@ -82,7 +82,7 @@ function isAddButtonDisabled(values: string[]) {
  */
 export default function AddModuleFields() {
   const [moduleParameters, setModuleParameters] = React.useState(Array(5).fill(""));
-  const  [rowsFound, setRowsFound] = React.useState(Array(0).fill({moduleID: "", moduleName: "", moduleCredits: NaN, moduleLanguage: "", moduleApplicability: ""}));
+  const [rowsFound, setRowsFound] = React.useState(Array(0).fill({moduleID: "", moduleName: "", moduleCredits: NaN, moduleLanguage: "", moduleApplicability: ""}));
   const [moduleToBeDeleted, setModuleToBeDeleted] = React.useState<string | null>(null);
   const [dialogOpen, setDialogOpen] = React.useState(false); 
   const [snackbarOpen, setSnackbarOpen] = React.useState(false);
@@ -167,7 +167,7 @@ export default function AddModuleFields() {
         <DialogTitle id="alert-dialog-title">Bestätigung</DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-description">
-            {"Bist du dir sicher, dass du das Modul mit ID " + moduleToBeDeleted + "löschen möchtest?"}
+            {"Bist du dir sicher, dass du das Modul mit ID " + moduleToBeDeleted + " löschen möchtest?"}
           </DialogContentText>
         </DialogContent>
         <DialogActions>
@@ -248,7 +248,7 @@ export default function AddModuleFields() {
             </tr>
           </thead>
           <tbody>
-            {/* If the search button is clicked and rowsFound is not empty the rows are displayed and the fields where one can add a module set if a module is clicked on */}
+            {/* If the search button is clicked and rowsFound is not empty the rows are displayed and the fields where one can add a module set if the edit icon is clicked and the module is deleted if the delete icon is clicked */}
             {rowsFound.map((row) => (
               <tr key={row.moduleID} onClick =  {() => {}}  >
                 <td>{row.moduleID}</td>

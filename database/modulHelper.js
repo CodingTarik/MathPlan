@@ -42,11 +42,7 @@ const isModuleExists = (moduleID) => {
   }).then((result) => !!result);
 };
 
-/**
- * Deletes a module from the database based on its ID
- * @param {string} moduleID - The module ID to delete
- * @returns {Promise} A promise that is rejected or fulfilled depending on the success of deleting the module
- */
+
 /**
  * Deletes a module from the database based on its ID
  * @param {string} moduleID - The module ID to delete

@@ -331,6 +331,7 @@ describe('Modules API Tests', () => {
   });
 });
 
+// Test 11
 test('DELETE /api/intern/deleteModule/:id: It should respond with a 404 status if the module was not found', async () => {
   const moduleId = Math.floor(Math.random() * 10000000).toString();
   const response = await request(app)
@@ -338,6 +339,7 @@ test('DELETE /api/intern/deleteModule/:id: It should respond with a 404 status i
   expect(response.statusCode).toBe(404);
 });
 
+// Test 12
 test('DELETE /api/intern/deleteModule/:id: It should delete an existing module', async () => {
   const newModule = {
     moduleID: Math.floor(Math.random() * 10000000).toString(),
