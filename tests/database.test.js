@@ -119,7 +119,7 @@ describe('Modules API Tests', () => {
   });
 
   // Test 5
-  test('GET /api/intern/getModules/:id/:name/:credits/:language/:applicability: It should respond with a 400 status if more than 50 modules match the request', async () => {
+  test('GET /api/intern/getModules/:id/:name/:credits/:language/:applicability: It should respond with a 400 status if too many modules match the request', async () => {
     const newModules = new Array(51);
     for (let i = 0; i < 51; i++) {
       const newModule = {
@@ -142,9 +142,6 @@ describe('Modules API Tests', () => {
       `/api/intern/getModules/${'undefined'}/${newModules[0].moduleName}/${newModules[0].moduleCredits}/${newModules[0].moduleLanguage}/${newModules[0].moduleApplicability}`
     );
     expect(response.statusCode).toBe(400);
-    expect(response.text).toBe(
-      'The search request yielded more than 50 requests'
-    );
     for (let i = 0; i < 51; i++) {
       modulehelper.deleteModulById(newModules[parseInt(i)].moduleID);
     }

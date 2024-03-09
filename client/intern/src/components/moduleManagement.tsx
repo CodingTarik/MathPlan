@@ -5,7 +5,7 @@ import TextField from '@mui/material/TextField';
 
 import ModuleServices from '../database_services/ModuleServices'; // for database functionality
 import Table from '@mui/joy/Table';
-import { AxiosError } from 'axios';
+import {  AxiosError } from 'axios';
 
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
@@ -188,7 +188,13 @@ function handleButtonClick(values: string[]) {
           setSnackbarOpen(true);
           console.log(e);
         }
-      });
+      })
+      .catch((e: Error) => { 
+          setSnackbarMessage('Es lief etwas schief.');
+          setSaveSuccess(false);
+          setSnackbarOpen(true);
+          console.log(e);
+        });
   }
   return (
     <>
