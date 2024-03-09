@@ -235,6 +235,7 @@ function ExamPlanFormElement({
         <TableForModules rows={value as ModulWrapper[]} nestedKeys={nestedKeys}></TableForModules>
       );
     default:
+      // check if the key-value pair represents an exam plan property
       if (Object.keys(descriptions).includes(key)) {
         // the information contained in the exam regulation like minNumberSeminars,.. is rendered as markdown with a descriptive string as specified in descriptions.ts
         return (
