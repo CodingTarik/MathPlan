@@ -7,7 +7,7 @@ const examRegulationHelper = require(
   path.join(__dirname, '../database/examRegulationHelper.js')
 );
 /**
- * if a request is made the addModul function of the database is called by the controller and the added module is sent back as a response
+ * If a request is made, the addModul function of the database is called by the controller and the added module is sent back as a response
  * @param {Object} req - The request object
  * @param {Object} res - The response object
  * @returns {void} - Sends a response with if the passed data is not sufficient as it does not contain a module id
@@ -105,14 +105,6 @@ const updateModule = (req, res) => {
 const deleteModulById = async (req, res) => {
   const moduleId = req.params.id; // Assuming the module ID is in the route parameters
 
-  if (!moduleId) {
-    // mMn ist abfrage unnötig; wenn keine id gegeben, gibts eine 404, weil andere URL gesucht wird (eine ohne Parameter)
-    res.status(400).send({
-      message: 'Module ID is required!'
-    });
-    return;
-  }
-
   modulHelper
     .deleteModulById(moduleId)
     .then((deleted) => {
@@ -127,7 +119,7 @@ const deleteModulById = async (req, res) => {
       }
     })
     .catch((err) => {
-      res.status(500).send({
+      res.status(500).send({ // only occurs when there a problems with the database connection and is therefore not tested
         message: err.message || 'Error deleting module!'
       });
     });
@@ -263,8 +255,9 @@ const addOrUpdateExamRegulation = async (req, res) => {
     });
   }
 };
+
 /**
- * if a request is made the getModules function of the database is called by the controller and the matching module(s)
+ * if a request is made, the getModules function of the database is called by the controller and the matching module(s)
  * is sent back as a response if there are less than 50 matching modules and no other error occurs
  * @param {Object} req
  * @param {Object} res
@@ -295,6 +288,26 @@ const getModules = (req, res) => {
     });
 };
 
+/**
+ * If a request is made, the getIncompleteModules function of the database is called by the controller,
+ * and a response is sent based on the success or failure of the search. On success, an array of all
+ * incomplete modules is sent.
+ * @param {Object} req - The request object (not used)
+ * @param {Object} res - The response object
+ * @returns {void} - Sends a response based on the success or failure of the findAll-function
+ */
+const getIncompleteModules = (req, res) => {
+  modulHelper.getIncompleteModules()
+    .then((data) => {
+      res.send(data);
+    })
+    .catch((err) => { // should only occur if the connection to the database breaks (not tested)
+      res.status(500).send({
+        message: err.message || 'Error getting module!'
+      });
+    });
+};
+
 module.exports = {
   addModul,
   deleteModulById,
@@ -303,5 +316,6 @@ module.exports = {
   addOrUpdateExamRegulation,
   updateModule,
   getOneModule,
-  getModules
+  getModules,
+  getIncompleteModules
 };

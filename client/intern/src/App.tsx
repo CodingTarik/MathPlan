@@ -18,7 +18,7 @@ import * as JSONEditor from '@json-editor/json-editor';
 import 'select2/dist/css/select2.css';
 import select2 from 'select2';
 
-import AddModuleFields from './components/moduleManagement';
+import ModuleManagementPage from './components/moduleManagement';
 import PdfFileUpload from './components/uploadPdfToServer';
 /**
  * JSX structure representing the entire intern application.
@@ -168,7 +168,7 @@ function App() {
         */}
         <TabPanel value="0">
           <div>
-           <AddModuleFields/>
+           <ModuleManagementPage/>
            <hr style={{ height: '4px', borderWidth: 0, color: 'gray', backgroundColor: 'gray' }} /> {/*horizontal line*/}
            <PdfFileUpload/>
            </div>
