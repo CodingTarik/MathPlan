@@ -298,7 +298,7 @@ const getModules = (req, res) => {
 
 /**
  * If a request is made, the getIncompleteModules function of the database is called by the controller,
- * and a response is sent based on the success or failure of the deletion. On success, an array of all
+ * and a response is sent based on the success or failure of the search. On success, an array of all
  * incomplete modules is sent.
  * @param {Object} req - The request object (not used)
  * @param {Object} res - The response object

@@ -179,8 +179,8 @@ const handleIncompleteSearchClick = () => {
       </div>
       </Box>
         <Button variant="outlined" sx={{ marginTop: 2, marginBottom: 2 }} disabled = {isAddButtonDisabled(moduleParameters)} onClick = {() => handleButtonClick(moduleParameters)}>Speichern</Button>
-        <Button variant="outlined"  sx={{ marginTop: 2, marginBottom: 2 }} onClick = {() => handleSearchClick(moduleParameters)}>Suchen</Button>
-        <Button variant="outlined"  sx={{ marginTop: 2, marginBottom: 2 }} onClick = {() => handleIncompleteSearchClick()}>Unvollständige Module suchen</Button>
+        <Button variant="outlined"  sx={{ marginTop: 2, marginBottom: 2, marginLeft: 2 }} onClick = {() => handleSearchClick(moduleParameters)}>Suchen</Button>
+        <Button variant="outlined"  sx={{ marginTop: 2, marginBottom: 2, marginLeft: 2 }} onClick = {() => handleIncompleteSearchClick()}>Unvollständige Module suchen</Button>
         <Table hoverRow sx={{ '& tr > *:not(:first-child)': { textAlign: 'right' } }}>
           <thead>
             <tr>
