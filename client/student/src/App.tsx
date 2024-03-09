@@ -1,4 +1,3 @@
-// Importing necessary dependencies and styles
 import './App.css';
 import { HashRouter, Route, Routes} from 'react-router-dom';
 import Overview from './components/examPlanOverview';
