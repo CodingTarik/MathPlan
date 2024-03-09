@@ -9,22 +9,19 @@ import {
   RadioGroup,
   Sheet,
   Typography,
-  Textarea
 } from '@mui/joy';
-import { Button, Box } from '@mui/material';
-import { ExamPlanFormElement } from './examPlanFormElement.tsx';
-import { setExamPlan, getExamPlan } from './examPlanVariable.ts';
-import objectPath from 'object-path';
+import { Box } from '@mui/material';
+import { setExamPlan} from './examPlanVariable.ts';
 import { AxiosError } from 'axios';
 import { getExamRegulations } from '../../../intern/src/database_services/ExamRegulationService.ts';
-import { saveExamPlan } from '../database_services/ExamPlanService.ts';
+import ExamPlanForm from './examPlanForm.tsx';
 
 /**
  * 
  * @returns the UI for the start page of the exam plan form where when the user can select a exam regulation and a type of exam plan. After that, the actual exam plan form is shown
  */
 export default function ExamPlanFormStartPage() {
-  // 
+  // the selected examRegulation
   const [examRegulation, setExamRegulation] = React.useState<{
     jsonSchema: string;
     name: string;
@@ -32,13 +29,17 @@ export default function ExamPlanFormStartPage() {
     jsonSchema: '',
     name: ''
   });
+  // "Prüfungsplan" or "Nebenfach"
   const [typeOfExamPlan, setTypeOfExamPlan] = React.useState<string | null>(
     null
   );
+  // true if exam regulation has been chosen and exam plan initialized
   const [hasExamPlan, setHasExamPlan] = React.useState(false);
+  // all exam regulation names from the database
   const [examRegulationNames, setExamRegulationNames] = React.useState<
     Array<string>
   >([]);
+  // all exam regulations from the database
   const [examRegulations, setExamRegulations] = React.useState<
     Array<{ jsonSchema: string; name: string }>
   >([]);
@@ -143,62 +144,7 @@ export default function ExamPlanFormStartPage() {
         </Box>
       )}
       {hasExamPlan && typeOfExamPlan === "Prüfungsplan" && (
-        <div style={{ minWidth: '900px' }}>
-          {Object.entries(JSON.parse(examRegulation?.jsonSchema)).map(
-            (entry) => (
-              <ExamPlanFormElement entry={entry} nestedKeys={''} level={0} />
-            )
-          )}
-          <FormControl sx={{ marginTop: 2, marginBottom: 2 }}>
-            <FormLabel>
-              Weitere Anmerkungen zum Prüfungs- bzw. Nebenfachplan (max. 5000
-              Zeichen)
-            </FormLabel>
-            <Textarea
-              minRows={4}
-              maxRows={8}
-              onChange={(event) => {
-                if (event.target.value.length > 5000)
-                  window.alert(
-                    'Die Anmerkung ist zu lang, so kann nur ein Teil der Anmerkung gespeichert werden.'
-                  );
-                else {
-                  const examPlan = getExamPlan();
-                  objectPath.set(
-                    examPlan,
-                    'area.notesStudent',
-                    event.target.value
-                  ),
-                    setExamPlan(examPlan);
-                }
-              }}
-            />
-          </FormControl>
-          <Button
-            variant="outlined"
-            sx={{ marginTop: 2, marginBottom: 2 }}
-            onClick={() => {
-              saveExamPlan(
-                JSON.stringify(getExamPlan()),
-                examRegulation.name,
-                typeOfExamPlan
-              )
-                .then((response: { data: object }) => {
-                  console.log('Success at saving examPlan');
-                  console.log(response.data);
-                  window.alert(
-                    'Der Entwurf wurde erfolgreich gespeichert.'
-                  );
-                })
-                .catch((e: Error) => {
-                  console.log('Error while saving examPlan');
-                  console.log(e);
-                });
-            }}
-          >
-            Als {typeOfExamPlan}-Entwurf speichern
-          </Button>
-        </div>
+        <ExamPlanForm examRegulation={examRegulation}></ExamPlanForm>
       )}
     </>
   );
