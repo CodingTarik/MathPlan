@@ -4,7 +4,7 @@ import Overview from './components/examPlanOverview';
 import ExamPlanFormStartPage from './components/examPlanFormStartPage';
 
 /**
- * JSX structure representing the entire intern application.
+ * JSX structure representing the entire student application.
  *
  * @function App
  * @returns {JSX.Element} The rendered React element.
