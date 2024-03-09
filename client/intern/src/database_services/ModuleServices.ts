@@ -63,11 +63,20 @@ const getModules = (
   );
 };
 
+/**
+ * sends a request with the id of the module that needs to be deleted
+ * @param id 
+ * @returns a promise that is rejected or fulfilled depending on the success of deleting the module
+ */
+const deleteModule = (id:string) => {
+  return http.delete(`/deleteModule/${encodeURIComponent(id)}`)
+}
 const ModuleServices = {
   create,
   update,
   getByID,
-  getModules
+  getModules,
+  deleteModule
 };
 
 export default ModuleServices;
