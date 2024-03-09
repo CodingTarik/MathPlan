@@ -121,7 +121,7 @@ export default function TableForModules({
   const [selected, setSelected] = React.useState<readonly ModulWrapper[]>([]);
 
   /**
-   * if a row ic clicked the selected object and the exam plan vaariable gets updated
+   * if a row is clicked the selected object and the exam plan vaariable gets updated
    * @param _event 
    * @param wrapper the module wrapper that was clicked
    */
