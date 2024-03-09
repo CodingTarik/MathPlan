@@ -90,7 +90,7 @@ export default function AddModuleFields() {
   const [snackbarMessage, setSnackbarMessage] = React.useState('');
 
   /**
-   * if delete button is clicked the dialog box is opened and the id of the module saved
+   * if delete button is clicked, the dialog box is opened and the id of the module is saved
    * @param id the moduleID of the module to be deleted
    */
   function handleDelete(id: string){
