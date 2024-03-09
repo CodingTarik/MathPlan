@@ -28,7 +28,4 @@ router.put('/updateModule/:id', dbController.updateModule);
 // for pdf parser
 router.post('/uploadPDFtoServer', pdfUploadController.uploadPDF);
 
-router.get('/getModules/:id/:name/:credits/:language/:applicability', dbController.getModules);
-router.delete('/deleteModule/:id', dbController.deleteModulById);
-
 module.exports = router;
