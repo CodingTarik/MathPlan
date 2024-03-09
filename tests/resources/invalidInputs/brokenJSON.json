@@ -1,0 +1,66 @@
+{
+  "enableDefaultPreprocessing": true,
+  "additionalPreprocessing": [
+    {
+      "find": "Arbeits aufwand",
+      "flags": "g",
+      "replace": "Arbeitsaufwand"
+    ,
+    {
+      "find": "\\uf0b7\\s*",
+      "flags": "g",
+      "replace": ""
+    }
+  ],
+  "moduleTitle": "Modulbeschreibung",
+
+  "moduleProperties": [
+    {
+      "propertyName": "moduleID",
+      "readFrom": "Modul Nr\\.",
+      "readTo": "Creditpoints",
+      "useResultAtIndex": 0,
+      "postprocessing": [
+        {
+          "find": "\\s",
+          "flags": "g",
+          "replace": ""
+        }
+      ]
+    },
+    {
+      "propertyName": "moduleName",
+      "readFrom": "Modulname",
+      "readTo": "Modul",
+      "useResultAtIndex": 0,
+      "postprocessing": []
+    },
+    {
+      "propertyName": "moduleCredits",
+      "readFrom": "Modul Nr\\.",
+      "readTo": "Arbeitsaufwand",
+      "useResultAtIndex": 0,
+      "postprocessing": [
+        {
+        "find": "^.*Creditpoints\\s",
+        "flags": "g",
+        "replace": ""
+        }
+      ]
+    },
+    {
+      "propertyName": "moduleLanguage",
+      "readFrom": "([sS]emester|Verwendbarkeit|[Uu]nregelmäßig) Sprache",
+      "readTo": "Modulverantwortliche",
+      "useResultAtIndex": 0,
+      "postprocessing": []
+    },
+    {
+      "propertyName": "moduleApplicability",
+      "readFrom": "Verwendbarkeit des Moduls",
+      "readTo": "9 Literatur",
+      "useResultAtIndex": 0,
+      "postprocessing": []
+    }
+  ]
+}

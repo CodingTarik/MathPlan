@@ -4,7 +4,19 @@ const db = require('../database/database');
 const configFile = require('../config.js');
 const Sequelize = require('sequelize');
 
+// setup
 beforeAll(async () => {
+  /**
+   * Database connection configuration
+   * @typedef {Object} DatabaseConfig
+   * @property {string} database - The database name
+   * @property {string} username - The database username
+   * @property {string} password - The database password
+   * @property {string} host - The database host
+   * @property {string} dialect - The database dialect ('mysql' or 'sqlite')
+   * @property {string} storage - The path to the SQLite file (only for SQLite)
+   */
+  // Define database connection parameters
   const config /** @type {DatabaseConfig} */ = {
     database: configFile.database.DB_DATABASE,
     username: configFile.database.DB_USER, // Your MySQL username
@@ -13,7 +25,23 @@ beforeAll(async () => {
     dialect: 'sqlite',
     storage: 'database.test.sqlite'
   };
+
+  // create a sequelize object
   const sequelize = new Sequelize(config);
+
+  // the table with the courses and its attributes is defined
+  // here and below as well we write 'modul' instead of 'module' to clarify that we mean university modules not NodeJS modules
+  /**
+   * Sequelize model for university modules
+   * @typedef {Object} ModulModel
+   * @property {number} id - Artificial primary key for the module
+   * @property {string} moduleID - The module ID
+   * @property {string} moduleName - The module name
+   * @property {number} moduleCredits - The number of credits for the module
+   * @property {string} moduleLanguage - The language of the module
+   * @property {string} moduleApplicability - The applicability of the module
+   */
+
   const Modul /** @type {ModulModel} */ = sequelize.define('Modul', {
     id: {
       type: Sequelize.INTEGER,
@@ -42,15 +70,20 @@ beforeAll(async () => {
       allowNull: false
     }
   });
-  db.setModul(Modul);
-  await sequelize.sync();
+
+  db.setModulAndSequelize(Modul, sequelize);
+  sequelize.sync();
+  // wait 3 sec (just to be sure the database was created even on slow computers)
+  await new Promise(resolve => setTimeout(resolve, 3000));
 });
+// releasing open connections
 afterAll(() => {
-  if (configFile.database.DB_DIAlECT !== 'sqlite') {
+  if (configFile.database.DB_DIALECT !== 'sqlite') {
     db.sequelize.close();
   }
 });
-test('POST /api/intern/addModul: It should add a new module and respond with status code 200', async () => {
+
+test('POST /api/intern/addModule: It should add a new module and respond with status code 200', async () => {
   // module with random id
   const newModule = {
     id: Math.floor(Math.random() * 10000000).toString(),
@@ -61,11 +94,11 @@ test('POST /api/intern/addModul: It should add a new module and respond with sta
   };
 
   const response = await request(app)
-    .post('/api/intern/addModul')
+    .post('/api/intern/addModule')
     .send(newModule);
 
   expect(response.statusCode).toBe(200);
-  // Check if the module was added to the database, wait 3 sec
+  // Check if the module was added to the database, wait 2 sec (just to be sure on slow computers)
   await new Promise(resolve => setTimeout(resolve, 2000));
   expect(await db.isModuleExists(newModule.id)).toBe(true);
   expect(await db.isModuleExists('ISJDSJGDJGSDIJOGSIKGD')).toBe(false);
@@ -78,11 +111,11 @@ test('POST /api/intern/addModul: It should add a new module and respond with sta
       moduleApplicability: newModule.applicability
     })
   );
-  db.deleteModulById(newModule.id);
+  db.deleteModuleById(newModule.id);
 });
 
-test('POST /api/intern/addModul: It should respond with a 400 status if data is not provided', async () => {
-  const response = await request(app).post('/api/intern/addModul');
+test('POST /api/intern/addModule: It should respond with a 400 status if data is not provided', async () => {
+  const response = await request(app).post('/api/intern/addModule');
   expect(response.statusCode).toBe(400);
 });
 
@@ -94,7 +127,7 @@ test('GET /api/intern/getModules/:id/:name/:credits/:language/:applicability: It
     moduleLanguage: 'English',
     moduleApplicability: 'B.Sc. Mathematik'
   };
-  await db.addModul(newModule.moduleID, newModule.moduleName, newModule.moduleCredits, newModule.moduleLanguage, newModule.moduleApplicability);
+  await db.addModule(newModule.moduleID, newModule.moduleName, newModule.moduleCredits, newModule.moduleLanguage, newModule.moduleApplicability);
   let response = await request(app)
     .get(`/api/intern/getModules/${newModule.moduleID}/${newModule.moduleName}/${newModule.moduleCredits}/${newModule.moduleLanguage}/${newModule.moduleApplicability}`);
   expect(response.statusCode).toBe(200);
@@ -105,7 +138,7 @@ test('GET /api/intern/getModules/:id/:name/:credits/:language/:applicability: It
   expect(response.statusCode).toBe(200);
   expect(response.body.length).toBe(1);
   expect(response.body).toContainEqual(expect.objectContaining(newModule));
-  db.deleteModulById(newModule.moduleID);
+  db.deleteModuleById(newModule.moduleID);
 });
 
 test('GET /api/intern/getModules/:id/:name/:credits/:language/:applicability: It should respond with a 400 status if more than 50 modules match the request', async () => {
@@ -119,14 +152,14 @@ test('GET /api/intern/getModules/:id/:name/:credits/:language/:applicability: It
       moduleApplicability: 'B.Sc. Mathematik'
     };
     newModules[parseInt(i)] = newModule;
-    await db.addModul(newModule.moduleID, newModule.moduleName, newModule.moduleCredits, newModule.moduleLanguage, newModule.moduleApplicability);
+    await db.addModule(newModule.moduleID, newModule.moduleName, newModule.moduleCredits, newModule.moduleLanguage, newModule.moduleApplicability);
   }
   const response = await request(app)
     .get(`/api/intern/getModules/${'undefined'}/${newModules[0].moduleName}/${newModules[0].moduleCredits}/${newModules[0].moduleLanguage}/${newModules[0].moduleApplicability}`);
   expect(response.statusCode).toBe(400);
   expect(response.text).toBe('The search request yielded more than 50 requests');
   for (let i = 0; i < 51; i++) {
-    db.deleteModulById(newModules[parseInt(i)].moduleID);
+    db.deleteModuleById(newModules[parseInt(i)].moduleID);
   }
 });
 
@@ -166,9 +199,9 @@ test('GET /api/intern/getModules/:id/:name/:credits/:language/:applicability: It
     moduleLanguage: 'English, Deutsch',
     moduleApplicability: 'B.Sc. Mathematik'
   };
-  await db.addModul(newModule1.moduleID, newModule1.moduleName, newModule1.moduleCredits, newModule1.moduleLanguage, newModule1.moduleApplicability);
-  await db.addModul(newModule2.moduleID, newModule2.moduleName, newModule2.moduleCredits, newModule2.moduleLanguage, newModule2.moduleApplicability);
-  await db.addModul(newModule3.moduleID, newModule3.moduleName, newModule3.moduleCredits, newModule3.moduleLanguage, newModule3.moduleApplicability);
+  await db.addModule(newModule1.moduleID, newModule1.moduleName, newModule1.moduleCredits, newModule1.moduleLanguage, newModule1.moduleApplicability);
+  await db.addModule(newModule2.moduleID, newModule2.moduleName, newModule2.moduleCredits, newModule2.moduleLanguage, newModule2.moduleApplicability);
+  await db.addModule(newModule3.moduleID, newModule3.moduleName, newModule3.moduleCredits, newModule3.moduleLanguage, newModule3.moduleApplicability);
   const response = await request(app)
     .get(`/api/intern/getModules/${newModule1.moduleID}/${newModule1.moduleName}/${newModule1.moduleCredits}/${newModule1.moduleLanguage}/${newModule1.moduleApplicability}`);
   expect(response.statusCode).toBe(200);
@@ -180,9 +213,96 @@ test('GET /api/intern/getModules/:id/:name/:credits/:language/:applicability: It
   console.log(response.body);
   expect(response.body).toContainEqual(expect.objectContaining(newModule1));
   expect(response.body).toContainEqual(expect.objectContaining(newModule2));
-  db.deleteModulById(newModule1.moduleID);
-  db.deleteModulById(newModule2.moduleID);
-  db.deleteModulById(newModule3.moduleID);
+  db.deleteModuleById(newModule1.moduleID);
+  db.deleteModuleById(newModule2.moduleID);
+  db.deleteModuleById(newModule3.moduleID);
+});
+test('GET /api/intern/getOneModule/:id: It should return an existing module and respond with status code 200', async () => {
+  // add module with random id
+  const id = Math.floor(Math.random() * 10000000).toString();
+  const newModule = {
+    id,
+    name: 'Test Module',
+    credits: 5,
+    language: 'English',
+    applicability: 'Computer Science'
+  };
+
+  await db.addModule(newModule.id, newModule.name, newModule.credits, newModule.language, newModule.applicability);
+  expect(await db.isModuleExists(newModule.id)).toBe(true);
+
+  const response = await request(app)
+    .get(`/api/intern/getOneModule/${id}`);
+  const returnedModule = JSON.parse(response.text);
+  expect(response.statusCode).toBe(200);
+  expect(returnedModule.moduleID).toBe(newModule.id);
+  expect(returnedModule.moduleCredits).toBe(newModule.credits);
+  expect(returnedModule.moduleName).toBe(newModule.name);
+  expect(returnedModule.moduleApplicability).toBe(newModule.applicability);
+  expect(returnedModule.moduleLanguage).toBe(newModule.language);
+});
+
+test('PUT /api/intern/updateModule/:id: It should modify an existing module and respond with status code 200', async () => {
+  // add module with random id
+  const id = Math.floor(Math.random() * 10000000).toString();
+  const newModule = {
+    id,
+    name: 'Test Module',
+    credits: 4,
+    language: 'English',
+    applicability: 'Computer Science'
+  };
+
+  await db.addModule(newModule.id, newModule.name, newModule.credits, newModule.language, newModule.applicability);
+  expect(await db.getAllModules()).toContainEqual(
+    expect.objectContaining({
+      moduleID: newModule.id,
+      moduleName: newModule.name,
+      moduleCredits: newModule.credits,
+      moduleLanguage: newModule.language,
+      moduleApplicability: newModule.applicability
+    })
+  );
+
+  // modify module
+  const modifiedModule = {
+    id,
+    name: 'modified Test Module',
+    credits: 7,
+    language: 'English',
+    applicability: 'Computer Science'
+  };
+
+  const response = await request(app)
+    .put(`/api/intern/updateModule/${id}`)
+    .send(modifiedModule);
+
+  expect(response.statusCode).toBe(200);
+  // Check if the module was modified in the database, wait 2 sec (just to be sure on slow computers)
+  await new Promise(resolve => setTimeout(resolve, 2000));
+  expect(await db.isModuleExists(newModule.id)).toBe(true);
+  const tmp = await db.getOneModule(id);
+  expect(tmp.moduleID).toBe(modifiedModule.id);
+  expect(tmp.moduleCredits).toBe(modifiedModule.credits);
+  expect(tmp.moduleName).toBe(modifiedModule.name);
+  expect(tmp.moduleApplicability).toBe(modifiedModule.applicability);
+  expect(tmp.moduleLanguage).toBe(modifiedModule.language);
+  // Check if the data of the old module do not longer exist in the database
+  expect(await db.getAllModules()).not.toContainEqual(
+    expect.objectContaining({
+      moduleID: newModule.id,
+      moduleName: newModule.name,
+      moduleCredits: newModule.credits,
+      moduleLanguage: newModule.language,
+      moduleApplicability: newModule.applicability
+    })
+  );
+});
+
+test('PUT /api/intern/updateModule/:id: It should respond with a 400 status if data is not provided', async () => {
+  const id = Math.floor(Math.random() * 10000000).toString();
+  const response = await request(app).put(`/api/intern/updateModule/${id}`);
+  expect(response.statusCode).toBe(400);
 });
 
 test('DELETE /api/intern/deleteModule/:id: It should respond with a 404 status if the module was not found', async () => {

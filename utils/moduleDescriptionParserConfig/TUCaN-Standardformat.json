@@ -1,0 +1,74 @@
+{
+  "enableDefaultPreprocessing": true,
+  "additionalPreprocessing": [
+    {
+      "find": "Leistungspun kte",
+      "flags": "g",
+      "replace": "Leistungspunkte"
+    },
+    {
+      "find": "\\uf0b7",
+      "flags": "g",
+      "replace": "•"
+    }
+  ],
+  "moduleTitle": "Modulbeschreibung",
+
+  "moduleProperties": [
+    {
+      "propertyName": "moduleID",
+      "readFrom": "\\d{2}-\\d{2}-",
+      "readTo": "\\d{4}(\\/\\w+)?",
+      "keepReadFromAndTo": true,
+      "useResultAtIndex": 0,
+      "postprocessing": [
+        {
+          "find": "-\\s.*(\\d{4})",
+          "flags": "g",
+          "replace": "-$1"
+        }
+      ],
+      "plausibilityCheck": "^\\d{2}-\\d{2}-\\d{4}(\\/\\w+)?$"
+    },
+    {
+      "propertyName": "moduleName",
+      "readFrom": "Modulname",
+      "readTo": "Modul Nr\\.",
+      "keepReadFromAndTo": false,
+      "useResultAtIndex": 0,
+      "postprocessing": []
+    },
+    {
+      "propertyName": "moduleCredits",
+      "readFrom": "\\d+ CP",
+      "readTo": "",
+      "keepReadFromAndTo": true,
+      "useResultAtIndex": 0,
+      "postprocessing": [],
+      "plausibilityCheck": "^[0-9]+ CP$"
+    },
+    {
+      "propertyName": "moduleLanguage",
+      "readFrom": "Sprache",
+      "readTo": "([Dd]eutsch|[Ee]nglisch)(\\sund\\s([Dd]eutsch|[Ee]nglisch))?",
+      "keepReadFromAndTo": true,
+      "useResultAtIndex": 0,
+      "postprocessing": [
+        {
+          "find": "Sprache.*?([Dd]eutsch|[Ee]nglisch)",
+          "flags": "g",
+          "replace": "$1"
+        }
+      ],
+      "plausibilityCheck": "^([Ee]nglisch|[Dd]eutsch).*"
+    },
+    {
+      "propertyName": "moduleApplicability",
+      "readFrom": "8 Verwendbarkeit des Moduls",
+      "readTo": "9 Literatur",
+      "keepReadFromAndTo": false,
+      "useResultAtIndex": 0,
+      "postprocessing": []
+    }
+  ]
+}

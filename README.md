@@ -1,10 +1,10 @@
-# Materno - Math Course Management System
+# MathPlan - Math Course Management System
 
-Materno is a Node.js web application developed to streamline the management of mathematics courses at TU Darmstadt. It facilitates the submission of examination schedules by students and allows instructors to select courses and specify room preferences.
+MathPlan is a Node.js web application developed to streamline the management of mathematics courses at TU Darmstadt. It facilitates the submission of examination schedules by students and allows instructors to select courses and specify room preferences.
 
 ## Table of Contents
 
-- [Materno - Math Course Management System](#materno---math-course-management-system)
+- [MathPlan - Math Course Management System](#mathplan---math-course-management-system)
   - [Table of Contents](#table-of-contents)
   - [Installation](#installation)
   - [Development Scripts](#development-scripts)
@@ -29,9 +29,25 @@ Materno is a Node.js web application developed to streamline the management of m
    Checkout `.env` file and configure the required variables.
 
 4. **Database Setup:**
+  *MySQL*
    Set up a MySQL database (follow online tutorial) and update the connection string in the `.env` file or use Envrioment variables (it is easier to configure MySQL according to the variables in the file (eg the password)).
    Locally create a database with name as specified in `.env` file.
-   Whenever there are changes in the scheme of tables, comment in db.sequelize.sync({force: true}) in app.js and comment out the line above. CAREFULL, this will delete all entries in the database.
+
+   *SQLite*
+   A sqlite file should be generated automatically. It has the name as specified in .env.
+
+   *Scheme changes*
+   Whenever there are changes in the scheme of tables, change line
+   ```bash
+   db.sequelize.sync()
+   ```
+   to
+   ```bash
+   db.sequelize.sync({force: true})
+   ```
+   in app.js. CAREFULL, this will delete all entries in the database.
+   Do not forget to redo this change after you have started the application once (if you want to keep your database content).
+   For sqlite, you can alternatively simply delete the sqlite file in your file manager (please not while running the application).
 
 5. **Start the Application:**
    ```bash
@@ -70,7 +86,7 @@ Materno is a Node.js web application developed to streamline the management of m
   ```bash
   npm run prepare
   ```
-  Install Husky, which runs ESLint before each commit.
+  Install Husky, which runs ESLint and Jest before each commit.
 
 - **Install Husky with Jest and ESLint:**
   ```bash
@@ -117,7 +133,7 @@ Please ensure that your code follows the project's coding standards and includes
 
 ## License
 
-Materno is open-source software licensed under the [GPL v3](LICENSE). # TODO Change this
+MathPlan is open-source software licensed under the [GPL v3](LICENSE).
 
 
  

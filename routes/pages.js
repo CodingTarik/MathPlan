@@ -9,6 +9,13 @@ router.get('/', (req, res, next) => {
   });
 });
 
+router.get('/teach', (req, res, next) => {
+  res.render('layout/index', {
+    body: '../pages/teach.ejs',
+    title: 'Dozierende'
+  });
+});
+
 const internPath = path.join(__dirname, '..', 'client', 'build', 'intern');
 
 router.get('/intern', (req, res, next) => {
