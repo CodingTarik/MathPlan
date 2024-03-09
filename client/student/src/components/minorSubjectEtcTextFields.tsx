@@ -3,6 +3,21 @@ import { setExamPlan, getExamPlan } from './examPlanVariable';
 import objectPath from 'object-path';
 import { FormHelperText } from '@mui/material';
 
+const needsAdditionalInputFieldForName = [
+  'Nebenfach',
+  'Nicht-mathematischer Vertiefungsbereich'
+];
+const needsAdditionalInputFieldForModules = [
+  'Nebenfach',
+  'Nicht-mathematischer Vertiefungsbereich',
+  'Studium Generale',
+  'Nebenfach Wirtschaftsinformatik',
+  'Nebenfach Informatik',
+  'Nicht-mathematischer Vertiefungsbereich: Wirtschaftswissenschaften',
+  'Module aus dem Nebenfach',
+  'Module aus der gewählten nicht-mathematischen Vertiefung'
+];
+
 /**
  * 
  * @param name of  the area
@@ -16,20 +31,7 @@ export default function MinorSubjectEtcTextFields({
   nestedKeys: string;
   name: string;
 }) {
-  const needsAdditionalInputFieldForName = [
-    'Nebenfach',
-    'Nicht-mathematischer Vertiefungsbereich'
-  ];
-  const needsAdditionalInputFieldForModules = [
-    'Nebenfach',
-    'Nicht-mathematischer Vertiefungsbereich',
-    'Studium Generale',
-    'Nebenfach Wirtschaftsinformatik',
-    'Nebenfach Informatik',
-    'Nicht-mathematischer Vertiefungsbereich: Wirtschaftswissenschaften',
-    'Module aus dem Nebenfach',
-    'Module aus der gewählten nicht-mathematischen Vertiefung'
-  ];
+  
   return (
     <div>
       {needsAdditionalInputFieldForName.includes(name) && (
