@@ -259,7 +259,7 @@ export default function AddModuleFields() {
                 <td >
                 <Box sx={{ display: 'flex', gap: 1 }}>
                   <IconButton
-                    color="secondary"
+                    color="default"
                     onClick={() => {handleDelete(row.moduleID);}
                     }
                   >
