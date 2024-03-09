@@ -248,7 +248,7 @@ export default function AddModuleFields() {
             </tr>
           </thead>
           <tbody>
-            {/* If the search button is clicked and rowsFound is not empty the rows are displayed and the fields where one can add a module set if the edit icon is clicked and the module is deleted if the delete icon is clicked */}
+            {/* If the search button is clicked and rowsFound is not empty, the rows are displayed. The fields where one can add a module are set if the edit icon is clicked and the module is deleted if the delete icon is clicked */}
             {rowsFound.map((row) => (
               <tr key={row.moduleID} onClick =  {() => {}}  >
                 <td>{row.moduleID}</td>
