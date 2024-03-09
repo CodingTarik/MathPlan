@@ -54,7 +54,7 @@ export default function MinorSubjectEtcTextFields({
             }}
           />
           <FormHelperText>
-            Geben Sie hier Ihr(e/en) {name} an (max. 100 Zeichen)
+            Hier {name} angeben (max. 100 Zeichen)
           </FormHelperText>
         </FormControl>
       )}
