@@ -21,6 +21,9 @@ interface InfoBoxProps {
   minVorlesungCount: string;
   maxVorlesungCount: string;
   minModuleCount: string;
+examPlanArea: string;
+modules: string;
+moduleRange: string;
 }
 /**
  * InfoBox component displays information in a collapsible box.
