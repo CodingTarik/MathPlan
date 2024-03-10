@@ -272,22 +272,14 @@ describe('Test invalid user input', () => {
     );
   });
 
-  test('Pdf file without any module information - should return an object with no data', async () => {
+  test('Pdf file without any module information - should thor an error', async () => {
     const dataBuffer = fs.readFileSync(
       path.join(__dirname, 'resources/invalidInputs/noModuleInformation.pdf')
     );
     const configPath = INPUT_DATA[0].configPath;
-    const result = await readAndFilterData(dataBuffer, configPath);
-    expect(result).toStrictEqual([
-      {
-        moduleApplicability: '',
-        moduleCredits: '',
-        moduleID: '',
-        moduleLanguage: '',
-        moduleName: '',
-        parserScore: -5
-      }
-    ]);
+    await expect(readAndFilterData(dataBuffer, configPath)).rejects.toThrow(
+      /No modules found in the given PDF file.*/
+    );
   });
 
   test('Pdf file without any text - should throw an error', async () => {
