@@ -14,7 +14,6 @@ interface InfoBoxProps {
   maxCreditPointsVorlesung: string;
   minSubAreaCheck: string;
   maxSubAreaCheck: string;
-  minSeminarsCount: string;
   minSeminarsCP: string;
   maxSeminarsCP: string;
   minPraktikumCount: string;
