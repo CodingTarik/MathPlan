@@ -73,6 +73,8 @@ interface ExamRegulationSelectProps {
  * @param {Object} props - The properties passed to this component.
  * @param {any} props.jsoneditor - The JSON editor instance.
  * @param {React.Dispatch<React.SetStateAction<string>>} props.setInternalName - The state setter for the internal name.
+ * @param {ExamRegulation[]} props.examRegulations - The list of exam regulations.
+ * @param {React.Dispatch<React.SetStateAction<ExamRegulation[]>>} props.setExamRegulations - The state setter for the list of exam regulations.
  */
 const ExamRegulationSelect = ({
   jsoneditor,

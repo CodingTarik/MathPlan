@@ -109,7 +109,7 @@
             }
           }
         },
-        "minSubAreaCheck": {
+        "minExamAreaCheck": {
           "type": "integer",
           "title": "Minimum Sub-Area Check",
           "options": {
@@ -118,7 +118,7 @@
             }
           }
         },
-        "maxSubAreaCheck": {
+        "maxExamAreaCheck": {
           "type": "integer",
           "title": "Maximum Sub-Area Check",
           "options": {

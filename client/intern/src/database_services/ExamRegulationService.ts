@@ -35,7 +35,8 @@ export async function saveExamRegulationFunction(
 }
 
 /**
- * Fetches the list of exam regulations from the server.
+ * @description Fetches the list of exam regulations from the server.
+ * @return response.data - The list of exam regulations.
  */
 export const fetchExamRegulations = async (
     setExamRegulations: React.Dispatch<React.SetStateAction<ExamRegulation[]>> | null
