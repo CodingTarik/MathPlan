@@ -51,6 +51,10 @@ const InfoBox: React.FC<InfoBoxProps> = ({
   minVorlesungCount,
   maxVorlesungCount,
   minModuleCount
+  minModuleCount,
+  examPlanArea,
+  modules,
+  moduleRange
 }) => {
   const [isOpen, setIsOpen] = useState(false);
 
