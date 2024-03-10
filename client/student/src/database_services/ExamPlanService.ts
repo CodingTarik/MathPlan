@@ -9,7 +9,7 @@ import axios from 'axios';
  * @returns A promise that resolves to the saved exam Plan if the request is successful.
  */
 export const saveExamPlan = (examPlanString: string, name:string, type:string) => {
-    return axios.post('/api/intern/addExamPlan', {
+    return axios.post('/api/student/addExamPlan', {
         examPlanString: examPlanString,
         name: name,
         typeOfPlan: type
