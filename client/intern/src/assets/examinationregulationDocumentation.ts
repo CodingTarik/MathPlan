@@ -21,6 +21,9 @@ const descriptions = {
     minVorlesungCount: "The minimum number of lectures to be completed in this area.",
     maxVorlesungCount: "The maximum number of lectures that can be completed in this area.",
     minModuleCount: "The minimum number of modules to be completed in this area.",
+  examPlanArea: "TODO Tarik",
+  modules: "TODO Tarik",
+  moduleRange: "TODO Tarik",
   };
 
   export default descriptions;
