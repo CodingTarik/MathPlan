@@ -12,17 +12,18 @@ interface InfoBoxProps {
   maxCreditPointsSeminar: string;
   minCreditPointsVorlesung: string;
   maxCreditPointsVorlesung: string;
-  minSubAreaCheck: string;
-  maxSubAreaCheck: string;
-  minSeminarsCount: string;
+  minExamPlanCheck: string;
+  maxExamPlanCheck: string;
   minSeminarsCP: string;
   maxSeminarsCP: string;
-  maxSeminarsCount: string;
   minPraktikumCount: string;
   maxPraktikumCount: string;
   minVorlesungCount: string;
   maxVorlesungCount: string;
   minModuleCount: string;
+examPlanArea: string;
+modules: string;
+moduleRange: string;
 }
 /**
  * InfoBox component displays information in a collapsible box.
@@ -41,17 +42,19 @@ const InfoBox: React.FC<InfoBoxProps> = ({
   maxCreditPointsSeminar,
   minCreditPointsVorlesung,
   maxCreditPointsVorlesung,
-  minSubAreaCheck,
-  maxSubAreaCheck,
-  minSeminarsCount,
+  minExamPlanCheck,
+  maxExamPlanCheck,
   minSeminarsCP,
   maxSeminarsCP,
-  maxSeminarsCount,
   minPraktikumCount,
   maxPraktikumCount,
   minVorlesungCount,
   maxVorlesungCount,
   minModuleCount
+  minModuleCount,
+  examPlanArea,
+  modules,
+  moduleRange
 }) => {
   const [isOpen, setIsOpen] = useState(false);
 

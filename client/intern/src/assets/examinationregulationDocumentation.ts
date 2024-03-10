@@ -10,8 +10,8 @@ const descriptions = {
     maxCreditPointsSeminar: "The maximum number of credit points allowed for seminars in this area.",
     minCreditPointsVorlesung: "The minimum number of credit points required for lectures in this area.",
     maxCreditPointsVorlesung: "The maximum number of credit points allowed for lectures in this area.",
-    minSubAreaCheck: "The minimum number of sub-areas to be checked in this area e.g. if you have 2 sub-areas and the minimum is 1, students needs to validate at least 1 (e.g. gaining enough credit points in one subarea if it is specified) ",
-    maxSubAreaCheck: "The maximum number of sub-areas that can be checked in this area.",
+    minExamPlanCheck: "The minimum number of examination plan areas to be checked in this area e.g. if you have 2 examination plan areas and the minimum is 1, students needs to validate at least 1 (e.g. gaining enough credit points in one examination plan area if it is specified) ",
+    maxExamPlanCheck: "The maximum number of examination plan areas that can be checked in this area.",
     minSeminarsCount: "The minimum number of seminars to be completed in this area.",
     minSeminarsCP: "The minimum number of credit points to be earned through participation in seminars in this area.",
     maxSeminarsCP: "The maximum number of credit points that can be earned through participation in seminars in this area.",
@@ -21,6 +21,9 @@ const descriptions = {
     minVorlesungCount: "The minimum number of lectures to be completed in this area.",
     maxVorlesungCount: "The maximum number of lectures that can be completed in this area.",
     minModuleCount: "The minimum number of modules to be completed in this area.",
+  examPlanArea: "TODO Tarik",
+  modules: "TODO Tarik",
+  moduleRange: "TODO Tarik",
   };
 
   export default descriptions;

@@ -111,19 +111,19 @@
         },
         "minExamAreaCheck": {
           "type": "integer",
-          "title": "Minimum Sub-Area Check",
+          "title": "Minimum Exam-Plan-Area Check",
           "options": {
             "inputAttributes": {
-              "placeholder": "Enter Minimum Sub-Area Check"
+              "placeholder": "Enter Minimum Exam-Plan-Area Check"
             }
           }
         },
         "maxExamAreaCheck": {
           "type": "integer",
-          "title": "Maximum Sub-Area Check",
+          "title": "Maximum Exam-Plan-Area Check",
           "options": {
             "inputAttributes": {
-              "placeholder": "Enter Maximum Sub-Area Check"
+              "placeholder": "Enter Maximum Exam-Plan-Area Check"
             }
           }
         },
@@ -194,7 +194,7 @@
           "type": "array",
           "items": { "$ref": "#/definitions/area" },
           "default": [],
-          "title": "examination plan area",
+          "title": "Examination Plan Area",
           "propertyOrder": 1001
         },
         "module": {
@@ -216,7 +216,7 @@
       },
       "defaultProperties": ["name"],
       "required": ["name"],
-      "title": "examination plan area",
+      "title": "Examination Plan Area",
       "headerTemplate": "{{self.name}}"
     },
     "module": {
