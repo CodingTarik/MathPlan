@@ -21,9 +21,9 @@ interface InfoBoxProps {
   minVorlesungCount: string;
   maxVorlesungCount: string;
   minModuleCount: string;
-examPlanArea: string;
-modules: string;
-moduleRange: string;
+  examPlanArea: string;
+  modules: string;
+  moduleRange: string;
 }
 /**
  * InfoBox component displays information in a collapsible box.
@@ -50,7 +50,6 @@ const InfoBox: React.FC<InfoBoxProps> = ({
   maxPraktikumCount,
   minVorlesungCount,
   maxVorlesungCount,
-  minModuleCount
   minModuleCount,
   examPlanArea,
   modules,
@@ -114,22 +113,16 @@ const InfoBox: React.FC<InfoBoxProps> = ({
           {maxCreditPointsVorlesung}
         </div>
         <div className="mb-3">
-          <strong>Minimum Sub-Area Check:</strong> {minSubAreaCheck}
+          <strong>Minimum Sub-Area Check:</strong> {minExamPlanCheck}
         </div>
         <div className="mb-3">
-          <strong>Maximum Sub-Area Check:</strong> {maxSubAreaCheck}
-        </div>
-        <div className="mb-3">
-          <strong>Minimum Seminars Count:</strong> {minSeminarsCount}
+          <strong>Maximum Sub-Area Check:</strong> {maxExamPlanCheck}
         </div>
         <div className="mb-3">
           <strong>Minimum Seminars Credit Points:</strong> {minSeminarsCP}
         </div>
         <div className="mb-3">
           <strong>Maximum Seminars Credit Points:</strong> {maxSeminarsCP}
-        </div>
-        <div className="mb-3">
-          <strong>Maximum Seminars Count:</strong> {maxSeminarsCount}
         </div>
         <div className="mb-3">
           <strong>Minimum Praktikum Count:</strong> {minPraktikumCount}
@@ -145,6 +138,15 @@ const InfoBox: React.FC<InfoBoxProps> = ({
         </div>
         <div className="mb-3">
           <strong>Minimum Module Count:</strong> {minModuleCount}
+        </div>
+        <div className="mb-3">
+          <strong>ExamPlanArea:</strong> {examPlanArea}
+        </div>
+        <div className="mb-3">
+          <strong>Modules:</strong> {modules}
+        </div>
+        <div className="mb-3">
+          <strong>ModuleRange:</strong> {moduleRange}
         </div>
       </div>
     </div>

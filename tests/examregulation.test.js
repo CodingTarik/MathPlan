@@ -59,7 +59,7 @@ describe('ExamRegulation API Tests', () => {
       (await dbhelper.getExamRegulation(newExamRegulationRequest.internalName))
         .jsonSchema
     ).toEqual(JSON.stringify(newExamRegulation));
-  dbhelper.deleteExamRegulationByName(newExamRegulationRequest.internalName);
+    dbhelper.deleteExamRegulationByName(newExamRegulationRequest.internalName);
   });
   test('not existance exam regulation name', async () => {
     expect(
@@ -217,6 +217,6 @@ describe('POST /api/intern/deleteExamRegulationByName', () => {
         newExamRegulationRequest.internalName
       )
     ).toBe(true);
-  dbhelper.deleteExamRegulationByName(newExamRegulationRequest.internalName);
+    dbhelper.deleteExamRegulationByName(newExamRegulationRequest.internalName);
   });
 });

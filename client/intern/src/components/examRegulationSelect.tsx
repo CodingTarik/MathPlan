@@ -120,6 +120,9 @@ const ExamRegulationSelect = ({
   };
 
   // Fetch exam regulations when the component mounts
+   
+  // needed to fetch exam regulations only once
+  /* eslint-disable react-hooks/exhaustive-deps */
   useEffect(() => {
     try {
       fetchExamRegulations(setExamRegulations);
@@ -127,7 +130,7 @@ const ExamRegulationSelect = ({
       console.error(error);
     }
   }, []);
-
+  /* eslint-enable react-hooks/exhaustive-deps */
   /**
    * Loads the selected exam regulation into the JSON editor.
    *
