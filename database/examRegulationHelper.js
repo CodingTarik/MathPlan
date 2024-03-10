@@ -65,10 +65,18 @@ const getExamRegulation = async (internalName) => {
     }
   }).then((result) => result);
 };
+/**
+ * @returns  Return all exam regulations
+ */
+const getAllExamRegulations = async () => {
+  // return all exam regulations
+  return await ExamRegulation.findAll();
+};
 
 // Export the functions.
 module.exports = {
   addOrUpdateExamRegulation,
   isExamRegulationExists,
+  getAllExamRegulations,
   getExamRegulation
 };

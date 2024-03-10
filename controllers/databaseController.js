@@ -6,6 +6,9 @@ const modulHelper = require(path.join(__dirname, '../database/modulHelper.js'));
 const examRegulationHelper = require(
   path.join(__dirname, '../database/examRegulationHelper.js')
 );
+const examPlanHelper = require(
+  path.join(__dirname, '../database/examPlanHelper.js')
+);
 const configFile = require(path.join(__dirname, '../config.js'));
 /**
  * If a request is made, the addModul function of the database is called by the controller and the added module is sent back as a response
@@ -308,6 +311,84 @@ const getIncompleteModules = (req, res) => {
       });
     });
 };
+/**
+ * Retrieve all exam regulations with minimal information.
+ * @param {*} req the request
+ * @param {*} res the result
+ */
+const getAllExamRegulationsMin = async (req, res) => {
+  try {
+    // Retreive all exam regulation schemas
+    const examRegulationSchemas =
+      await examRegulationHelper.getAllExamRegulations();
+
+    // we just want attribute name and jsonSchema
+    const finalExamRegulationSchemas = [];
+    examRegulationSchemas.forEach((schema) => {
+      finalExamRegulationSchemas.push({
+        name: schema.name,
+        jsonSchema: schema.jsonSchema
+      });
+    });
+
+    // Send a success response
+    res.status(200).send(finalExamRegulationSchemas);
+  } catch (error) {
+    console.error('Error retrieving exam regulation schemas:', error);
+
+    // Send an error response
+    res.status(500).json({
+      success: false,
+      message: 'Error retrieving exam regulation schemas.',
+      error: error.message
+    });
+  }
+};
+
+/**
+ * Function that adds exam plan while assuming the necessary fields are contained in the body
+ * @param {*} req the request
+ * @param {*} res the result
+ * @returns
+ */
+const addExamPlan = async (req, res) => {
+  // Access the field of the exam plan from the request body
+  const examPlanRequest = req.body;
+  // check if contains fields examPlanString, name and typeOfPlan
+  if (
+    !examPlanRequest.examPlanString ||
+    !examPlanRequest.name ||
+    !examPlanRequest.typeOfPlan
+  ) {
+    res.status(400).send({
+      message:
+        'Content can not be empty! Contains an empty field'
+    });
+    return;
+  }
+  const examPlanString = examPlanRequest.examPlanString;
+  const name = examPlanRequest.name;
+  const typeOfPlan = examPlanRequest.typeOfPlan;
+  examPlanHelper.addExamPlan(
+    examPlanString,
+    name,
+    typeOfPlan
+  )
+    .then((data) => {
+      res.send(data);
+    })
+    .catch((err) => {
+    // Handle any errors that occurred during processing
+      logger.error('Error processing exam plan: ' + err.message);
+
+      // Send an error response
+      res.status(500).send({
+        success: false,
+        message: 'Error processing exam plan.',
+        error: err.message
+      });
+    });
+};
 
 module.exports = {
   addModul,
@@ -315,8 +396,11 @@ module.exports = {
   getAllModulsForJSONEditor,
   getAllModulsMin,
   addOrUpdateExamRegulation,
+  getAllExamRegulationsMin,
   updateModule,
   getOneModule,
   getModules,
-  getIncompleteModules
+  getIncompleteModules,
+  addExamPlan
+
 };

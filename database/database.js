@@ -11,6 +11,7 @@ const User = require(path.join(__dirname, './models/user.js'));
 const ExaminationRegulation = require(
   path.join(__dirname, './models/examinationregulation.js')
 );
+const ExamPlan = require(path.join(__dirname, './models/examPlan.js'));
 
 /**
  * Database connection configuration
@@ -52,7 +53,8 @@ const sequelize = new Sequelize(config);
 const models = {
   Modul: Modul(sequelize),
   User: User(sequelize),
-  ExaminationRegulation: ExaminationRegulation(sequelize)
+  ExaminationRegulation: ExaminationRegulation(sequelize),
+  ExamPlan: ExamPlan(sequelize)
 };
 
 module.exports = {
