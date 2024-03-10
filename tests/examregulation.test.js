@@ -95,9 +95,7 @@ describe('ExamRegulation API Tests', () => {
 
 describe('POST /api/intern/deleteExamRegulationByName', () => {
   beforeAll(async () => {
-    db.config.dialect = 'sqlite';
-    db.config.storage = 'database.test.sqlite';
-    db.sequelize.sync();
+    await db.sequelize.sync();
     // wait 3 sec
     await new Promise((resolve) => setTimeout(resolve, 3000));
   });
