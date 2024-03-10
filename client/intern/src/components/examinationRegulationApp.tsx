@@ -10,11 +10,15 @@ import {
   TextField
 } from '@mui/material';
 import SaveIcon from '@mui/icons-material/Save';
+import ExamRegulationDocuInfoBox from './examRegulationsDocuInfoBox';
+import ExamRegulationDocu from '.././assets/examinationregulationDocumentation';
 import { CustomSnackbarContent } from './customSnackbarContent';
 import {
   saveExamRegulation,
   initializeJsonEditor
 } from './examinationRegulationEditor';
+import ExamRegulationSelect, { ExamRegulation } from './examRegulationSelect';
+import { fetchExamRegulations } from '../database_services/ExamRegulationService';
 
 /**
  * The main component for the Examination Regulation Application.
@@ -22,6 +26,7 @@ import {
  * @returns {JSX.Element} The rendered component.
  */
 function ExaminationRegulationApp() {
+  const [examRegulations, setExamRegulations] = useState<ExamRegulation[]>([]); // Holds the list of exam regulations
   /**
    * @type {React.MutableRefObject<HTMLDivElement | null>}
    * @description Reference to the div that will contain the JSON editor.
@@ -58,6 +63,13 @@ function ExaminationRegulationApp() {
    */
   const [internalName, setInternalName] = useState('');
 
+  /* eslint-disable @typescript-eslint/no-explicit-any */
+  // jsoneditor is not typed
+  /**
+   * @descirption JSONEditor
+   */
+  const [jsoneditor, setJsoneditor] = useState<any>();
+  /* eslint-enable @typescript-eslint/no-explicit-any */
   /**
    * @function handleSaveClick
    * @description Handler for when the save button is clicked. Opens the save dialog.
@@ -78,6 +90,7 @@ function ExaminationRegulationApp() {
 
       // Update the state based on whether the save was successful.
       if (saveResult) {
+        fetchExamRegulations(setExamRegulations);
         setSnackbarMessage('Erfolgreich gespeichert!');
         setSaveSuccess(true);
       } else {
@@ -105,16 +118,22 @@ function ExaminationRegulationApp() {
 
   // Initialize the JSON editor when the component is first rendered.
   useEffect(() => {
-    initializeJsonEditor(editorRef);
+    setJsoneditor(initializeJsonEditor(editorRef));
   }, []);
 
   // Render the UI for the application.
   return (
     <>
+      <ExamRegulationSelect
+        jsoneditor={jsoneditor}
+        setInternalName={setInternalName}
+        examRegulations={examRegulations}
+        setExamRegulations={setExamRegulations}
+      ></ExamRegulationSelect>
       <div style={{ marginBottom: '16px' }}>
         <TextField
           label="Internal Name"
-          style={{ marginRight: '16px', height: '56px' }}
+          style={{ marginRight: '16px', height: '56px', minWidth: '450px' }}
           value={internalName}
           onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
             setInternalName(event.target.value)
@@ -127,12 +146,12 @@ function ExaminationRegulationApp() {
           startIcon={<SaveIcon />}
           onClick={handleSaveClick}
         >
-          Speichern
+          Save
         </Button>
       </div>
 
       <div ref={editorRef} />
-
+      <ExamRegulationDocuInfoBox {...ExamRegulationDocu} />
       <Dialog
         open={dialogOpen}
         onClose={() => setDialogOpen(false)}
@@ -142,7 +161,9 @@ function ExaminationRegulationApp() {
         <DialogTitle id="alert-dialog-title">Bestätigung</DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-description">
-            Möchten Sie die Änderungen wirklich speichern? Sollte der interne Name bereits in der Datenbank vorhanden sein, so wird diese Prüfungsordnung überschrieben.
+            Möchten Sie die Änderungen wirklich speichern? Sollte der interne
+            Name bereits in der Datenbank vorhanden sein, so wird diese
+            Prüfungsordnung überschrieben.
           </DialogContentText>
         </DialogContent>
         <DialogActions>
@@ -172,6 +193,7 @@ function ExaminationRegulationApp() {
           />
         </div>
       </Snackbar>
+
     </>
   );
 }

@@ -1,4 +1,5 @@
 import axios, { AxiosResponse } from 'axios';
+import { ExamRegulation } from '../components/examRegulationSelect';
 
 /**
  * Sends an exam regulation to the server.
@@ -27,25 +28,32 @@ export async function saveExamRegulationFunction(
       console.log(response.data);
       return false;
     }
-  } catch (error) {
-    // If an error occurs during the request, we log the error and return false
+} catch (error) {
     console.error(error);
-    return false;
   }
+  return false;
 }
 
 /**
- * Fetches the list of exam regulations from the server.
+ * @description Fetches the list of exam regulations from the server.
+ * @return response.data - The list of exam regulations.
  */
-export const getExamRegulations = async () => {
-  try {
-    // Send axios get request to /api/intern/getAllexamRegulationsMin
-    const response: AxiosResponse<{jsonSchema: string, name:string}[]> = await axios.get(
-      '/api/intern/getAllexamRegulationsMin'
-    );
-    return response.data;
-  } catch (error) {
-    console.error(error);
-    throw error;
-  }
-};
+export const fetchExamRegulations = async (
+    setExamRegulations: React.Dispatch<React.SetStateAction<ExamRegulation[]>> | null
+  ) => {
+    try {
+      // Send axios get request to /api/intern/getAllExamRegulationsMin
+      const response: AxiosResponse<ExamRegulation[]> = await axios.get(
+        '/api/intern/getAllExamRegulationsMin'
+      );
+      // Update the state with the fetched exam regulations
+      // check if set examregulation function is not null
+      if(setExamRegulations) 
+        setExamRegulations(response.data);
+      return response.data;
+    } catch (error) {
+      console.error(error);
+      throw error;
+    }
+  };
+

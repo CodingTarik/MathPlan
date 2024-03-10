@@ -41,7 +41,7 @@ describe('ExamPlan API Tests', () => {
       typeOfPlan: 'Prüfungsplan'
     };
     const response = await request(app)
-      .post('/api/intern/addExamPlan')
+      .post('/api/student/addExamPlan')
       .send(newExamPlanRequest);
 
     expect(response.statusCode).toBe(200);
@@ -76,7 +76,7 @@ describe('ExamPlan API Tests', () => {
 
   test('It should respond with a 400 status if some fields are not provided while adding an exam plan', async () => {
     let response = await request(app)
-      .post('/api/intern/addExamPlan')
+      .post('/api/student/addExamPlan')
       .send(null);
     expect(response.statusCode).toBe(400);
 
@@ -84,7 +84,7 @@ describe('ExamPlan API Tests', () => {
       name: Math.floor(Math.random() * 10000000).toString()
     };
     response = await request(app)
-      .post('/api/intern/addExamPlan')
+      .post('/api/student/addExamPlan')
       .send(newExamPlanRequestTest);
     expect(response.statusCode).toBe(400);
 
@@ -92,7 +92,7 @@ describe('ExamPlan API Tests', () => {
       examPlanString: {}
     };
     response = await request(app)
-      .post('/api/intern/addExamPlan')
+      .post('/api/student/addExamPlan')
       .send(newExamPlanRequestTest);
     expect(response.statusCode).toBe(400);
 
@@ -102,7 +102,7 @@ describe('ExamPlan API Tests', () => {
       // no typeOfPlan
     };
     response = await request(app)
-      .post('/api/intern/addExamPlan')
+      .post('/api/student/addExamPlan')
       .send(newExamPlanRequestTest);
     expect(response.statusCode).toBe(400);
   });

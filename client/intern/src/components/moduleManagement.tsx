@@ -5,7 +5,7 @@ import TextField from '@mui/material/TextField';
 
 import ModuleServices from '../database_services/ModuleServices'; // for database functionality
 import Table from '@mui/joy/Table';
-import { AxiosError } from 'axios';
+import {  AxiosError } from 'axios';
 
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
@@ -15,57 +15,6 @@ import {Dialog, DialogTitle, DialogContent, DialogActions, DialogContentText, Sn
 
 
 
-/**
- * Called when button is clicked to create new database entry and add it to database or to modify existing entry
- * @param values The entries made by the user for each of the input fields (id, name, credits, language, applicability)
- */
-function handleButtonClick(values: string[]) {
-  // wrapping module as javascript object (is automatically converted into JSON by axios)
-    const tmpModule = {
-      id: values[0],
-      name: values[1],
-      credits: values[2],
-      language: values[3],
-      applicability: values[4]
-    };
-
-  // test if module with ID tmpModule.id is already in database
-  ModuleServices.getByID(tmpModule.id)
-    .then((response: { data: object; }) => {
-      if (response.data) { // ID was found (data !== null)
-        console.log("trying retrieving module by ID: data found");
-        // modifying module
-        ModuleServices.update(values[0], tmpModule)
-          .then(() => {
-            console.log("module modification successful");
-            ModuleServices.getByID(tmpModule.id).then((response: { data: object; }) => {
-              console.log(response.data);
-            }).catch((e: Error) => { 
-              console.log(e);
-            });
-          })
-          .catch((e: Error) => { 
-            console.log(e);
-          });
-      } else { // ID was not found (data === null)
-        console.log("trying retrieving module by ID: data not found");
-        // inserting module
-        ModuleServices.create(tmpModule)
-          .then((response: { data: object; }) => { 
-            console.log("Success at saving module");
-            console.log(response.data);
-          })
-          .catch((e: Error) => { 
-            console.log("Error while saving module");
-            console.log(e);
-          });
-      }
-    })
-    .catch((e: Error) => {
-      console.log(e);
-    });
-    
-}
 
 /**
  * if there is an empty field, the button is disabled and can not be clicked
@@ -84,10 +33,64 @@ export default function ModuleManagementPage() {
   const [moduleParameters, setModuleParameters] = React.useState(Array(5).fill(""));
   const [rowsFound, setRowsFound] = React.useState(Array(0).fill({moduleID: "", moduleName: "", moduleCredits: NaN, moduleLanguage: "", moduleApplicability: ""}));
   const [moduleToBeDeleted, setModuleToBeDeleted] = React.useState<string | null>(null);
+  const [moduleToBeOverwritten, setModuleToBeOverwritten] = React.useState<{id: string, name: string, credits: string, language: string, applicability: string} | null>(null);
   const [dialogOpen, setDialogOpen] = React.useState(false); 
+  const [dialogDelete, setDialogDelete] = React.useState(false);
   const [snackbarOpen, setSnackbarOpen] = React.useState(false);
   const [saveSuccess, setSaveSuccess] = React.useState(false);
   const [snackbarMessage, setSnackbarMessage] = React.useState('');
+
+  /**
+ * Called when button is clicked to create new database entry and add it to database or to modify existing entry
+ * @param values The entries made by the user for each of the input fields (id, name, credits, language, applicability)
+ */
+function handleButtonClick(values: string[]) {
+  // wrapping module as javascript object (is automatically converted into JSON by axios)
+    const tmpModule = {
+      id: values[0],
+      name: values[1],
+      credits: values[2],
+      language: values[3],
+      applicability: values[4]
+    };
+
+  // test if module with ID tmpModule.id is already in database
+  ModuleServices.getByID(tmpModule.id)
+    .then((response: { data: object; }) => {
+      if (response.data) { // ID was found (data !== null)
+        // modifying module
+        setModuleToBeOverwritten(tmpModule);
+        setDialogDelete(false);
+        setDialogOpen(true);
+      } else { // ID was not found (data === null)
+        // inserting module
+        ModuleServices.create(tmpModule)
+          .then((response: { data: object; }) => { 
+            setSnackbarMessage('Modul wurde erfolgreich gespeichert.');
+            setSaveSuccess(true);
+            setSnackbarOpen(true);
+            console.log(response.data);
+          })
+          .catch((e: Error) => { 
+            setSnackbarMessage('Beim Speichern des Moduls lief etwas schief.');
+            setSaveSuccess(false);
+            setSnackbarOpen(true);
+            console.log(e);
+          });
+      }
+    })
+    .catch((e: Error) => {
+      setSnackbarMessage('Beim Speichern des Moduls lief etwas schief.');
+      setSaveSuccess(false);
+      setSnackbarOpen(true);
+      console.log(e);
+    });
+    
+}
+
+
+
+
 
   /**
    * if delete button is clicked, the dialog box is opened and the id of the module is saved
@@ -95,9 +98,37 @@ export default function ModuleManagementPage() {
    */
   function handleDelete(id: string){
     setModuleToBeDeleted(id);
+    setDialogDelete(true);
     setDialogOpen(true);
   }
 
+  /**
+   * if overwrite is clicked in the dialog box the module is overwritten
+   */
+  function handleConfirmOverwrite(){
+    if (moduleToBeOverwritten){
+    ModuleServices.update(moduleToBeOverwritten.id, moduleToBeOverwritten)
+          .then(() => {
+            setSnackbarMessage('Modul wurde erfolgreich modifiziert.');
+            setSaveSuccess(true);
+            setSnackbarOpen(true);
+            setDialogOpen(false);
+            ModuleServices.getByID(moduleToBeOverwritten.id).then((response: { data: object; }) => {
+              console.log(response.data);
+            }).catch((e: Error) => { 
+              console.log(e);
+            }); 
+          })
+          .catch((e: Error) => { 
+            setSnackbarMessage('Beim Modifizieren des Moduls lief etwas schief.');
+            setSaveSuccess(false);
+            setSnackbarOpen(true);
+            setDialogOpen(false);
+            console.log(e);
+          });
+        }
+        else console.error('moduleToBeOverwritten cannot be null'); 
+  }
   /**
    * if delete is clicked in the dialog box, then the module is deleted,
    * the rows displayed are updated, and the success/failure of deleting the 
@@ -141,20 +172,34 @@ export default function ModuleManagementPage() {
     }
     ModuleServices.getModules(values_copy[0], values_copy[1], values_copy[2], values_copy[3], values_copy[4])
       .then((response: { data: { moduleID: string; moduleName: string; moduleCredits: number; moduleLanguage: string; moduleApplicability: string; createdAt: object; id: object, updatedAt: object}[]; }) => { 
-        console.log("Success at getting module");
+        if (response.data.length === 0) {
+          setSnackbarMessage('Es wurde kein passendes Modul gefunden');
+          setSaveSuccess(false);
+          setSnackbarOpen(true);
+        }
         console.log(response.data);
         setRowsFound(response.data);
       })
       .catch((e: AxiosError) => { 
-        if (e.response?.data == 'The search request yielded more than 50 requests') {
-          console.log('The search request yielded more than 50 requests')
+        if ((e.response?.data as {message:string, num:number}).message == 'too many results') {
+          setSnackbarMessage("Die Suche ergab zu viele Ergebnisse, maximal sind erlaubt: " + (e.response?.data as {message:string, num:number}).num);
+          setSaveSuccess(false);
+          setSnackbarOpen(true);
           setRowsFound(Array(0).fill({moduleID: "", moduleName: "", moduleCredits: NaN, moduleLanguage: "", moduleApplicability: ""}))
         }
         else {
-          console.log("Error while getting module");
+          setSnackbarMessage('Es lief etwas schief.');
+          setSaveSuccess(false);
+          setSnackbarOpen(true);
           console.log(e);
         }
-      });
+      })
+      .catch((e: Error) => { 
+          setSnackbarMessage('Es lief etwas schief.');
+          setSaveSuccess(false);
+          setSnackbarOpen(true);
+          console.log(e);
+        });
   }
 
 // if the incomplete module search button is clicked, the database is searched for modules with incomplete information
@@ -182,15 +227,17 @@ const handleIncompleteSearchClick = () => {
         <DialogTitle id="alert-dialog-title">Bestätigung</DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-description">
-            {"Bist du dir sicher, dass du das Modul mit ID " + moduleToBeDeleted + " löschen möchtest?"}
+            {dialogDelete && "Sind Sie sich sicher, dass Sie das Modul mit ID " + moduleToBeDeleted + " löschen möchten?"}
+            {!dialogDelete && "Es exisitiert bereits ein Modul mit dieser Modulnummer. Sind Sie sich sicher, dass Sie fortfahren wollen und so ggf. das Modul mit ID " + moduleToBeOverwritten?.id +" überschreiben?"}
           </DialogContentText>
         </DialogContent>
         <DialogActions>
           <Button onClick={() => setDialogOpen(false)} color="primary">
             Abbrechen
           </Button>
-          <Button onClick={handleConfirmDelete} color="primary" autoFocus>
-            Löschen
+          <Button onClick={() => {if (dialogDelete) {handleConfirmDelete()} else {handleConfirmOverwrite()}}} color="primary" autoFocus>
+            {dialogDelete && "Löschen"}
+            {!dialogDelete && "Überschreiben"}
           </Button>
         </DialogActions>
     </Dialog>
