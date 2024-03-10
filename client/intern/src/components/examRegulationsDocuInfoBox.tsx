@@ -14,8 +14,6 @@ interface InfoBoxProps {
   maxCreditPointsVorlesung: string;
   minExamPlanCheck: string;
   maxExamPlanCheck: string;
-  minSeminarsCP: string;
-  maxSeminarsCP: string;
   minPraktikumCount: string;
   maxPraktikumCount: string;
   minVorlesungCount: string;
@@ -44,8 +42,6 @@ const InfoBox: React.FC<InfoBoxProps> = ({
   maxCreditPointsVorlesung,
   minExamPlanCheck,
   maxExamPlanCheck,
-  minSeminarsCP,
-  maxSeminarsCP,
   minPraktikumCount,
   maxPraktikumCount,
   minVorlesungCount,
@@ -117,12 +113,6 @@ const InfoBox: React.FC<InfoBoxProps> = ({
         </div>
         <div className="mb-3">
           <strong>Maximum Sub-Area Check:</strong> {maxExamPlanCheck}
-        </div>
-        <div className="mb-3">
-          <strong>Minimum Seminars Credit Points:</strong> {minSeminarsCP}
-        </div>
-        <div className="mb-3">
-          <strong>Maximum Seminars Credit Points:</strong> {maxSeminarsCP}
         </div>
         <div className="mb-3">
           <strong>Minimum Praktikum Count:</strong> {minPraktikumCount}
