@@ -21,9 +21,9 @@ const descriptions = {
     minVorlesungCount: "The minimum number of lectures to be completed in this area.",
     maxVorlesungCount: "The maximum number of lectures that can be completed in this area.",
     minModuleCount: "The minimum number of modules to be completed in this area.",
-  examPlanArea: "TODO Tarik",
-  modules: "TODO Tarik",
-  moduleRange: "TODO Tarik",
+  examPlanArea: "You can define specific parts of the exam regulation e.g. 'Pflichtbereich', 'Wahlbereich', 'Studienleistungen'",
+  modules: "Here you can define modules",
+  moduleRange: "Here you can define modules but different from modules whole module ranges with regular expressions (not implemented yet)",
   };
 
   export default descriptions;
