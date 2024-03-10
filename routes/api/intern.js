@@ -15,16 +15,16 @@ const pdfUploadController = require(
 // for exam regulations
 router.post('/addExamRegulation', dbController.addOrUpdateExamRegulation);
 router.get('/getAllExamRegulationsMin', dbController.getAllExamRegulationsMin);
+router.post(
+  '/deleteExamRegulationByName',
+  dbController.deleteExamRegulationByName
+);
 
 // for modules
 router.get('/getAllModuls', dbController.getAllModulsForJSONEditor);
 router.get('/getAllModulsMin', dbController.getAllModulsMin);
 router.post('/addModul', dbController.addModul);
 router.post('/deleteModulById', dbController.deleteModulById);
-router.post(
-  '/deleteExamRegulationByName',
-  dbController.deleteExamRegulationByName
-);
 router.delete('/deleteModule/:id', dbController.deleteModulById);
 router.get(
   '/getModules/:id/:name/:credits/:language/:applicability',
