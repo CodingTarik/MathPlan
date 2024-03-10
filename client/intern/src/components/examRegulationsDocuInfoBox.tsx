@@ -44,7 +44,6 @@ const InfoBox: React.FC<InfoBoxProps> = ({
   minSeminarsCount,
   minSeminarsCP,
   maxSeminarsCP,
-  maxSeminarsCount,
   minPraktikumCount,
   maxPraktikumCount,
   minVorlesungCount,
