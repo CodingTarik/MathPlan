@@ -1,5 +1,5 @@
 /* eslint security/detect-object-injection: "off" */
-
+const configFile = require('../config.js');
 const request = require('supertest');
 const app = require('../app').app;
 const db = require('../database/database');
@@ -119,9 +119,9 @@ describe('Modules API Tests', () => {
   });
 
   // Test 5
-    test('GET /api/intern/getModules/:id/:name/:credits/:language/:applicability: It should respond with a 400 status if more than MAX_NUMBER_FOUND_MODULES modules match the request', async () => {
-    const newModules = new Array(configFile.database.MAX_NUMBER_FOUND_MODULES+1);
-    for (let i = 0; i < configFile.database.MAX_NUMBER_FOUND_MODULES+1; i++) {
+  test('GET /api/intern/getModules/:id/:name/:credits/:language/:applicability: It should respond with a 400 status if more than MAX_NUMBER_FOUND_MODULES modules match the request', async () => {
+    const newModules = new Array(configFile.database.MAX_NUMBER_FOUND_MODULES + 1);
+    for (let i = 0; i < configFile.database.MAX_NUMBER_FOUND_MODULES + 1; i++) {
       const newModule = {
         moduleID: Math.floor(Math.random() * 10000000).toString(),
         moduleName: 'Numerik',
