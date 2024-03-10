@@ -111,19 +111,19 @@
         },
         "minSubAreaCheck": {
           "type": "integer",
-          "title": "Minimum Sub-Area Check",
+          "title": "Minimum Exam-Plan-Area Check",
           "options": {
             "inputAttributes": {
-              "placeholder": "Enter Minimum Sub-Area Check"
+              "placeholder": "Enter Minimum Exam-Plan-Area Check"
             }
           }
         },
         "maxSubAreaCheck": {
           "type": "integer",
-          "title": "Maximum Sub-Area Check",
+          "title": "Maximum Exam-Plan-Area Check",
           "options": {
             "inputAttributes": {
-              "placeholder": "Enter Maximum Sub-Area Check"
+              "placeholder": "Enter Maximum Exam-Plan-Area Check"
             }
           }
         },
