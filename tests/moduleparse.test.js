@@ -31,7 +31,7 @@ const INPUT_DATA = [
     filePath: path.join(__dirname, 'resources/Modulhandbuch PO2018.pdf'),
     configPath: path.join(
       __dirname,
-      '../utils/moduleDescriptionParserConfig/PO2018 neu und schön.json'
+      '../utils/moduleDescriptionParserConfig/PO2018 neu und schoen.json'
     ),
     expectedModules: 226
   },
