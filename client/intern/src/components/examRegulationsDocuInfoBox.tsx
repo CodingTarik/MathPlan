@@ -17,7 +17,6 @@ interface InfoBoxProps {
   minSeminarsCount: string;
   minSeminarsCP: string;
   maxSeminarsCP: string;
-  maxSeminarsCount: string;
   minPraktikumCount: string;
   maxPraktikumCount: string;
   minVorlesungCount: string;
