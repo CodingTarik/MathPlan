@@ -13,8 +13,6 @@ const descriptions = {
     minExamPlanCheck: "The minimum number of examination plan areas to be checked in this area e.g. if you have 2 examination plan areas and the minimum is 1, students needs to validate at least 1 (e.g. gaining enough credit points in one examination plan area if it is specified) ",
     maxExamPlanCheck: "The maximum number of examination plan areas that can be checked in this area.",
     minSeminarsCount: "The minimum number of seminars to be completed in this area.",
-    minSeminarsCP: "The minimum number of credit points to be earned through participation in seminars in this area.",
-    maxSeminarsCP: "The maximum number of credit points that can be earned through participation in seminars in this area.",
     maxSeminarsCount: "The maximum number of seminars that can be completed in this area.",
     minPraktikumCount: "The minimum number of internships to be completed in this area.",
     maxPraktikumCount: "The maximum number of internships that can be completed in this area.",
