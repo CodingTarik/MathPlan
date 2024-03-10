@@ -41,7 +41,6 @@ const InfoBox: React.FC<InfoBoxProps> = ({
   maxCreditPointsVorlesung,
   minSubAreaCheck,
   maxSubAreaCheck,
-  minSeminarsCount,
   minSeminarsCP,
   maxSeminarsCP,
   minPraktikumCount,
