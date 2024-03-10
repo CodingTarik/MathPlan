@@ -194,7 +194,7 @@
           "type": "array",
           "items": { "$ref": "#/definitions/area" },
           "default": [],
-          "title": "examination plan area",
+          "title": "Examination Plan Area",
           "propertyOrder": 1001
         },
         "module": {
