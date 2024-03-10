@@ -216,5 +216,6 @@ describe('POST /api/intern/deleteExamRegulationByName', () => {
         newExamRegulationRequest.internalName
       )
     ).toBe(true);
+  dbhelper.deleteExamRegulationByName(newExamRegulationRequest.internalName);
   });
 });
