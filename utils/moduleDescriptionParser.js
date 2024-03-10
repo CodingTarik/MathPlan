@@ -1,187 +1,325 @@
+/* eslint-disable security/detect-non-literal-regexp */
+// linter warning disabled because non-literal regex are needed in this file. The regex should be configurable in the config files.
+
 const pdf = require('pdf-parse');
+const fs = require('fs');
+const path = require('node:path');
 
-module.exports = readAndFilterData;
+const dotenv = require('dotenv');
+dotenv.config({ path: path.join(__dirname, '../.env') });
 
-// TODO: Diese Infos ggf. aus Konfigurationsdatei einlesen?
+/**
+ * @global
+ * The current configuration for the module description parser as read from the module description config file.
+ */
+let config = {};
 
-// properties to be extracted from the module description
-// propertyName: name of the property in the resulting object
-// property can be found in the module description between readFrom and readTo (both exclusive)
-// if excess is given, the specified characters will be removed from the property value after extraction
-const moduleProperties = [
-  {
-    propertyName: 'moduleID',
-    readFrom: 'Modul Nr.',
-    readTo: 'Creditpoints',
-    excess: ['\\s']
-  },
-  {
-    propertyName: 'moduleName',
-    readFrom: 'Modulname',
-    readTo: 'Modul'
-  },
-  {
-    propertyName: 'moduleCredits',
-    readFrom: 'Modul Nr.',
-    readTo: 'Arbeitsaufwand',
-    excess: ['^.*Creditpoints\\s']
-  },
-  {
-    propertyName: 'moduleLanguage',
-    readFrom: '([sS]emester|Verwendbarkeit|[Uu]nregelmäßig) Sprache',
-    readTo: 'Modulverantwortliche'
-  },
-  {
-    propertyName: 'moduleApplicability',
-    readFrom: 'Verwendbarkeit des Moduls',
-    readTo: '9 Literatur'
+/**
+ * @global
+ * The folder containing the module description configuration files.
+ * If no configuration file is given to the module description parser, all files in this folder are available for selection.
+ */
+const CONFIG_FOLDER = path.join(__dirname, 'moduleDescriptionParserConfig');
+
+/**
+ * Helper function:
+ * Returns an array of all available module description configuration file paths in the CONFIG_FOLDER.
+ * @returns {string[]} An array of all available module description configuration file paths.
+ */
+function getAvailableConfigFiles() {
+  const configFilePaths = [];
+  for (const file of fs.readdirSync(CONFIG_FOLDER)) {
+    if (file.endsWith('.json')) {
+      configFilePaths.push(path.join(CONFIG_FOLDER, file));
+    }
   }
-];
+  return configFilePaths;
+}
+
+/**
+ * Helper function:
+ * Reads the module description configuration file with the given name from the CONFIG_FOLDER
+ * and stores the configuration in the global variable "config".
+ * @param configPath The path to the module description configuration file to be read.
+ * @returns {void}
+ * @throws {Error} If the configuration file cannot be accessed or parsed.
+ */
+function readConfigFile(configPath) {
+  try {
+    // linter disabled because the path is not a user input and hard-coding all possible paths is not feasible
+    // eslint-disable-next-line security/detect-non-literal-fs-filename
+    const fileContent = fs.readFileSync(configPath);
+    config = JSON.parse(fileContent);
+  } catch (error) {
+    throw new Error(
+      `Failed to load the configuration from the file with the path "${configPath}": ${error.message}`
+    );
+  }
+}
 
 /**
  * Parses the properties specified in "moduleProperties" from the given data buffer.
  *
  * @param {Buffer} dataBuffer The data buffer of the pdf file to be parsed.
- * @param {string} searchTerm The search term to be used to check if the data buffer contains module information.
+ * @param {string} configPath The path to the module description configuration file to be used for parsing. If not given or undefined, all available configuration files are used and the best result is returned.
+ * @param {boolean} rawDataOnly If true, the module descriptions are not parsed but the preprocessed raw text is returned. For debugging and development purposes.
  * @returns {Promise<Array>} The parsed module descriptions: An array of objects, each object representing one module.
  */
-async function readAndFilterData(dataBuffer, searchTerm) {
+async function readAndFilterData(
+  dataBuffer,
+  configPath = undefined,
+  rawDataOnly = false
+) {
+  // read the content from the given data buffer (pdf file)
+  let data;
   try {
-    // read content from pdf file
-    const data = await pdf(dataBuffer);
-
-    // extract text from pdf and do some preprocessing
-    const pdfText = moduleDescriptionsPreprocessing(data.text);
-
-    // TODO: searchTerm wieder entfernen? Sehe den Sinn nicht so ganz...
-    // filter text for searchTerm
-    if (!pdfText.includes(searchTerm)) {
-      throw new Error(`Search term ${searchTerm} not found in data buffer!`);
-    }
-
-    // count number of modules
-    const numberOfModules = (pdfText.match(/Modulbeschreibung/g) || []).length;
-    if (numberOfModules === 0) {
-      throw new Error('No modules found in data buffer!');
-    }
-
-    // collect all module properties into one array per property
-    const parsedProperties = parseProperties(pdfText, numberOfModules);
-
-    // build target objects from parsed properties
-    return buildModules(parsedProperties, numberOfModules);
+    data = await pdf(dataBuffer);
   } catch (error) {
-    console.error('Error while parsing the pdf file:', error);
+    throw new Error(`Failed to read the PDF file: ${error.message}`);
   }
-}
 
-/**
- * Collects all module properties into one array per property.
- *
- * @param pdfText The preprocessed text of the pdf file to be parsed.
- * @param numberOfModules The number of modules expected.
- * @returns {Object} An object containing one array per module property.
- */
-function parseProperties(pdfText, numberOfModules) {
-  const parsedProperties = {};
-
-  for (const property of moduleProperties) {
-    parsedProperties[property.propertyName] = filterAndAppendNextWords(
-      pdfText,
-      property.readFrom,
-      property.readTo
-    );
-
-    if (parsedProperties[property.propertyName].length !== numberOfModules) {
+  // choose the right mode of operation depending on the given parameters
+  // return only the preprocessed raw text if rawDataOnly is true
+  if (rawDataOnly) {
+    if (!configPath) {
       throw new Error(
-        `Number of parsed ${property.propertyName} (${
-          parsedProperties[property.propertyName].length
-        }) does not match number of modules (${numberOfModules})!`
+        'No configuration file given. Please specify a configuration file to use.'
       );
     }
+    return rawOutputOnly(data.text, configPath);
   }
-  return parsedProperties;
-}
 
-/**
- * Builds the target objects from the parsed properties.
- *
- * @param parsedProperties The parsed properties, an object containing one array per module property.
- * @param numberOfModules The number of modules expected.
- * @returns {Array} An array of objects, each object representing one module.
- */
-function buildModules(parsedProperties, numberOfModules) {
-  const modules = [];
-  for (let i = 0; i < numberOfModules; i++) {
-    const module = {};
-    for (const property of moduleProperties) {
-      let parsedProperty = parsedProperties[property.propertyName][i];
-
-      // if needed, remove excess characters from property value
-      if (property.excess) {
-        for (const excess of property.excess) {
-          parsedProperty = parsedProperty.replace(new RegExp(excess), '');
-        }
-      }
-
-      module[property.propertyName] = parsedProperty;
+  let results = [];
+  if (configPath) {
+    // if configPath is given, solely use the specified configuration file for parsing
+    results.push(parseModuleDescriptionsWithConfig(data.text, configPath));
+  } else {
+    // if no configPath is given, use all available configuration files
+    const allConfigFiles = getAvailableConfigFiles();
+    for (const configFile of allConfigFiles) {
+      results.push(parseModuleDescriptionsWithConfig(data.text, configFile));
     }
-    modules.push(module);
   }
-  return modules;
+
+  // filter out all results that do not contain any modules
+  results = results.filter((result) => result.numberOfModules > 0);
+
+  // sort the results by the sum of the parser scores and the number of parsed modules
+  results.sort(
+    (a, b) =>
+      b.numberOfModules +
+      b.totalParserScore -
+      (a.numberOfModules + a.totalParserScore)
+  );
+
+  // throw an error if no modules are found in any of the configuration files
+  if (!results[0]) {
+    throw new Error(
+      'No modules found in the given PDF file. Please check if the PDF file contains module descriptions and if the configuration file is correct.'
+    );
+  }
+
+  // return the best result
+  if (process.env.DEBUG === 'true') {
+    console.log(
+      `[moduleDescriptionParser] Used configuration file: "${
+        results[0].configName
+      }", parsed ${results[0].numberOfModules} modules, found ${
+        results[0].totalParserScore * -1
+      } possible problems.`
+    );
+  }
+  return results[0].data;
 }
 
 /**
- * Preprocesses the module descriptions: harmonizes whitespaces and removes line breaks.
+ * Does only preprocessing and returns the preprocessed raw text.
+ * For debugging and development purposes.
+ * @param pdfText The text of the pdf file to be parsed.
+ * @param configPath The path to the module description configuration file to be used for parsing.
+ * @returns {string[]} An array of preprocessed module descriptions. Each array entry contains the text of exactly one module description.
+ */
+function rawOutputOnly(pdfText, configPath) {
+  // read the configuration file
+  readConfigFile(configPath);
+
+  // do preprocessing on the module descriptions and return directly
+  return moduleDescriptionsPreprocessing(pdfText);
+}
+
+/**
+ * Parses given pdfText with a specified configuration file and calculates the total parser score.
+ * @param {string} pdfText The text of the pdf file to be parsed.
+ * @param {string} configPath The path to the module description configuration file to be used for parsing.
+ * @returns {{totalParserScore: number, numberOfModules: number, data: *[], configName: string}} An object containing the parsed module descriptions, the total parser score, the number of parsed modules and the name of the used configuration file.
+ */
+function parseModuleDescriptionsWithConfig(pdfText, configPath) {
+  // load the configuration file
+  readConfigFile(configPath);
+
+  // do preprocessing on the module descriptions
+  const moduleDescriptionTexts = moduleDescriptionsPreprocessing(pdfText);
+
+  // parse each module description and calculate the total parser score
+  let totalScore = 0;
+  const parsedModules = [];
+
+  for (const singleModuleDescription of moduleDescriptionTexts) {
+    const parsedModule = parseSingleModuleDescription(singleModuleDescription);
+    totalScore += parsedModule.parserScore;
+    parsedModules.push(parsedModule);
+  }
+
+  return {
+    data: parsedModules,
+    totalParserScore: totalScore,
+    numberOfModules: parsedModules.length,
+    configName: path.basename(configPath)
+  };
+}
+
+/**
+ * Helper function:
+ * Extracts the properties (as specified in "moduleProperties" in the config object) from the given input string.
+ * For each item of moduleProperties, the function searches for the specified readFrom ... readTo and extracts the text in between.
+ * If more than one match is found, the function uses the result at the specified index (useResultAtIndex).
+ * If specified, the function applies additional postprocessing to the extracted text.
+ * The extracted text is added as a property with the specified name (propertyName) to the module object.
+ * The function also adds a property "parserScore" to the module object, which is used to filter out implausible results.
+ *
+ * @param moduleDescriptionText {string} A string representing the module description.
+ * @returns {{}} An object containing the extracted properties and thus representing one module.
+ */
+function parseSingleModuleDescription(moduleDescriptionText) {
+  // initialize an empty module object
+  const module = {};
+  let score = 0;
+
+  for (const propertyToExtract of config.moduleProperties) {
+    // find the correct match of readFrom ... readTo
+    const matches = findKeywordMatches(
+      moduleDescriptionText,
+      propertyToExtract.readFrom,
+      propertyToExtract.readTo,
+      propertyToExtract.keepReadFromAndTo
+    );
+    let extractedText = matches[propertyToExtract.useResultAtIndex] || '';
+
+    // if needed, do additional postprocessing as specified in config
+    for (const findAndReplaceItem of propertyToExtract.postprocessing) {
+      extractedText = extractedText.replace(
+        new RegExp(findAndReplaceItem.find, findAndReplaceItem.flags),
+        findAndReplaceItem.replace
+      );
+    }
+
+    // add the extracted text as a property to the module object
+    module[propertyToExtract.propertyName] = extractedText;
+
+    // plausibility-check the extracted property
+    if (!extractedPropertyIsPlausible(propertyToExtract, extractedText)) {
+      score--;
+    }
+  }
+
+  // add the score as a property to the module object
+  module.parserScore = score;
+
+  return module;
+}
+
+/**
+ * Helper function:
+ * Checks if the extracted property is plausible.
+ * @param {object} propertyToExtract The configuration of the property to be extracted (from the config object).
+ * @param {string} extractedProperty The extracted property text.
+ * @returns {boolean}
+ */
+function extractedPropertyIsPlausible(propertyToExtract, extractedProperty) {
+  if (propertyToExtract.plausibilityCheck) {
+    // if a plausibility check is specified in the config, apply it
+    if (!extractedProperty.match(propertyToExtract.plausibilityCheck)) {
+      return false;
+    }
+  } else {
+    // if no plausibility check is specified, check if the property is not empty and not too long
+    return extractedProperty.length > 0 && extractedProperty.length < 500;
+  }
+  return true;
+}
+
+/**
+ * Helper function:
+ * Preprocesses the module descriptions
+ * - harmonizes whitespaces and removes line breaks if enableDefaultPreprocessing is true in config
+ * - applies additional preprocessing (find and replace) as specified in config
  * @param moduleDescriptions The un-preprocessed module descriptions text.
- * @returns {string} The preprocessed module descriptions text.
+ * @returns {string[]} An array of preprocessed module descriptions. Each array entry contains the text of exactly one module description.
  */
 function moduleDescriptionsPreprocessing(moduleDescriptions) {
-  moduleDescriptions = moduleDescriptions
-    .replace(/(\r\n|\n|\r)/gm, ' ') // remove line breaks
-    .replace(/\s+/g, ' ') // harmonize spaces
-    .replace(/Arbeits aufwand/g, 'Arbeitsaufwand'); // fix additional line break in Arbeitsaufwand
+  // default preprocessing if enabled in config
+  if (config.enableDefaultPreprocessing) {
+    moduleDescriptions = moduleDescriptions
+      .replace(/(\r\n|\n|\r)/gm, ' ') // remove line breaks
+      .replace(/\s+/g, ' '); // harmonize spaces
+  }
 
-  return moduleDescriptions;
+  // additional preprocessing as specified in config
+  for (const findAndReplaceItem of config.additionalPreprocessing) {
+    moduleDescriptions = moduleDescriptions.replace(
+      new RegExp(findAndReplaceItem.find, findAndReplaceItem.flags),
+      findAndReplaceItem.replace
+    );
+  }
+
+  // split the text: each array entry contains the text of exactly one module description
+  const moduleDescriptionTexts = moduleDescriptions.split(config.moduleTitle);
+
+  // remove the first entry, as it just contains all the text before the first module description
+  moduleDescriptionTexts.shift();
+
+  return moduleDescriptionTexts;
 }
 
 /**
+ * Helper function:
  * Filters the given originalString for all matches of readFrom ... readTo.
+ * The function returns an array of all matches found or an empty array if no matches are found.
  *
- * @param originalString The string to be filtered.
- * @param readFrom The start of the match to be filtered.
- * @param readTo The end of the match to be filtered.
+ * @param originalString {string} The string to be filtered.
+ * @param readFrom {string} The start of the match to be filtered.
+ * @param readTo {string} The end of the match to be filtered.
+ * @param keepReadFromAndTo {boolean} Iff true, the readFrom and readTo strings are kept in the result.
  * @returns {Array} An array of all matches.
  */
-function filterAndAppendNextWords(originalString, readFrom, readTo) {
-  // Escape special characters in search terms
-  readFrom = toRegexString(readFrom);
-  readTo = toRegexString(readTo);
-
+function findKeywordMatches(
+  originalString,
+  readFrom,
+  readTo,
+  keepReadFromAndTo
+) {
   // Find all matches of readFrom ... readTo
   const regex = new RegExp(`${readFrom}.*?${readTo}`, 'gm');
   const matches = originalString.match(regex);
+  let resultMatches = [];
 
   if (matches === null) {
     return [];
   }
 
-  // Remove searchTerm and keyWordBis from matches
-  for (let i = 0; i < matches.length; i++) {
-    matches[i] = matches[i].replace(new RegExp(`^${readFrom}`), '');
-    matches[i] = matches[i].replace(new RegExp(`${readTo}$`), '');
-    matches[i] = matches[i].trim();
+  // Remove readFrom and readTo from matches if wanted
+  if (!keepReadFromAndTo) {
+    for (let match of matches) {
+      match = match.replace(new RegExp(`^${readFrom}`), '');
+      match = match.replace(new RegExp(`${readTo}$`), '');
+      match = match.trim();
+      resultMatches.push(match);
+    }
+  } else {
+    resultMatches = matches;
   }
 
-  return matches;
+  return resultMatches;
 }
 
-/**
- * Helper function to escape special characters in a string so that the string becomes a valid RegEx.
- *
- * @param str The string to be escaped.
- * @returns {string} The escaped string.
- */
-function toRegexString(str) {
-  return str.replace(/\./g, '\\.');
-}
+module.exports = readAndFilterData;

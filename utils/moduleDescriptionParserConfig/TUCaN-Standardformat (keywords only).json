@@ -1,0 +1,70 @@
+{
+  "enableDefaultPreprocessing": true,
+  "additionalPreprocessing": [
+    {
+      "find": "Leistungspun kte",
+      "flags": "g",
+      "replace": "Leistungspunkte"
+    },
+    {
+      "find": "\\uf0b7",
+      "flags": "g",
+      "replace": "•"
+    }
+  ],
+  "moduleTitle": "Modulbeschreibung",
+
+  "moduleProperties": [
+    {
+      "propertyName": "moduleID",
+      "readFrom": "Modul Nr\\.",
+      "readTo": "Leistungspunkte",
+      "useResultAtIndex": 0,
+      "postprocessing": [
+        {
+          "find": "\\s",
+          "flags": "g",
+          "replace": ""
+        }
+      ]
+    },
+    {
+      "propertyName": "moduleName",
+      "readFrom": "Modulname",
+      "readTo": "Modul Nr\\.",
+      "keepReadFromAndTo": false,
+      "useResultAtIndex": 0,
+      "postprocessing": []
+    },
+    {
+      "propertyName": "moduleCredits",
+      "readFrom": "Leistungspunkte",
+      "readTo": "Arbeitsaufwand",
+      "useResultAtIndex": 0,
+      "postprocessing": []
+    },
+    {
+      "propertyName": "moduleLanguage",
+      "readFrom": "Modulname",
+      "readTo": "Modulverantwortliche Person",
+      "keepReadFromAndTo": false,
+      "useResultAtIndex": 0,
+      "postprocessing": [
+        {
+          "find": ".*Sprache\\s*",
+          "flags": "g",
+          "replace": ""
+        }
+      ],
+      "plausibilityCheck": "^([Ee]nglisch|[Dd]eutsch).*"
+    },
+    {
+      "propertyName": "moduleApplicability",
+      "readFrom": "8 Verwendbarkeit des Moduls",
+      "readTo": "9 Literatur",
+      "keepReadFromAndTo": false,
+      "useResultAtIndex": 0,
+      "postprocessing": []
+    }
+  ]
+}

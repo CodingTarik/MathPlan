@@ -35,9 +35,19 @@ if (config.dev.DEBUG) {
   app.use(morgan('dev', { stream: morganStream }));
 }
 
-// Register imprint middleware
+// Register middleware for static variable and configurable data for rendering
 app.use((req, res, next) => {
-  res.locals.imprinturl = config.data.imprinturl;
+  res.locals.imprinturl = config.web.IMPRINT_URL;
+  res.locals.faqurl = config.web.FAQ_URL;
+  res.locals.faqurlactivemenu = config.web.FAQ_URL_ACTIVE;
+  res.locals.faqactivatestartpage = config.web.FAQ_STARTPAGE_ACTIVE;
+  res.locals.scoialmedia = config.web.SOCIAL_MEDIA_ACTIVE;
+  res.locals.facebookurl = config.web.FACEBOOK_URL;
+  res.locals.twitterurl = config.web.TWITTER_URL;
+  res.locals.instagramurl = config.web.INSTAGRAM_URL;
+  res.locals.pagename = config.web.PAGE_NAME;
+  res.locals.privacypolicyurl = config.web.PRIVACY_POLICY_URL;
+  res.locals.supportemail = config.web.SUPPORT_EMAIL;
   next();
 });
 
@@ -47,7 +57,22 @@ app.use(
   '/assets/bootstrap',
   express.static(path.join(__dirname, 'node_modules/bootstrap/dist'))
 );
-
+app.use(
+  '/assets/animate',
+  express.static(path.join(__dirname, 'node_modules/animate.css'))
+);
+app.use(
+  '/assets/animateonscroll',
+  express.static(path.join(__dirname, 'node_modules/aos/dist'))
+);
+app.use(
+  '/assets/typed',
+  express.static(path.join(__dirname, 'node_modules/typed.js/dist'))
+);
+app.use(
+  '/assets/sweetalert2',
+  express.static(path.join(__dirname, 'node_modules/sweetalert2/dist'))
+);
 // parse requests of content-type - application/json
 app.use(express.json());
 
@@ -77,10 +102,9 @@ app.use('/', pages);
 try {
   if (process.env.NODE_ENV !== 'test') {
     // Datbase
-    /* eslint-disable */
     db.sequelize
       .sync()
-      // for changing the underlying database (delets all content, updates scheme) a line of code can be added as decribed in readme file
+      // for changing the underlying database (delets all content, updates scheme) adjust the line above as decribed in the readme file
       /* eslint-enable */
       .then(() => {
         logger.info('Synced db.');
@@ -91,7 +115,8 @@ try {
     // HTTP-Server
     if (config.server.ALLOW_HTTP) {
       let httpServer = null;
-      if (config.HTTP_REDIRECT) {
+      if (config.server.HTTP_REDIRECT) {
+        logger.info('HTTP REDIRECT ACTIVE');
         httpServer = http.createServer((req, res) => {
           res.writeHead(301, {
             Location:

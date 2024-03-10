@@ -1,6 +1,8 @@
 const logger = require('../logger.js');
 const Modul = require('./database.js').models.Modul;
 const Sequelize = require('sequelize');
+const { Op } = require('sequelize');
+const configFile = require('../config.js');
 
 /**
  * Adds a module to the database
@@ -45,11 +47,6 @@ const isModuleExists = (moduleID) => {
 /**
  * Deletes a module from the database based on its ID
  * @param {string} moduleID - The module ID to delete
- * @returns {Promise} A promise that is rejected or fulfilled depending on the success of deleting the module
- */
-/**
- * Deletes a module from the database based on its ID
- * @param {string} moduleID - The module ID to delete
  * @returns {Promise<boolean>} A promise that resolves to true if the module is deleted, false otherwise
  */
 const deleteModulById = async (moduleID) => {
@@ -64,7 +61,7 @@ const deleteModulById = async (moduleID) => {
     // If affectedRows is greater than 0, it means at least one record was deleted
     return affectedRows > 0;
   } catch (error) {
-    logger.error('Error deleting module:', error);
+    logger.error('Error deleting module:', error); // only occurs when there a problems with the database connection and is therefore not tested
     return false; // Return false if an error occurs during deletion
   }
 };
@@ -84,7 +81,7 @@ const getAllModuls = () => {
  * if a moduleCredits is provided: moduleCredits of returned modules must equal the given moduleCredits
  * if a moduleLanguage is provided: moduleLanguage of returned modules must equal the given moduleLanguage
  * if a moduleApplicability is provided: moduleApplicability of returned modules must equal the given moduleApplicability.
- * If more than 50 modules match only the first 50 are returned.
+ * If more than MAX_NUMBER_FOUND_MODULES as specified in the config file modules match only the first MAX_NUMBER_FOUND_MODULES modules are returned.
  * @param {string} moduleID
  * @param {string} moduleName
  * @param {string} moduleCredits
@@ -101,21 +98,95 @@ const getModules = (
   moduleApplicability
 ) => {
   const parameters = {};
-  if (!(moduleID === 'undefined')) { parameters.moduleID = { [Sequelize.Op.like]: `%${moduleID}%` }; }
-  if (!(moduleName === 'undefined')) { parameters.moduleName = { [Sequelize.Op.like]: `%${moduleName}%` }; }
-  if (!(moduleCredits === 'undefined')) { parameters.moduleCredits = moduleCredits; }
-  if (!(moduleLanguage === 'undefined')) { parameters.moduleLanguage = moduleLanguage; }
-  if (!(moduleApplicability === 'undefined')) { parameters.moduleApplicability = moduleApplicability; }
+  if (!(moduleID === 'undefined')) {
+    parameters.moduleID = { [Sequelize.Op.like]: `%${moduleID}%` };
+  }
+  if (!(moduleName === 'undefined')) {
+    parameters.moduleName = { [Sequelize.Op.like]: `%${moduleName}%` };
+  }
+  if (!(moduleCredits === 'undefined')) {
+    parameters.moduleCredits = moduleCredits;
+  }
+  if (!(moduleLanguage === 'undefined')) {
+    parameters.moduleLanguage = moduleLanguage;
+  }
+  if (!(moduleApplicability === 'undefined')) {
+    parameters.moduleApplicability = moduleApplicability;
+  }
   return Modul.findAndCountAll({
     where: parameters,
-    limit: 50,
+    limit: configFile.database.MAX_NUMBER_FOUND_MODULES,
     order: [['moduleID', 'ASC']]
   });
 };
+
+/**
+ * Finds a module with given moduleID in the database
+ * @param {string} moduleID - The module ID
+ * @returns {Promise<Model|null>} A promise that is rejected or fulfilled depending on the success of finding the module
+ */
+const getOneModule = (moduleID) => {
+  return Modul.findOne({
+    where: {
+      moduleID
+    }
+  });
+};
+
+/**
+ * Updates the module with the moduleId "searchModuleID" in the database
+ * @param {string} searchModuleID - The module ID of the module to be modified
+ * @param {string} moduleID - The new (modified) module ID
+ * @param {string} moduleName - The new (modified) module name
+ * @param {number} moduleCredits - The new (modified) number of credits for the module
+ * @param {string} moduleLanguage - The new (modified) language of the module
+ * @param {string} moduleApplicability - The new (modified) applicability of the module
+ * @returns {Promise<Array<number, number>>} A promise that is rejected or fulfilled depending on the success of updating the module
+ */
+const updateModule = (
+  searchModuleID,
+  moduleID,
+  moduleName,
+  moduleCredits,
+  moduleLanguage,
+  moduleApplicability
+) => {
+  const modul = {
+    moduleID,
+    moduleName,
+    moduleCredits,
+    moduleLanguage,
+    moduleApplicability
+  };
+  return Modul.update(modul, { where: { moduleID: searchModuleID } });
+};
+
+/**
+ * Gets all incomplete modules. Incomplete modules are ones that are have at least on attribute that hold an empty string, or in case of moduleCredits -1.
+ * @returns {Promise<Array<Object>>} A promise that is rejected or fulfilled depending on the success of getting the module(s). If it is fulfilled, it returns an array of all incomplete modules.
+ */
+const getIncompleteModules = () => {
+  const parameters = {
+    [Op.or]: [
+      { moduleName: '' },
+      { moduleCredits: -1 },
+      { moduleLanguage: '' },
+      { moduleApplicability: '' }
+    ]
+  };
+  return Modul.findAll({
+    where: parameters,
+    order: [['moduleID', 'ASC']]
+  });
+};
+
 module.exports = {
+  updateModule,
+  getOneModule,
   addModul,
   isModuleExists,
   deleteModulById,
   getAllModuls,
-  getModules
+  getModules,
+  getIncompleteModules
 };

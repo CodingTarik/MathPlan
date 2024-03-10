@@ -11,6 +11,7 @@ const User = require(path.join(__dirname, './models/user.js'));
 const ExaminationRegulation = require(
   path.join(__dirname, './models/examinationregulation.js')
 );
+const ExamPlan = require(path.join(__dirname, './models/examPlan.js'));
 
 /**
  * Database connection configuration
@@ -24,15 +25,26 @@ const ExaminationRegulation = require(
  */
 
 // Define database connection parameters
-const config /** @type {DatabaseConfig} */ = {
-  database: configFile.database.DB_DATABASE,
-  username: configFile.database.DB_USER, // Your MySQL username
-  password: configFile.database.DB_PASSWORD, // Your MySQL password
-  host: configFile.database.DB_HOST,
-  logging: configFile.dev.DEBUG ? (msg) => logger.database(msg) : false,
-  dialect: configFile.database.DB_DIALECT, // can be set to 'mysql' or 'sqlite'
-  storage: './database.sqlite' // For SQLite, define the path to the SQLite file
-};
+// eslint-disable-next-line prefer-const
+let config;
+if (process.env.NODE_ENV !== 'test') {
+  config /** @type {DatabaseConfig} */ = {
+    database: configFile.database.DB_DATABASE,
+    username: configFile.database.DB_USER, // Your MySQL username
+    password: configFile.database.DB_PASSWORD, // Your MySQL password
+    host: configFile.database.DB_HOST,
+    logging: configFile.dev.DEBUG ? (msg) => logger.database(msg) : false,
+    dialect: configFile.database.DB_DIALECT, // can be set to 'mysql' or 'sqlite'
+    storage: './database.sqlite' // For SQLite, define the path to the SQLite file
+  };
+} else {
+  // use test database instead of actual one
+  config /** @type {DatabaseConfig} */ = {
+    logging: configFile.dev.DEBUG ? (msg) => logger.database(msg) : false,
+    dialect: 'sqlite',
+    storage: 'database.test.sqlite'
+  };
+}
 
 // create a sequelize object
 const sequelize = new Sequelize(config);
@@ -41,7 +53,8 @@ const sequelize = new Sequelize(config);
 const models = {
   Modul: Modul(sequelize),
   User: User(sequelize),
-  ExaminationRegulation: ExaminationRegulation(sequelize)
+  ExaminationRegulation: ExaminationRegulation(sequelize),
+  ExamPlan: ExamPlan(sequelize)
 };
 
 module.exports = {

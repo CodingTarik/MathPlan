@@ -208,7 +208,7 @@
         "modulerange": {
           "type": "array",
           "format": "table",
-          "items": { "$ref": "#/definitions/modulerange"},
+          "items": { "$ref": "#/definitions/modulerange" },
           "default": [],
           "title": "Module Range",
           "propertyOrder": 1003

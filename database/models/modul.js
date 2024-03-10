@@ -20,7 +20,6 @@ module.exports = (sequelize) => {
    * @property {string} moduleLanguage - The language of the module
    * @property {string} moduleApplicability - The applicability of the module
    */
-
   const Modul /** @type {ModulModel} */ = sequelize.define('Modul', {
     id: {
       type: DataTypes.INTEGER,

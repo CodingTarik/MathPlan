@@ -107,7 +107,9 @@ describe('Logger Zip Tests', () => {
     for (let i = 0; i < 10; i++) {
       // simulate little break between log messages like in real application
       await new Promise((resolve) => setTimeout(resolve, 10));
-      logger.debug('42ZIPZIPZIPZIPZIPZIPZIPZIPZIPZIPZIPZIPZIPZIPZIPZIPZIPZIPZIPZIPZIPZIPZIPZIPZIPZIPZIPZIP');
+      logger.debug(
+        '42ZIPZIPZIPZIPZIPZIPZIPZIPZIPZIPZIPZIPZIPZIPZIPZIPZIPZIPZIPZIPZIPZIPZIPZIPZIPZIPZIPZIP'
+      );
     }
     // Wait for logger to finish writing
     await new Promise((resolve) => setTimeout(resolve, 1000));

@@ -21,9 +21,11 @@ describe('Imprint URL Test', () => {
     const hrefAttribute = imprintLink.attr('href');
 
     // Expect the href value to match the one defined in the configuration
-    expect(hrefAttribute).toBe(config.data.imprinturl);
+    expect(hrefAttribute).toBe(config.web.IMPRINT_URL);
 
     // Additional check: Ensure that the href value is not a specific invalid URL
-    expect(hrefAttribute).not.toBe('https://example.comdjsghdsjghdjshgjdshgjdshgjdshgjdsg');
+    expect(hrefAttribute).not.toBe(
+      'https://example.comdjsghdsjghdjshgjdshgjdshgjdshgjdsg'
+    );
   });
 });

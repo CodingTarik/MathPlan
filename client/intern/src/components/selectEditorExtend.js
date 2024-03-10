@@ -6,7 +6,7 @@
 export class SelectedExtend extends window.JSONEditor.defaults.editors.select2 {
   afterInputReady() {
     this.select2_instance = window.jQuery(this.input).select2(null);
-    this.select2v4 = null; //hasOwnProperty(this.select2_instance.select2, 'amd');
+    this.select2v4 = null;
 
     this.selectChangeHandler = () => {
       const value = this.select2v4
