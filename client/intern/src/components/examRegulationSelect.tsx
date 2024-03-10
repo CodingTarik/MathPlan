@@ -55,7 +55,7 @@ export interface ExamRegulation {
  * @typedef {Object} ExamRegulationSelectProps
  * @property {any} jsoneditor - The JSON editor instance.
  * @property {React.Dispatch<React.SetStateAction<string>>} setInternalName - The state setter for the internal name.
- *  * @param {ExamRegulation[]} props.examRegulations - The list of exam regulations.
+ * @param {ExamRegulation[]} props.examRegulations - The list of exam regulations.
  * @param {React.Dispatch<React.SetStateAction<ExamRegulation[]>>} props.setExamRegulations - The state setter for the list of exam regulations.
  */
 interface ExamRegulationSelectProps {
