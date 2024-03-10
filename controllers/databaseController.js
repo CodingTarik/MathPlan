@@ -261,6 +261,67 @@ const addOrUpdateExamRegulation = async (req, res) => {
 };
 
 /**
+ * Retrieve all exam regulations with minimal information.
+ * @param {*} req the request
+ * @param {*} res the result
+ */
+const getAllExamRegulationsMin = async (req, res) => {
+  try {
+    // Retreive all exam regulation schemas
+    const examRegulationSchemas =
+      await examRegulationHelper.getAllExamRegulations();
+
+    // we just want attribute name and jsonSchema
+    const finalExamRegulationSchemas = [];
+    examRegulationSchemas.forEach((schema) => {
+      finalExamRegulationSchemas.push({
+        name: schema.name,
+        jsonSchema: schema.jsonSchema
+      });
+    });
+
+    // Send a success response
+    res.status(200).send(finalExamRegulationSchemas);
+  } catch (error) {
+    console.error('Error retrieving exam regulation schemas:', error);
+
+    // Send an error response
+    res.status(500).json({
+      success: false,
+      message: 'Error retrieving exam regulation schemas.',
+      error: error.message
+    });
+  }
+};
+/**
+ * Deletes exam regulation by name
+ * @param {*} req the request
+ * @param {*} res the result
+ */
+const deleteExamRegulationByName = async (req, res) => {
+  try {
+    // the data is the name to delete
+    const name = req.body.name;
+    // delete the exam regulation by name
+    await examRegulationHelper.deleteExamRegulationByName(name);
+    // send a success response
+    res.status(200).json({
+      success: true,
+      message: 'Exam regulation schema deleted successfully.'
+    });
+  } catch (error) {
+    // Handle any errors that occurred during processing
+    console.error('Error deleting exam regulation schema:', error);
+
+    // Send an error response
+    res.status(400).json({
+      success: false,
+      message: 'Error deleting exam regulation schema.',
+      error: error.message
+    });
+  }
+};
+/*
  * if a request is made the getModules function of the database is called by the controller and the matching module(s)
  * is sent back as a response if there are less than MAX_NUMBER_FOUND_MODULES as specified in the config file matching modules and no other error occurs
  * @param {Object} req
@@ -311,39 +372,6 @@ const getIncompleteModules = (req, res) => {
       });
     });
 };
-/**
- * Retrieve all exam regulations with minimal information.
- * @param {*} req the request
- * @param {*} res the result
- */
-const getAllExamRegulationsMin = async (req, res) => {
-  try {
-    // Retreive all exam regulation schemas
-    const examRegulationSchemas =
-      await examRegulationHelper.getAllExamRegulations();
-
-    // we just want attribute name and jsonSchema
-    const finalExamRegulationSchemas = [];
-    examRegulationSchemas.forEach((schema) => {
-      finalExamRegulationSchemas.push({
-        name: schema.name,
-        jsonSchema: schema.jsonSchema
-      });
-    });
-
-    // Send a success response
-    res.status(200).send(finalExamRegulationSchemas);
-  } catch (error) {
-    console.error('Error retrieving exam regulation schemas:', error);
-
-    // Send an error response
-    res.status(500).json({
-      success: false,
-      message: 'Error retrieving exam regulation schemas.',
-      error: error.message
-    });
-  }
-};
 
 /**
  * Function that adds exam plan while assuming the necessary fields are contained in the body
@@ -391,12 +419,13 @@ const addExamPlan = async (req, res) => {
 };
 
 module.exports = {
+  deleteExamRegulationByName,
   addModul,
   deleteModulById,
   getAllModulsForJSONEditor,
   getAllModulsMin,
-  addOrUpdateExamRegulation,
   getAllExamRegulationsMin,
+  addOrUpdateExamRegulation,
   updateModule,
   getOneModule,
   getModules,
