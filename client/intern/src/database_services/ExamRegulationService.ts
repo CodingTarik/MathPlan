@@ -38,7 +38,7 @@ export async function saveExamRegulationFunction(
  * Fetches the list of exam regulations from the server.
  */
 export const fetchExamRegulations = async (
-    setExamRegulations: React.Dispatch<React.SetStateAction<ExamRegulation[]>>
+    setExamRegulations: React.Dispatch<React.SetStateAction<ExamRegulation[]>> | null
   ) => {
     try {
       // Send axios get request to /api/intern/getAllexamRegulationsMin
@@ -46,9 +46,13 @@ export const fetchExamRegulations = async (
         '/api/intern/getAllexamRegulationsMin'
       );
       // Update the state with the fetched exam regulations
-      setExamRegulations(response.data);
+      // check if set examregulation function is not null
+      if(setExamRegulations) 
+        setExamRegulations(response.data);
+      return response.data;
     } catch (error) {
       console.error(error);
       throw error;
     }
   };
+
