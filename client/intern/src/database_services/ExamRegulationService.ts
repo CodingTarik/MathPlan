@@ -41,7 +41,7 @@ export const fetchExamRegulations = async (
     setExamRegulations: React.Dispatch<React.SetStateAction<ExamRegulation[]>> | null
   ) => {
     try {
-      // Send axios get request to /api/intern/getAllexamRegulationsMin
+      // Send axios get request to /api/intern/getAllExamRegulationsMin
       const response: AxiosResponse<ExamRegulation[]> = await axios.get(
         '/api/intern/getAllexamRegulationsMin'
       );
