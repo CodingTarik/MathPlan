@@ -216,7 +216,7 @@
       },
       "defaultProperties": ["name"],
       "required": ["name"],
-      "title": "examination plan area",
+      "title": "Examination Plan Area",
       "headerTemplate": "{{self.name}}"
     },
     "module": {
