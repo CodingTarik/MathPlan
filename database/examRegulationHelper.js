@@ -73,10 +73,28 @@ const getAllExamRegulations = async () => {
   return await ExamRegulation.findAll();
 };
 
+/**
+ *
+ * @param {*} name the name of the exam regulation
+ * @returns delete exam regulation by name
+ */
+const deleteExamRegulationByName = async (name) => {
+  // check if exam regulation exists if not throw error
+  if (!(await isExamRegulationExists(name))) {
+    throw new Error('Exam regulation does not exist');
+  }
+  return await ExamRegulation.destroy({
+    where: {
+      name
+    }
+  });
+};
+
 // Export the functions.
 module.exports = {
+  deleteExamRegulationByName,
   addOrUpdateExamRegulation,
   isExamRegulationExists,
-  getAllExamRegulations,
-  getExamRegulation
+  getExamRegulation,
+  getAllExamRegulations
 };

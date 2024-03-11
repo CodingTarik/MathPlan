@@ -41,14 +41,17 @@ app.use(async (req, res, next) => {
   res.locals.faqurl = config.web.FAQ_URL;
   res.locals.faqurlactivemenu = config.web.FAQ_URL_ACTIVE;
   res.locals.faqactivatestartpage = config.web.FAQ_STARTPAGE_ACTIVE;
-  res.locals.scoialmedia = config.web.SOCIAL_MEDIA_ACTIVE;
+  res.locals.socialmedia = config.web.SOCIAL_MEDIA_ACTIVE;
   res.locals.facebookurl = config.web.FACEBOOK_URL;
   res.locals.twitterurl = config.web.TWITTER_URL;
   res.locals.instagramurl = config.web.INSTAGRAM_URL;
   res.locals.pagename = config.web.PAGE_NAME;
   res.locals.privacypolicyurl = config.web.PRIVACY_POLICY_URL;
+  res.locals.supportresponsible = config.web.SUPPORT_RESPONSIBLE;
+  res.locals.supportemailactive = config.web.SUPPORT_EMAIL_ACTIVE;
   res.locals.supportemail = config.web.SUPPORT_EMAIL;
-
+  res.locals.supportlinkactive = config.web.SUPPORT_LINK_ACTIVE;
+  res.locals.supportlink = config.web.SUPPORT_LINK;
   next();
 });
 

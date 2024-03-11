@@ -22,6 +22,21 @@ require('dotenv').config({ path: '.secret' });
  * @property {string} server.HOST - Server host.
  * @property {Object} web - Web configuration.
  * @property {string} web.DEFAULT_LANGUAGE - Default language for the web.
+ * @property {string} web.PAGE_NAME - Name of the application shown in navbar and on startpage.
+ * @property {boolean} web.FAQ_STARTPAGE_ACTIVE - Enable FAQ on startpage.
+ * @property {boolean} web.FAQ_URL_ACTIVE - Enable FAQ in menu banner.
+ * @property {string} web.FAQ_URL - FAQ URL.
+ * @property {string} web.SUPPORT_RESPONSIBLE - The person or group responsible for this application.
+ * @property {boolean} web.SUPPORT_EMAIL_ACTIVE - Enable support email in footer.
+ * @property {string} web.SUPPORT_EMAIL - Support email.
+ * @property {boolean} web.SUPPORT_LINK_ACTIVE - Enable support link in footer.
+ * @property {string} web.SUPPORT_LINK - Support link (e.g. a contact form).
+ * @property {string} web.IMPRINT_URL - Imprint URL.
+ * @property {string} web.PRIVACY_POLICY_URL - Privacy policy URL.
+ * @property {boolean} web.SOCIAL_MEDIA_ACTIVE - Enable social media links in footer.
+ * @property {string} web.FACEBOOK_URL - Facebook URL.
+ * @property {string} web.TWITTER_URL - Twitter URL.
+ * @property {string} web.INSTAGRAM_URL - Instagram URL.
  * @property {Object} dev - Development configuration.
  * @property {boolean} dev.DEBUG - Debug mode.
  */
@@ -41,6 +56,8 @@ config.database.DB_DATABASE = process.env.DB_DATABASE || 'database';
 config.database.DB_USER = process.env.DB_USER || 'root';
 // Set the database dialect to 'mysql' or 'sqlite'
 config.database.DB_DIALECT = process.env.DB_DIALECT || 'sqlite';
+// Set the maximum number of modules that can be retrieved from the database via the search button in the intern page
+config.database.MAX_NUMBER_FOUND_MODULES = process.env.MAX_NUMBER_FOUND_MODULES || 50;
 
 // Initialize an empty server configuration object
 config.server = {};
@@ -72,13 +89,18 @@ config.server.HOST = process.env.HOST || 'localhost';
 config.web = {};
 // Set the default language for the web, defaulting to 'de' if not provided
 config.web.DEFAULT_LANGUAGE = process.env.DEFAULT_LANGUAGE || 'de';
-
 // the faq url the website will redirect if faq_url_activate is active
 config.web.FAQ_URL = process.env.FAQ_URL || 'www.example.org';
 // page name
-config.web.PAGE_NAME = process.env.PAGE_NAME || 'Materno';
+config.web.PAGE_NAME = process.env.PAGE_NAME || 'MathPlan';
+// support: responsible person or group
+config.web.SUPPORT_RESPONSIBLE = process.env.SUPPORT_RESPONSIBLE;
 // support email for footer
+config.web.SUPPORT_EMAIL_ACTIVE = testBool(process.env.SUPPORT_EMAIL_ACTIVE);
 config.web.SUPPORT_EMAIL = process.env.SUPPORT_EMAIL || 'example@example.com';
+// support link for footer
+config.web.SUPPORT_LINK_ACTIVE = testBool(process.env.SUPPORT_LINK_ACTIVE);
+config.web.SUPPORT_LINK = process.env.SUPPORT_LINK || 'www.example.com';
 // defined if faq item in menu banner is activate redirects to faq_url
 config.web.FAQ_URL_ACTIVE = testBool(process.env.FAQ_URL_ACTIVE);
 // Defines if faq on startpage is active

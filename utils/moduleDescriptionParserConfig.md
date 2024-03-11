@@ -91,7 +91,7 @@ node moduleDescriptionParserCLI.js <Pfad zur PDF-Datei> <Pfad zur Konfigurations
 
 ## Derzeit verfügbare Konfigurationsdateien
 
-- `PO 2018 neu und schön.json`: Für das [Modulhandbuch Mathematik PO 2018](https://www.mathematik.tu-darmstadt.de/media/mathematik/studium/downloads_1/studienordnungen_modulhandbuecher_etc/modulhandbuch/Modulhandbuch_neu_und_schoen_Stand_Nov_2023_midi_Inhaltsverzeichnis.pdf). Dieses Modulhandbuch wurde wohl stark angepasst, sodass einige Keywords anders sind als in solchen Modulhandbüchern, die direkt von TUCaN erstellt wurden. 
+- `PO2018 neu und schoen.json`: Für das [Modulhandbuch Mathematik PO 2018](https://www.mathematik.tu-darmstadt.de/media/mathematik/studium/downloads_1/studienordnungen_modulhandbuecher_etc/modulhandbuch/Modulhandbuch_neu_und_schoen_Stand_Nov_2023_midi_Inhaltsverzeichnis.pdf). Dieses Modulhandbuch wurde wohl stark angepasst, sodass einige Keywords anders sind als in solchen Modulhandbüchern, die direkt von TUCaN erstellt wurden. 
 - `TUCaN-Standardformat.json` Für Modulhandbücher, die direkt mit TUCaN erstellt wurden.
 - `TUCaN-Standardformat (keywords only).json` Für Modulhandbücher, die direkt mit TUCaN erstellt wurden. Da es in diesen Modulhandbüchern oft ungünstige Seitenumbrüche gibt, die das Auslesen stark erschweren, enthält die Datei `TUCaN-Standardformat.json` teilweise ziemlich komplexe reguläre Ausdrücke. `TUCaN-Standardformat (keywords only).json` ist simpler aufgebaut und sollte daher besser zu verstehen sein. Diese Konfiguration liefert allerdings schlechtere Ergebnisse als `TUCaN-Standardformat.json`.
 - `TUCaN-Standardformat englisch.json` Für _englische_ Modulhandbücher, die direkt mit TUCaN erstellt wurden.
@@ -188,7 +188,7 @@ node moduleDescriptionParserCLI.js <path to the PDF file> <path to the configura
 
 ## Currently available configuration files
 
-- `PO 2018 neu und schön.json`: For the [Mathematics PO 2018 module handbook](https://www.mathematik.tu-darmstadt.de/media/mathematik/studium/downloads_1/studienordnungen_modulhandbuecher_etc/modulhandbuch/Modulhandbuch_neu_und_schoen_Stand_Nov_2023_midi_Inhaltsverzeichnis.pdf). This module handbook has apparently been heavily modified, so some keywords are different from those in module handbooks created directly by TUCaN.
+- `PO2018 neu und schoen.json`: For the [Mathematics PO 2018 module handbook](https://www.mathematik.tu-darmstadt.de/media/mathematik/studium/downloads_1/studienordnungen_modulhandbuecher_etc/modulhandbuch/Modulhandbuch_neu_und_schoen_Stand_Nov_2023_midi_Inhaltsverzeichnis.pdf). This module handbook has apparently been heavily modified, so some keywords are different from those in module handbooks created directly by TUCaN.
 - `TUCaN-Standardformat.json` For module handbooks created directly with TUCaN.
 - `TUCaN-Standardformat (keywords only).json` For module handbooks created directly with TUCaN. Since these module handbooks often have unfavorable page breaks that make parsing them perfectly very difficult, the file `TUCaN-Standardformat.json` contains some quite complex regular expressions. `TUCaN-Standardformat (keywords only).json` is simpler and should therefore be easier to understand. However, this configuration provides worse results than `TUCaN-Standardformat.json`.
 - `TUCaN-Standardformat englisch.json` For _English_ module handbooks created directly with TUCaN.

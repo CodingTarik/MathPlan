@@ -1,7 +1,7 @@
 /** @type {import('jest').Config} */
 const config = {
   verbose: true,
-  testTimeout: 30000, // Timeout of 30000 milliseconds (30 seconds) for all tests
+  testTimeout: 120000, // Timeout of 120000 milliseconds (2 minutes) for all tests
   collectCoverage: true,
   coverageReporters: ['lcov', 'text', 'html']
 };

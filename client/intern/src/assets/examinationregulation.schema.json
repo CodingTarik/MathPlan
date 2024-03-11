@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "title": "Prüfungsordnung",
+  "title": "exam regulation",
   "definitions": {
     "area": {
       "type": "object",
@@ -109,21 +109,21 @@
             }
           }
         },
-        "minSubAreaCheck": {
+        "minExamAreaCheck": {
           "type": "integer",
-          "title": "Minimum Sub-Area Check",
+          "title": "Minimum Exam-Plan-Area Check",
           "options": {
             "inputAttributes": {
-              "placeholder": "Enter Minimum Sub-Area Check"
+              "placeholder": "Enter Minimum Exam-Plan-Area Check"
             }
           }
         },
-        "maxSubAreaCheck": {
+        "maxExamAreaCheck": {
           "type": "integer",
-          "title": "Maximum Sub-Area Check",
+          "title": "Maximum Exam-Plan-Area Check",
           "options": {
             "inputAttributes": {
-              "placeholder": "Enter Maximum Sub-Area Check"
+              "placeholder": "Enter Maximum Exam-Plan-Area Check"
             }
           }
         },
@@ -133,24 +133,6 @@
           "options": {
             "inputAttributes": {
               "placeholder": "Enter Minimum Seminars Count"
-            }
-          }
-        },
-        "minSeminarsCP": {
-          "type": "integer",
-          "title": "Minimum Seminars Credit Points",
-          "options": {
-            "inputAttributes": {
-              "placeholder": "Enter Minimum Seminars Credit Points"
-            }
-          }
-        },
-        "maxSeminarsCP": {
-          "type": "integer",
-          "title": "Maximum Seminars Credit Points",
-          "options": {
-            "inputAttributes": {
-              "placeholder": "Enter Maximum Seminars Credit Points"
             }
           }
         },
@@ -212,7 +194,7 @@
           "type": "array",
           "items": { "$ref": "#/definitions/area" },
           "default": [],
-          "title": "Sub-Areas",
+          "title": "Examination Plan Area",
           "propertyOrder": 1001
         },
         "module": {
@@ -234,8 +216,8 @@
       },
       "defaultProperties": ["name"],
       "required": ["name"],
-      "title": "Area",
-      "headerTemplate": "{{i}} - {{self.name}}"
+      "title": "Examination Plan Area",
+      "headerTemplate": "{{self.name}}"
     },
     "module": {
       "type": "object",
@@ -244,10 +226,7 @@
         "name": {
           "type": "object",
           "format": "select2",
-          "enumSource": {
-            "$ref": "api/intern/getAllModulsMin",
-            "title": "moduleName"
-          },
+          "enumSource": [{"source": {"$ref": "api/intern/getAllModulsMin", "title": "moduleName"}}],
           "title": "Module Name",
           "options": {
             "inputAttributes": {

@@ -13,7 +13,7 @@ import {
 import { Box } from '@mui/material';
 import { setExamPlan} from './examPlanVariable.ts';
 import { AxiosError } from 'axios';
-import { getExamRegulations } from '../../../intern/src/database_services/ExamRegulationService.ts';
+import { fetchExamRegulations } from '../../../intern/src/database_services/ExamRegulationService.ts';
 import ExamPlanForm from './examPlanForm.tsx';
 
 /**
@@ -46,7 +46,7 @@ export default function ExamPlanFormStartPage() {
 
   // on the first render the exam regulations are fetched from the database
   React.useEffect(() => {
-    getExamRegulations()
+    fetchExamRegulations(null)
       .then((responseData: { jsonSchema: string; name: string }[]) => {
         setExamRegulationNames(responseData.map((entry) => entry.name));
         setExamRegulations(responseData);

@@ -162,13 +162,23 @@ function parseModuleDescriptionsWithConfig(pdfText, configPath) {
 
   // parse each module description and calculate the total parser score
   let totalScore = 0;
-  const parsedModules = [];
+  let parsedModules = [];
 
   for (const singleModuleDescription of moduleDescriptionTexts) {
     const parsedModule = parseSingleModuleDescription(singleModuleDescription);
     totalScore += parsedModule.parserScore;
     parsedModules.push(parsedModule);
   }
+
+  // Filter out completely empty modules - these do not count
+  parsedModules = parsedModules.filter((module) => {
+    for (const property of config.moduleProperties) {
+      if (module[property.propertyName]) {
+        return true;
+      }
+    }
+    return false;
+  });
 
   return {
     data: parsedModules,

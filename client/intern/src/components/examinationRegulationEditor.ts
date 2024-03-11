@@ -63,6 +63,8 @@ export async function initializeJsonEditor(
 
     // Set up the watcher for changes in the JSON editor.
     watchEditorChanges(editor);
+
+    return editor;
   }
 }
 // editor is not fully typed so we have to disable the eslint rule
@@ -86,12 +88,11 @@ function watchEditorChanges(editor: any) {
       if (match) {
         // Get the value of the changed module.
         const module = editor.getEditor(match[0]).getValue();
-
         // Define the paths to the credit points and module ID of the module.
         const creditPoints =
           match[1] + '.module' + '.' + match[2] + '.creditPoints';
         const moduleID = match[1] + '.module' + '.' + match[2] + '.moduleID';
-
+        
         // Set the credit points and module ID of the module in the JSON editor.
         editor.getEditor(creditPoints).setValue(module.moduleCredits);
         editor.getEditor(moduleID).setValue(module.moduleID);

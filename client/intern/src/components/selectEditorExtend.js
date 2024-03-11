@@ -13,7 +13,12 @@ export class SelectedExtend extends window.JSONEditor.defaults.editors.select2 {
         ? this.select2_instance.val()
         : this.select2_instance.select2('val');
       this.updateValue(value);
-      this.onChange(true);
+      try {
+        this.onChange(true);
+      } catch (err) {
+        console.log('Error in onChange: ' + err.message);
+        console.log(err.stack);
+      }
     };
 
     this.select2_instance.on('change', this.selectChangeHandler);
@@ -25,22 +30,26 @@ export class SelectedExtend extends window.JSONEditor.defaults.editors.select2 {
     if (bubble) this.change();
   }
   setValue(value, initial) {
+    /* Change begins here */
+    // check if value is a string
+    if (typeof value === 'object') {
+      value = JSON.stringify(value);
+    }
+    if (this.select2_instance === undefined) {
+      super.setValue(value, initial);
+      this.afterInputReady();
+    }
     if (this.select2_instance) {
-      if (initial) this.is_dirty = false;
-      else if (this.jsoneditor.options.show_errors === 'change')
+      if (initial) {
+        this.is_dirty = false;
+      } else {
         this.is_dirty = true;
-
-      const sanitized =
-        this.updateValue(value); /* Sets this.value to sanitized value */
-
-      this.input.value = sanitized;
-
-      if (this.select2v4)
-        this.select2_instance.val(sanitized).trigger('change');
-      else this.select2_instance.select2('val', sanitized);
-
-      this.onChange(true);
-    } else super.setValue(value, initial);
+        this.updateValue(value);
+        this.select2_instance.val(value).trigger('change');
+      }
+    }
+    this.onChange(true);
+    /* Change ends here */
   }
   onWatchedFieldChange() {
     let vars;
@@ -202,9 +211,10 @@ export class SelectedExtend extends window.JSONEditor.defaults.editors.select2 {
     /* Change ends here */
     value = this.typecast(value || '');
     if (!this.enum_values.includes(value)) {
-      if (this.newEnumAllowed) {
-        sanitized = this.addNewOption(value) ? value : sanitized;
-      }
+      // changed this always to true so that changing module names is working
+      //if (this.newEnumAllowed) {
+      sanitized = this.addNewOption(value) ? value : sanitized;
+      //}
     } else sanitized = value;
     // convert JSON-String to object
     this.input.value = sanitized;
@@ -278,7 +288,8 @@ export class SelectedExtend extends window.JSONEditor.defaults.editors.select2 {
           } else if (!Array.isArray(this.schema.enumSource[i])) {
             // extend ist definiert in der externen Bibliothek von JSONEditor
             /* eslint-disable-next-line no-undef */
-            this.enumSource[i] = extend({}, this.schema.enumSource[i]);
+            //this.enumSource[i] = extend({}, this.schema.enumSource[i]);
+            this.enumSource[i] = this.schema.enumSource[i];
           } else {
             this.enumSource[i] = this.schema.enumSource[i];
           }
@@ -349,5 +360,30 @@ export class SelectedExtend extends window.JSONEditor.defaults.editors.select2 {
     } else {
       throw new Error("'select' editor requires the enum property to be set.");
     }
+  }
+  addNewOption(value) {
+    let res = false;
+    if (value === undefined || value === null || value === '') return false;
+    value = JSON.parse(value);
+    if (
+      !this.enum_values.some((module) => {
+        return Object.keys(module).every((key) => {
+          return module[key] === value[key];
+        });
+      })
+    ) {
+      /* Add to list of valid enum values */
+      this.enum_options.push(JSON.stringify(value));
+      this.enum_display.push(value.moduleName);
+      this.enum_values.push(value);
+      /* Update Schema enum to prevent triggering error */
+      /* "Value must be one of the enumerated values" */
+      this.schema.enumSource[0].source.push(value);
+      this.input.appendChild(
+        new Option(value.moduleName, JSON.stringify(value), false, false)
+      );
+      res = true;
+    }
+    return res;
   }
 }
