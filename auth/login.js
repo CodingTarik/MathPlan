@@ -10,14 +10,14 @@ let client = null;
 
 // OpenID configuration
 const ssoconfig = {
-  client_id: config.auth.openid_client_id,
-  client_secret: config.auth.openid_client_secret,
-  redirect_uris: [config.auth.REDIRECT_URI],
+  client_id: config.auth.SSO_CLIENT_ID,
+  client_secret: config.auth.SSO_CLIENT_SECRET,
+  redirect_uris: [config.auth.SSO_REDIRECT_URI],
   response_types: ['code']
 };
 
 const params = { // those are the parameters that work with the google login
-  scope: 'openid email profile' // specify attributes to be returned (scope)
+  scope: 'openid tudMatrikel sub' // specify attributes to be returned (scope)
 };
 
 /**
@@ -80,7 +80,7 @@ const setupOpenID = (app) => {
     timeout: 15000
   });
 
-  Issuer.discover(config.auth.openid_discovery_url)
+  Issuer.discover(config.auth.SSO_ISSUER)
     .then((issuer) => {
       client = new issuer.Client(ssoconfig);
     })

@@ -119,6 +119,12 @@ config.web.TWITTER_URL = process.env.TWITTER_URL || 'https://twitter.com/';
 config.web.INSTAGRAM_URL =
   process.env.INSTAGRAM_URL || 'https://www.instagram.com/';
 
+config.auth = {};
+config.auth.SSO_CLIENT_ID = process.env.SSO_CLIENT_ID;
+config.auth.SSO_CLIENT_SECRET = process.env.SSO_CLIENT_SECRET;
+config.auth.SSO_REDIRECT_URI = process.env.SSO_REDIRECT_URI;
+config.auth.SSO_ISSUER = process.env.SSO_IDP;
+
 // Initialize an empty dev configuration object
 config.dev = {};
 config.dev.DEBUG = testBool(process.env.DEBUG) || false;
@@ -183,15 +189,6 @@ const securityHeaderConfig = {
 };
 // sets securityheader
 config.server.HELMET = securityHeaderConfig;
-
-config.auth = {};
-config.auth.admin = process.env.ADMIN;
-config.auth.openid_client_id = process.env.OPENID_CLIENT_ID;
-config.auth.openid_client_secret = process.env.OPENID_CLIENT_SECRET;
-config.auth.openid_discovery_url = process.env.OPENID_DISCOVERY_URL;
-config.auth.REDIRECT_URI =
-  process.env.SSO_REDIRECT_URI ||
-  'https://mathplan.mathematik.tu-darmstadt.de/callback';
 
 // Export the config object
 module.exports = config;
