@@ -98,6 +98,7 @@ const getModules = (
   moduleApplicability
 ) => {
   const parameters = {};
+  const limit = Number(configFile.database.MAX_NUMBER_FOUND_MODULES);
   if (!(moduleID === 'undefined')) {
     parameters.moduleID = { [Sequelize.Op.like]: `%${moduleID}%` };
   }
@@ -115,7 +116,7 @@ const getModules = (
   }
   return Modul.findAndCountAll({
     where: parameters,
-    limit: configFile.database.MAX_NUMBER_FOUND_MODULES,
+    limit,
     order: [['moduleID', 'ASC']]
   });
 };
