@@ -16,7 +16,7 @@ const ssoconfig = {
   response_types: ['code']
 };
 
-const params = {  // parameters for the authorization request
+const params = { // parameters for the authorization request
   scope: 'openid tudMatrikel sub cn memberOf ' // attributes to be returned (scope)
 };
 
@@ -44,7 +44,7 @@ const registerSession = (app) => {
     saveUninitialized: false,
     cookie: {
       maxAge: 1000 * 60 * 60 * 24, // 24 hours
-      sameSite: 'strict' 
+      sameSite: 'strict'
     }
   };
 
@@ -106,7 +106,7 @@ const setupOpenID = (app) => {
       const userinfo = await client.userinfo(tokenSet.access_token);
       await validateUser(req, res, userinfo);
       req.session.userinfo = userinfo;
-      logger.info('User logged in: '+ userinfo.name );
+      logger.info('User logged in: ' + userinfo.name);
       res.redirect('/');
     } catch (err) {
       logger.error(err);
@@ -157,16 +157,15 @@ const validateUser = async (req, res, userinfo) => {
     // get user from database
     req.session.user = await user.getUserByEmail(userinfo.email);
     // change role to student, if user is not in the intern group
-    //if(req.sessuin.user.role === 'intern' && !(userinfo.memberOf.includes('100063sbmathpl_studbuero')|| userinfo.memberOf.includes('100063sbmathpl_studproj'))){
+    // if(req.sessuin.user.role === 'intern' && !(userinfo.memberOf.includes('100063sbmathpl_studbuero')|| userinfo.memberOf.includes('100063sbmathpl_studproj'))){
     //  user.setRoleByEmail(userinfo.email, 'student');
-    //} TODO: change, if the  memberOf attribute is available
-
+    // } TODO: change, if the  memberOf attribute is available
   } else {
     // TODO: change, if the  memberOf attribute is available
-    const role = 'student'; //await (userinfo.memberOf.includes('100063sbmathpl_studbuero')|| userinfo.memberOf.includes('100063sbmathpl_studproj')) ? 'intern' : 'student';
+    const role = 'student'; // await (userinfo.memberOf.includes('100063sbmathpl_studbuero')|| userinfo.memberOf.includes('100063sbmathpl_studproj')) ? 'intern' : 'student';
     // create new user
     req.session.user = await user.addUser(
-      userinfo.sub,// TODO: change to userinfo.cn, when available 
+      userinfo.sub, // TODO: change to userinfo.cn, when available
       userinfo.email,
       role,
       userinfo.tudMatrikel // matrikelnumber to be added, when available
