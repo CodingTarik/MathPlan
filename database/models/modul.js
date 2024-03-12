@@ -44,7 +44,7 @@ module.exports = (sequelize) => {
       allowNull: false
     },
     moduleApplicability: {
-      type: DataTypes.STRING,
+      type: DataTypes.TEXT,
       allowNull: false
     }
   });
