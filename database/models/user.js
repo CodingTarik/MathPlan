@@ -10,7 +10,7 @@ module.exports = (sequelize) => {
     name: {
       type: DataTypes.STRING,
       allowNull: false,
-      unique: true
+      unique: false
     },
     email: {
       type: DataTypes.STRING,
@@ -32,7 +32,7 @@ module.exports = (sequelize) => {
       allowNull: true,
       unique: true,
       validate: {
-        // isNumeric: true //TODO: uncomment when matrikelnumber is available
+        isNumeric: true
       }
     }
   });

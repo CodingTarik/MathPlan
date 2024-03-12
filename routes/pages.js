@@ -48,11 +48,12 @@ router.get('/noaccess', (req, res) => {
 
 const studentPath = path.join(__dirname, '..', 'client', 'build', 'student');
 
-router.get('/student', (req, res, next) => {
+router.get('/student',checkRole('student'), (req, res, next) => {
   res.render('layout/index', { body: '../../client/build/student/index.html' });
 });
 router.use(
   '/student',
+  checkRole('student'),
   express.static(studentPath, { index: false, redirect: false })
 );
 

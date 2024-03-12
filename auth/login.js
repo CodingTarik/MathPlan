@@ -16,8 +16,8 @@ const ssoconfig = {
   response_types: ['code']
 };
 
-const params = { // those are the parameters that work with the google login
-  scope: 'openid tudMatrikel sub' // specify attributes to be returned (scope)
+const params = {  // parameters for the authorization request
+  scope: 'openid tudMatrikel sub cn memberOf ' // attributes to be returned (scope)
 };
 
 /**
@@ -43,7 +43,8 @@ const registerSession = (app) => {
     resave: false,
     saveUninitialized: false,
     cookie: {
-      maxAge: 1000 * 60 * 60 * 24 // 24 hours
+      maxAge: 1000 * 60 * 60 * 24, // 24 hours
+      sameSite: 'strict' 
     }
   };
 
@@ -101,11 +102,11 @@ const setupOpenID = (app) => {
   app.get('/callback', async (req, res) => {
     try {
       const params = client.callbackParams(req);
-      const tokenSet = await client.callback(config.auth.REDIRECT_URI, params);
+      const tokenSet = await client.callback(config.auth.SSO_REDIRECT_URI, params);
       const userinfo = await client.userinfo(tokenSet.access_token);
       await validateUser(req, res, userinfo);
       req.session.userinfo = userinfo;
-      logger.info('User logged in: ' + req.session.user.email);
+      logger.info('User logged in: '+ userinfo.name );
       res.redirect('/');
     } catch (err) {
       logger.error(err);
@@ -147,26 +148,28 @@ const setupOpenID = (app) => {
  * @returns {Promise<void>} - A promise that resolves once the validation is complete.
  */
 const validateUser = async (req, res, userinfo) => {
-  const isAdmin = userinfo.email === config.auth.admin;
+  console.log('UserInfo: ');
+  console.dir(userinfo);
   // check if user exits in database
   if (await user.isUserExists(userinfo.email)) {
     // user exits
     req.session.isLoggedin = true;
+    // get user from database
     req.session.user = await user.getUserByEmail(userinfo.email);
-    // check if user is admin
-    if (!(req.session.user.role === 'admin') && isAdmin) {
-      // update user role to admin
-      await user.setRoleByEmail(userinfo.email, 'intern');
-      req.session.user = await user.getUserByEmail(userinfo.email);
-    }
+    // change role to student, if user is not in the intern group
+    //if(req.sessuin.user.role === 'intern' && !(userinfo.memberOf.includes('100063sbmathpl_studbuero')|| userinfo.memberOf.includes('100063sbmathpl_studproj'))){
+    //  user.setRoleByEmail(userinfo.email, 'student');
+    //} TODO: change, if the  memberOf attribute is available
+
   } else {
+    // TODO: change, if the  memberOf attribute is available
+    const role = 'student'; //await (userinfo.memberOf.includes('100063sbmathpl_studbuero')|| userinfo.memberOf.includes('100063sbmathpl_studproj')) ? 'intern' : 'student';
     // create new user
-    // TODO change logic for isAdmin and matrikelnumber (0)
     req.session.user = await user.addUser(
-      userinfo.name,
+      userinfo.sub,// TODO: change to userinfo.cn, when available 
       userinfo.email,
-      isAdmin ? 'intern' : 'student',
-      userinfo.email // matrikelnumber to be added, when available
+      role,
+      userinfo.tudMatrikel // matrikelnumber to be added, when available
     );
     logger.info('User created: ' + req.session.user.email);
   }

@@ -128,6 +128,7 @@ config.auth.SSO_ISSUER = process.env.SSO_IDP;
 // Initialize an empty dev configuration object
 config.dev = {};
 config.dev.DEBUG = testBool(process.env.DEBUG) || false;
+config.dev.DEVELOPMENT_MODE = process.env.DEVELOPMENT_MODE || false;
 
 /**
  * For more information on the security headers, see:
