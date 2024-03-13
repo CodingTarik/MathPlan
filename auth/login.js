@@ -76,7 +76,7 @@ const registerSession = (app) => {
 
 // Register OpenID
 const setupOpenID = (app) => {
-  // set timeout little higher default is very low
+  // set timeout a little higher as the default value is very low
   custom.setHttpOptionsDefaults({
     timeout: 15000
   });
