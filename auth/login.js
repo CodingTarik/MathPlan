@@ -59,7 +59,6 @@ const registerSession = (app) => {
       res.locals.isIntern = session.user
         ? session.user.role === 'intern'
         : false;
-      logger.info(session.user.role);
       res.locals.isTeach = session.user
         ? session.user.role === 'teacher'
         : false;
