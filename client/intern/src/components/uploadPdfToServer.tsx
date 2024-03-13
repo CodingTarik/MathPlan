@@ -47,15 +47,18 @@ export default function pdfFileUpload() {
         if(response.data[1].length > 0){
           console.log('Failed uploading ' + response.data[1].length + ' file(s). \n');
           alert('The following files could not be uploaded: \n- '+ response.data[1].join(',\n- '));
+          history.go(0);
         }
         if(response.data[0].length > 0){
           console.log('Uploaded successfully ', response.data[0].length + ' file(s).'); 
           const resultOfUplaod = await uploadPdfToDatabase(response.data[0]);
           alert(resultOfUplaod);
+          history.go(0);
         }
       }catch (error) {
           console.error("Upload fehlgeschlagen"+ error);
-          alert("Upload fehlgeschlagen:"+ error);  
+          alert("Upload fehlgeschlagen:"+ error);
+          history.go(0);
           }
         }          
     };
