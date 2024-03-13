@@ -8,7 +8,7 @@ const fs = require('fs');
 const logger = require('./logger');
 const chalk = require('chalk');
 const helmet = require('helmet');
-
+const sso = require('./auth/login.js');
 // Config
 const config = require(path.join(__dirname, 'config.js'));
 
@@ -36,7 +36,7 @@ if (config.dev.DEBUG) {
 }
 
 // Register middleware for static variable and configurable data for rendering
-app.use((req, res, next) => {
+app.use(async (req, res, next) => {
   res.locals.imprinturl = config.web.IMPRINT_URL;
   res.locals.faqurl = config.web.FAQ_URL;
   res.locals.faqurlactivemenu = config.web.FAQ_URL_ACTIVE;
@@ -99,6 +99,9 @@ app.use(
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 
+// Register login
+sso.setupSessionAndOpenID(app);
+
 // Routing
 app.use('/api', api);
 app.use('/', pages);
@@ -120,7 +123,7 @@ try {
     if (config.server.ALLOW_HTTP) {
       let httpServer = null;
       if (config.server.HTTP_REDIRECT) {
-        logger.info('HTTP REDIRECT ACTIVE');
+        logger.debug('HTTP REDIRECT ACTIVE');
         httpServer = http.createServer((req, res) => {
           res.writeHead(301, {
             Location:
@@ -147,9 +150,10 @@ try {
     // HTTPS-Server
     /* eslint-disable security/detect-non-literal-fs-filename */
     if (config.server.ALLOW_HTTPS) {
+      logger.info('Reading certificate file from ' + config.server.CERT_PATH);
       const options = {
-        key: fs.readFileSync(config.server.CERT_PATH, 'utf8'),
-        cert: fs.readFileSync(config.server.CERT_SECRET_PATH, 'utf8')
+        key: fs.readFileSync(config.server.CERT_SECRET_PATH, 'utf8'),
+        cert: fs.readFileSync(config.server.CERT_PATH, 'utf8')
       };
       /* eslint-enable security/detect-non-literal-fs-filename */
 

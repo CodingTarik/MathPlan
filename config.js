@@ -1,5 +1,6 @@
 // Load the environment variables from the .env file in the root of the project
 require('dotenv').config();
+require('dotenv').config({ path: '.secret' });
 
 /**
  * Configuration object for the application.
@@ -117,9 +118,17 @@ config.web.FACEBOOK_URL =
 config.web.TWITTER_URL = process.env.TWITTER_URL || 'https://twitter.com/';
 config.web.INSTAGRAM_URL =
   process.env.INSTAGRAM_URL || 'https://www.instagram.com/';
+
+config.auth = {};
+config.auth.SSO_CLIENT_ID = process.env.SSO_CLIENT_ID;
+config.auth.SSO_CLIENT_SECRET = process.env.SSO_CLIENT_SECRET;
+config.auth.SSO_REDIRECT_URI = process.env.SSO_REDIRECT_URI;
+config.auth.SSO_ISSUER = process.env.SSO_IDP;
+
 // Initialize an empty dev configuration object
 config.dev = {};
 config.dev.DEBUG = testBool(process.env.DEBUG) || false;
+config.dev.DEVELOPMENT_MODE = process.env.DEVELOPMENT_MODE || false;
 
 /**
  * For more information on the security headers, see:
@@ -181,6 +190,7 @@ const securityHeaderConfig = {
 };
 // sets securityheader
 config.server.HELMET = securityHeaderConfig;
+
 // Export the config object
 module.exports = config;
 

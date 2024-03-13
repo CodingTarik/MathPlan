@@ -7,10 +7,10 @@ module.exports = (sequelize) => {
       autoIncrement: true,
       primaryKey: true
     },
-    username: {
+    name: {
       type: DataTypes.STRING,
       allowNull: false,
-      unique: true
+      unique: false
     },
     email: {
       type: DataTypes.STRING,
@@ -20,9 +20,20 @@ module.exports = (sequelize) => {
         isEmail: true // Validate that the email is in the correct format
       }
     },
-    password: {
+    role: {
       type: DataTypes.STRING,
-      allowNull: false
+      allowNull: false,
+      validate: {
+        isIn: [['student', 'teacher', 'intern']]
+      }
+    },
+    matrikelnr: {
+      type: DataTypes.STRING,
+      allowNull: true,
+      unique: true,
+      validate: {
+        isNumeric: true
+      }
     }
   });
 };
