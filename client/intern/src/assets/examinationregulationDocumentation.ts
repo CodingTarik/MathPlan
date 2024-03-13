@@ -1,7 +1,7 @@
 const descriptions = {
     info: "Information about the examination plan properties, most of them are currently not implemented in automatic checking, just min and max Creditpoints",
     name: "The name of the examination plan area associated with it.",
-    description: "A more detailed description of the examination plan area to explain its contents and purposes.",
+    description: "A more detailed description of the examination plan area to explain its contents and purposes. You may use markdown syntax here. For example, to add a link, simply write [link text](http://example.com).",
     minCreditPointsOverall: "The minimum number of total credit points required for this area.",
     maxCreditPointsOverall: "The maximum number of total credit points allowed for this area.",
     minCreditPointsPraktikum: "The minimum number of credit points required for internships in this area.",
