@@ -94,7 +94,7 @@ const registerSession = (app) => {
  * @param {Object} app - The Express app object.
  */
 const setupOpenID = (app) => {
-  // set timeout little higher default is very low
+  // set timeout a little higher as the default value is very low
   custom.setHttpOptionsDefaults({
     timeout: 15000
   });
@@ -126,7 +126,7 @@ const setupOpenID = (app) => {
       const userinfo = await client.userinfo(tokenSet.access_token);
       await validateUser(req, res, userinfo);
       req.session.userinfo = userinfo;
-      logger.info('User logged in: ' + userinfo.name);
+      logger.info('User logged in: ' + userinfo.email);
       res.redirect('/');
     } catch (err) {
       logger.error(err);
@@ -139,19 +139,6 @@ const setupOpenID = (app) => {
       req.session.destroy(() => {
         res.redirect('/');
       });
-    } catch (err) {
-      logger.error(err);
-      renderError(req, res, err);
-    }
-  });
-  // test route to check if user is logged in
-  app.get('/testlogin', async (req, res) => {
-    try {
-      if (req.session.user) {
-        res.send('Welcome, ' + req.session.user.name + ' (' + req.session.user.email + ')');
-      } else {
-        res.send('You are not logged in. <a href="/login">Login</a>');
-      }
     } catch (err) {
       logger.error(err);
       renderError(req, res, err);

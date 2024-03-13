@@ -23,11 +23,11 @@
           können Sie mühelos Ihren Prüfungsplan erstellen, validieren und
           genehmigen lassen.
         </p>
-        <% let ziel = "/"; %>
-        <% if(isTeach) {ziel = "/teach"; %>
-        <% }else if(isloggedin && !isIntern) {ziel = "/student"; %>
-        <% }else if (!isIntern) {ziel = "/login"} %>
-        <a href= <%= ziel %> class="btn btn-outline-primary btn-lg mb-4"
+        <% let target = "/"; %>
+        <% if (isTeach) { target = "/teach"; %>
+        <% } else if (isloggedin && !isIntern) { target = "/student"; %>
+        <% } else if (!isIntern) { target = "/login"; } %>
+        <a href= <%= target %> class="btn btn-outline-primary btn-lg mb-4"
           >Jetzt starten!</a> 
         <br />
         <p><b>Ein Projekt des Fachbereich Mathematik der TU Darmstadt:</b></p>
