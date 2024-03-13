@@ -52,6 +52,7 @@ app.use(async (req, res, next) => {
   res.locals.supportemail = config.web.SUPPORT_EMAIL;
   res.locals.supportlinkactive = config.web.SUPPORT_LINK_ACTIVE;
   res.locals.supportlink = config.web.SUPPORT_LINK;
+  res.locals.developmentmode = config.dev.DEVELOPMENT_MODE;
   next();
 });
 
