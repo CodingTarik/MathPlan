@@ -62,7 +62,7 @@ export default function ExternalModules({
               onClick={() => setDisplayInputFields(true)}
             >
               {' '}
-              Anerkannte Leistung hinzufügen
+              Leistung hinzufügen
             </Button>
           )}
           {displayInputFields && (
