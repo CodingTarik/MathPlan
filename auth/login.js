@@ -125,7 +125,6 @@ const setupOpenID = (app) => {
       const tokenSet = await client.callback(config.auth.SSO_REDIRECT_URI, params);
       const userinfo = await client.userinfo(tokenSet.access_token);
       await validateUser(req, res, userinfo);
-      req.session.userinfo = userinfo;
       logger.info('User logged in: ' + userinfo.email);
       res.redirect('/');
     } catch (err) {
@@ -137,6 +136,7 @@ const setupOpenID = (app) => {
   app.get('/logout', (req, res) => {
     try {
       req.session.destroy(() => {
+        logger.info('User logged out: ' + res.locals.email);
         res.redirect('/');
       });
     } catch (err) {
@@ -147,6 +147,21 @@ const setupOpenID = (app) => {
 };
 
 /**
+ * Determines the role of a user based on their userinfo.
+ * @param {Object} userinfo - The userinfo object containing user information.
+ * @returns {string} The role of the user ('intern', 'teacher', or 'student').
+ */
+function getUserRole(userinfo) {
+  if (userinfo.memberOf.includes('100063sbmathpl_studbuero') || userinfo.memberOf.includes('100063sbmathpl_studproj')) {
+    return 'intern';
+    // eslint-disable-next-line
+  } else if (false) { // TODO: add logic for a teacher group when available
+    return 'teacher';
+  } else {
+    return 'student';
+  }
+}
+/**
  * Validates the user and performs necessary actions based on the user's information.
  *
  * @param {Object} req - The request object.
@@ -155,26 +170,24 @@ const setupOpenID = (app) => {
  * @returns {Promise<void>} - A promise that resolves once the validation is complete.
  */
 const validateUser = async (req, res, userinfo) => {
-  console.log('UserInfo: ');
-  console.dir(userinfo);
+  const role = getUserRole(userinfo); // determine the accessability of the user to the different parts/routes of the app
   // check if user exits in database
   if (await user.isUserExists(userinfo.email)) {
     req.session.isLoggedin = true;
     // get user from database
     req.session.user = await user.getUserByEmail(userinfo.email);
-    // change role to student, if user is not in the intern group
-    // if(req.sessuin.user.role === 'intern' && !(userinfo.memberOf.includes('100063sbmathpl_studbuero')|| userinfo.memberOf.includes('100063sbmathpl_studproj'))){
-    //  user.setRoleByEmail(userinfo.email, 'student');
-    // } TODO: change, if the  memberOf attribute is available
+    // check if the role has changed and updates the role in the database
+    if (req.session.user.role !== role) {
+      req.session.user.role = role;
+      await user.setRoleByEmail(req.session.user.email, role);
+    }
   } else {
-    // TODO: change, if the  memberOf attribute is available
-    const role = 'student'; // await (userinfo.memberOf.includes('100063sbmathpl_studbuero')|| userinfo.memberOf.includes('100063sbmathpl_studproj')) ? 'intern' : 'student';
     // create new user
     req.session.user = await user.addUser(
-      userinfo.sub, // TODO: change to userinfo.cn, when available
+      userinfo.given_name + ' ' + userinfo.family_name,
       userinfo.email,
       role,
-      userinfo.tudMatrikel // matrikelnumber to be added, when available
+      userinfo.tudMatrikel
     );
     logger.info('User created: ' + req.session.user.email);
   }
