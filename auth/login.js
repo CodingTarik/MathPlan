@@ -124,19 +124,6 @@ const setupOpenID = (app) => {
       renderError(req, res, err);
     }
   });
-  // test route to check if user is logged in
-  app.get('/testlogin', async (req, res) => {
-    try {
-      if (req.session.user) {
-        res.send('Welcome, ' + req.session.user.name + ' (' + req.session.user.email + ')');
-      } else {
-        res.send('You are not logged in. <a href="/login">Login</a>');
-      }
-    } catch (err) {
-      logger.error(err);
-      renderError(req, res, err);
-    }
-  });
 };
 
 /**
