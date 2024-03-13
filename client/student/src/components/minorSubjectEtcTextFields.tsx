@@ -7,16 +7,7 @@ const needsAdditionalInputFieldForName = [
   'Nebenfach',
   'Nicht-mathematischer Vertiefungsbereich'
 ];
-/* const needsAdditionalInputFieldForModules = [
-  'Nebenfach',
-  'Nicht-mathematischer Vertiefungsbereich',
-  'Studium Generale',
-  'Nebenfach Wirtschaftsinformatik',
-  'Nebenfach Informatik',
-  'Nicht-mathematischer Vertiefungsbereich: Wirtschaftswissenschaften',
-  'Module aus dem Nebenfach',
-  'Module aus der gewählten nicht-mathematischen Vertiefung'
-]; */
+
 
 /**
  * 
