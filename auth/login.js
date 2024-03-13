@@ -55,7 +55,7 @@ const registerSession = (app) => {
     const session = req.session;
     // check if session is set
     if (session && session.user) {
-      res.locals.isloggedin = !!session.user;
+      res.locals.isloggedin = true;
       res.locals.isIntern = session.user
         ? session.user.role === 'intern'
         : false;
