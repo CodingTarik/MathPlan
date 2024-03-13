@@ -6,9 +6,19 @@ const config = require('../config');
 const user = require('../database/userHelper');
 const renderError = require('../routes/error').renderError;
 
+/**
+ * client for the openid provider.
+ * This is null before it is initialized in setupOpenID().
+ */
 let client = null;
 
-// OpenID configuration
+/**
+ * Configuration object for Single Sign-On (SSO).
+ * @property {string} client_id - The client ID for SSO.
+ * @property {string} client_secret - The client secret for SSO.
+ * @property {string[]} redirect_uris - The redirect URIs for SSO. This is the callback URL.
+ * @property {string[]} response_types - The response types for SSO. 'code' is default response type.
+ */
 const ssoconfig = {
   client_id: config.auth.SSO_CLIENT_ID,
   client_secret: config.auth.SSO_CLIENT_SECRET,
@@ -28,15 +38,25 @@ function generateSecretKey() {
   return crypto.randomBytes(64).toString('hex');
 }
 
-// Setup session and OpenID
+/**
+ * Sets up the session and OpenID for the app.
+ *
+ * @param {Object} app - The app object.
+ * @returns {Promise} A promise that resolves when the session and OpenID setup is complete.
+ */
 const setupSessionAndOpenID = (app) => {
   registerSession(app);
-  logger.info('Session setup complete');
+  if (config.dev.DEBUG) logger.info('Session setup complete');
   setupOpenID(app);
-  logger.info('Session and OpenID setup complete');
+  if (config.dev.DEBUG) logger.info('Session and OpenID setup complete');
 };
 
-// Register session
+/**
+ * Registers session middleware for handling user sessions.
+ * And sets up middleware to check if user is logged in and set the locals.
+ *
+ * @param {Object} app - The Express app object.
+ */
 const registerSession = (app) => {
   const sessionConfig = {
     secret: generateSecretKey(), // random generated key
@@ -47,22 +67,17 @@ const registerSession = (app) => {
       sameSite: 'strict'
     }
   };
-
+  // register session
   app.use(session(sessionConfig));
 
-  // Register session middleware handling
+  // middleware to check if user is logged in and set the locals
   app.use((req, res, next) => {
     const session = req.session;
     // check if session is set
     if (session && session.user) {
-      res.locals.isloggedin = !!session.user;
-      res.locals.isIntern = session.user
-        ? session.user.role === 'intern'
-        : false;
-      logger.info(session.user.role);
-      res.locals.isTeach = session.user
-        ? session.user.role === 'teacher'
-        : false;
+      res.locals.isloggedin = true;
+      res.locals.isIntern = session.user ? session.user.role === 'intern' : false;
+      res.locals.isTeach = session.user ? session.user.role === 'teacher' : false;
       res.locals.name = session.user.name;
       res.locals.email = session.user.email;
     } else {
@@ -74,13 +89,17 @@ const registerSession = (app) => {
   });
 };
 
-// Register OpenID
+/**
+ * Sets up OpenID authentication for the application.
+ * @param {Object} app - The Express app object.
+ */
 const setupOpenID = (app) => {
   // set timeout little higher default is very low
   custom.setHttpOptionsDefaults({
     timeout: 15000
   });
 
+  // reach out to the openid provider to get the client
   Issuer.discover(config.auth.SSO_ISSUER)
     .then((issuer) => {
       client = new issuer.Client(ssoconfig);
@@ -88,6 +107,7 @@ const setupOpenID = (app) => {
     .catch((err) => {
       logger.error('Issuer not available. Caught ' + err);
     });
+
   // handles the login route and redirects to the openid provider
   app.get('/login', (req, res) => {
     try {
@@ -152,7 +172,6 @@ const validateUser = async (req, res, userinfo) => {
   console.dir(userinfo);
   // check if user exits in database
   if (await user.isUserExists(userinfo.email)) {
-    // user exits
     req.session.isLoggedin = true;
     // get user from database
     req.session.user = await user.getUserByEmail(userinfo.email);

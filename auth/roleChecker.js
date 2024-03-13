@@ -1,5 +1,10 @@
 const config = require('../config');
-// Define a middleware function to check role
+/**
+ * Middleware function to check if the user has the required role.
+ *
+ * @param {string} role - The required role for accessing a route or resource.
+ * @returns {Function} - Middleware function that checks if the user has the required role.
+ */
 const checkRole = (role) => {
   return (req, res, next) => {
     // Check if the user is logged in and has the required role or is in development mode or test mode
