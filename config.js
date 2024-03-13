@@ -57,7 +57,8 @@ config.database.DB_USER = process.env.DB_USER || 'root';
 // Set the database dialect to 'mysql' or 'sqlite'
 config.database.DB_DIALECT = process.env.DB_DIALECT || 'sqlite';
 // Set the maximum number of modules that can be retrieved from the database via the search button in the intern page
-config.database.MAX_NUMBER_FOUND_MODULES = process.env.MAX_NUMBER_FOUND_MODULES || 50;
+config.database.MAX_NUMBER_FOUND_MODULES =
+  process.env.MAX_NUMBER_FOUND_MODULES || 50;
 
 // Initialize an empty server configuration object
 config.server = {};
@@ -128,7 +129,7 @@ config.auth.SSO_ISSUER = process.env.SSO_IDP;
 // Initialize an empty dev configuration object
 config.dev = {};
 config.dev.DEBUG = testBool(process.env.DEBUG) || false;
-config.dev.DEVELOPMENT_MODE = process.env.DEVELOPMENT_MODE || false;
+config.dev.DEVELOPMENT_MODE = testBool(process.env.DEVELOPMENT_MODE);
 
 /**
  * For more information on the security headers, see:
