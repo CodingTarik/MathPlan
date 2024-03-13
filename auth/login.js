@@ -106,7 +106,7 @@ const setupOpenID = (app) => {
       const userinfo = await client.userinfo(tokenSet.access_token);
       await validateUser(req, res, userinfo);
       req.session.userinfo = userinfo;
-      logger.info('User logged in: ' + userinfo.name);
+      logger.info('User logged in: ' + userinfo.email);
       res.redirect('/');
     } catch (err) {
       logger.error(err);
