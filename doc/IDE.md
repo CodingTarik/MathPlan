@@ -32,6 +32,7 @@ Git ist ein Versionsverwaltungssystem, das die Zusammenarbeit an Softwareprojekt
 Git fasst Änderungen in sogenannten Commits zusammen. Ein Commit ist eine Sammlung von Änderungen an Dateien, die mit einer Beschreibung versehen ist. Commits können dann in einem zentralen Repository gespeichert und von anderen Entwicklern heruntergeladen werden.
 
 Wenn Sie in Visual Studio Code ein Git-Repository geöffnet haben, können Sie über die Versionskontrolle-Schaltfläche **(3)** auf die Git-Funktionen zugreifen. Sobald eine Datei geändert wurde, wird sie in der Versionskontrolle-Schaltfläche mit einem blauen Punkt markiert. Klicken Sie auf die Schaltfläche, um die Änderungen zu sehen und einen Commit zu erstellen:
+
 ![](res/VSCode-Commit.png)
 
 Um Änderungen zu einem Commit hinzuzuügen, klicken Sie auf das `+`-Symbol neben der Datei **(1)**. Geben Sie dann eine Beschreibung für den Commit ein **(2)** und klicken Sie auf das Häkchen **(3)**, um den Commit zu erstellen.
