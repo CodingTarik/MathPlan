@@ -173,7 +173,7 @@ Die URL zur Datenschutzerklärung von _MathPlan_. Diese wird im Footer angezeigt
 
 Gibt an, ob Links zu sozialen Medien im Footer angezeigt werden sollen.
 
-### `INSTAGRAM_URL`, `FACEBOOK_URL`, `TWITTER_URL`,
+### `INSTAGRAM_URL`, `FACEBOOK_URL`, `TWITTER_URL`
 **Erlaubte Werte**: URL
 
 Die URLs zu den sozialen Medien, die im Footer angezeigt werden, sofern `SOCIAL_MEDIA_ACTIVE` auf `true` gesetzt ist.
