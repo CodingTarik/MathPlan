@@ -2,6 +2,8 @@
 
 MathPlan is a Node.js web application developed to streamline the management of mathematics courses at TU Darmstadt. It simplifies the submission and approval of student's examination plans. It also allows members of the study office of mathematics to enter or modify data, such as courses/modules and examination regulations.
 
+This README provides some basic information on how to install and run the application. For more detailed information, please refer to the [documentation](doc/index.md).
+
 ## Table of Contents
 
 - [MathPlan - Math Course Management System](#mathplan---math-course-management-system)
@@ -16,8 +18,8 @@ MathPlan is a Node.js web application developed to streamline the management of 
 
 1. **Clone the Repository:**
    ```bash
-   git clone https://git.rwth-aachen.de/tarik.azzouzi/materno.git
-   cd materno
+   git clone https://github.com/CodingTarik/MathPlan.git
+   cd MathPlan
    ```
 
 2. **Install Dependencies:**
@@ -35,7 +37,7 @@ MathPlan is a Node.js web application developed to streamline the management of 
    Locally, create a database with name as specified in `.env` file, or else update the `.env` file.
 
    *SQLite:*
-   A sqlite file should be generated automatically. It has the name (And path) as specified in database.js.
+   A sqlite file should be generated automatically. It has the name (and path) as specified in database.js.
 
    *Scheme changes:*
    Whenever there are changes in the scheme of tables (in Sequelize), change line
@@ -46,7 +48,7 @@ MathPlan is a Node.js web application developed to streamline the management of 
    ```bash
    db.sequelize.sync({force: true})
    ```
-   in app.js. Otherwise, the database still works with the old scheme and errors might occure. **CAREFULL, this will delete all entries in the database.**
+   in app.js. Otherwise, the database still works with the old scheme and errors might occur. **WARNING: this will delete all entries in the database.**  
    Do not forget to redo this change after you have started the application once (if you want to keep your database content).
    For sqlite, you can alternatively simply delete the sqlite file in your file manager (please not while running the application).
 
@@ -75,7 +77,7 @@ MathPlan is a Node.js web application developed to streamline the management of 
   ```bash
   node app.js
   ```
-  Works propely only when application is already built, i.e. the build command was run and no changes in the frontend occured afterwards.
+  Works properly only when application is already built, i.e. the build command was run and no changes in the frontend occurred afterwards.
   This command starts the application much faster than the other commands.
 
 - **Linting:**
@@ -117,7 +119,7 @@ MathPlan is a Node.js web application developed to streamline the management of 
 ## Usage
 
 - **Student Submission:**
-  Students can log in and fill in the examination plan. They are also supposed to be able to alter and submit their examination plans and see fedback that was given on their submissions.
+  Students can log in and fill in the examination plan. They are also supposed to be able to alter and submit their examination plans and see feedback that was given on their submissions.
 
 - **Instructor Management:**
   Instructors are supposed to be able to log in, choose courses they want to teach, and specify room preferences for examinations.
@@ -127,7 +129,7 @@ MathPlan is a Node.js web application developed to streamline the management of 
 
 ## Contributing
 
-We welcome contributions from the community! If you'd like to contribute to Materno, please follow these steps:
+We welcome contributions from the community! If you'd like to contribute to MathPlan, please follow these steps:
 
 1. Fork the repository.
 2. Create a new branch: `git checkout -b feature`.
