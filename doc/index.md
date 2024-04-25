@@ -13,4 +13,3 @@
 
 - **Weiterentwicklung von MathPlan**
   - [Entwicklungsumgebung und Versionsverwaltung](IDE.md)
-  - [Hinzufügen neuer Webseiten](Routing.md)
